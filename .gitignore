@@ -166,3 +166,9 @@ cython_debug/
 
 logs
 poetry.lock
+
+# Local-only (not for remote repo)
+_upstream/
+References/
+BenchmarkAgenticworkflow/
+benchmark/E2E/

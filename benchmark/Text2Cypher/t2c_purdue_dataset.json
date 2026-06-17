@@ -1,0 +1,310 @@
+[
+  {
+    "id": "C1_1-requests-2_31_0",
+    "template_id": "C1.1",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SR",
+    "difficulty": "Easy",
+    "question": "What are the available versions for software 'requests'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+    "expected_result": [
+      {
+        "version": "2.31.0"
+      }
+    ]
+  },
+  {
+    "id": "C1_2-requests-2_31_0",
+    "template_id": "C1.2",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "Does software 'requests' version '2.31.0' have any known vulnerabilities?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+    "expected_result": [
+      {
+        "has_vuln": true
+      }
+    ]
+  },
+  {
+    "id": "C1_3-requests-2_31_0",
+    "template_id": "C1.3",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "Does software 'requests' version '2.31.0' exist in the graph?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'}) RETURN count(v) > 0 AS exists",
+    "expected_result": [
+      {
+        "exists": true
+      }
+    ]
+  },
+  {
+    "id": "C2_1-requests-2_31_0",
+    "template_id": "C2.1",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Easy",
+    "question": "What are the direct dependencies of software 'requests' version '2.31.0'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+    "expected_result": [
+      {
+        "software": "charset-normalizer",
+        "version": "3.4.1"
+      },
+      {
+        "software": "idna",
+        "version": "3.10.0"
+      },
+      {
+        "software": "urllib3",
+        "version": "2.4.0"
+      }
+    ]
+  },
+  {
+    "id": "C2_2-requests-2_31_0",
+    "template_id": "C2.2",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "Does software 'requests' version '2.31.0' directly depend on software 'idna'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'idna'}) RETURN count(dep) > 0 AS depends",
+    "expected_result": [
+      {
+        "depends": true
+      }
+    ]
+  },
+  {
+    "id": "C2_3-requests-2_31_0",
+    "template_id": "C2.3",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Medium",
+    "question": "What are the CVE IDs of known vulnerabilities affecting software 'requests' version '2.31.0'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+    "expected_result": [
+      {
+        "cveId": "CVE-2024-35195"
+      }
+    ]
+  },
+  {
+    "id": "C2_4-requests-2_31_0",
+    "template_id": "C2.4",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Medium",
+    "question": "What CWE IDs are associated with vulnerabilities of software 'requests' version '2.31.0'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+    "expected_result": [
+      {
+        "cweId": "CWE-670"
+      }
+    ]
+  },
+  {
+    "id": "C3_1-requests-2_31_0",
+    "template_id": "C3.1",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Medium",
+    "question": "What are all transitive dependencies of software 'requests' version '2.31.0'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+    "expected_result": [
+      {
+        "software": "charset-normalizer",
+        "version": "3.4.1"
+      },
+      {
+        "software": "idna",
+        "version": "3.10.0"
+      },
+      {
+        "software": "urllib3",
+        "version": "2.4.0"
+      }
+    ]
+  },
+  {
+    "id": "C3_2-requests-2_31_0",
+    "template_id": "C3.2",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Medium",
+    "question": "Does software 'requests' version '2.31.0' depend on software 'idna' at any depth?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'idna'}) RETURN count(dep) > 0 AS depends",
+    "expected_result": [
+      {
+        "depends": true
+      }
+    ]
+  },
+  {
+    "id": "C3_3-requests-2_31_0",
+    "template_id": "C3.3",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Hard",
+    "question": "What dependency path exists from software 'requests' version '2.31.0' to software 'idna'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (ds:Software {name: 'idna'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+    "expected_result": [
+      {
+        "path": [
+          "2.31.0",
+          "3.10.0"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C4_1-requests-2_31_0",
+    "template_id": "C4.1",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "How many direct dependencies does software 'requests' version '2.31.0' have?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+    "expected_result": [
+      {
+        "cnt": 3
+      }
+    ]
+  },
+  {
+    "id": "C4_2-requests-2_31_0",
+    "template_id": "C4.2",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Medium",
+    "question": "How many total transitive dependencies does software 'requests' version '2.31.0' have?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+    "expected_result": [
+      {
+        "cnt": 3
+      }
+    ]
+  },
+  {
+    "id": "C4_3-requests-2_31_0",
+    "template_id": "C4.3",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "How many vulnerabilities (CVEs) does software 'requests' version '2.31.0' have?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+    "expected_result": [
+      {
+        "cnt": 1
+      }
+    ]
+  },
+  {
+    "id": "C4_4-requests-2_31_0",
+    "template_id": "C4.4",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Easy",
+    "question": "How many distinct CWE types affect software 'requests' version '2.31.0'?",
+    "cypher_query": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+    "expected_result": [
+      {
+        "cnt": 1
+      }
+    ]
+  },
+  {
+    "id": "C5_1-requests-2_31_0",
+    "template_id": "C5.1",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "CR",
+    "difficulty": "Hard",
+    "question": "What common direct dependencies are shared by software 'requests' version '2.31.0' and software 'django' version '4.2.11'?",
+    "cypher_query": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+    "expected_result": []
+  },
+  {
+    "id": "C5_2-requests-2_31_0",
+    "template_id": "C5.2",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Medium",
+    "question": "Which has more direct dependencies: software 'requests' version '2.31.0' or software 'django' version '4.2.11'?",
+    "cypher_query": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+    "expected_result": [
+      {
+        "c1": 3,
+        "c2": 2
+      }
+    ]
+  },
+  {
+    "id": "C5_3-requests-2_31_0",
+    "template_id": "C5.3",
+    "anchor": {
+      "pkg": "requests",
+      "ver": "2.31.0"
+    },
+    "query_type": "SA",
+    "difficulty": "Medium",
+    "question": "Which has more known vulnerabilities (CVEs): software 'requests' version '2.31.0' or software 'django' version '4.2.11'?",
+    "cypher_query": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+    "expected_result": [
+      {
+        "n1": 1,
+        "n2": 14
+      }
+    ]
+  }
+]

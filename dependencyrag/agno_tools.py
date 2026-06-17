@@ -6,6 +6,16 @@ Migrated from Langroid to Agno.
 import json
 import requests
 from typing import Optional
+
+# =============================================================================
+# [BENCHMARK] Extra imports for E2E frozen OSV check_vulnerability.
+# Revert to original version: remove the two lines below when restoring [ORIGINAL] block.
+# =============================================================================
+import os
+from pathlib import Path
+# =============================================================================
+# [ORIGINAL] This file used only: json, requests (+ typing, agno, etc.)
+# =============================================================================
 from pydantic import BaseModel, Field
 
 from agno.agent import Agent
@@ -162,30 +172,79 @@ def check_vulnerability(request: VulnerabilityRequest) -> str:
             "ecosystem": ecosystem
         },
     }
-    
-    # Send request to OSV API
-    url = "https://api.osv.dev/v1/query"
-    
+
+    # =============================================================================
+    # [BENCHMARK-E2E]: read frozen OSV when env is set.
+    # Env: BENCHMARK_OSV_FIXTURE=1 and E2E_OSV_FIXTURE_FILE=<path to .json>
+    # If not set, falls through to live api.osv.dev (same as original version).
+    # To restore original version only:
+    #   1. Comment out this entire block
+    #   2. Uncomment the [ORIGINAL] block below
+    #   3. Remove os/Path import at top
+    # =============================================================================
+    fixture_file = os.getenv("E2E_OSV_FIXTURE_FILE", "").strip()
+    use_fixture = os.getenv("BENCHMARK_OSV_FIXTURE", "").lower() in ("1", "true", "yes")
+
     try:
-        response = requests.post(url, data=json.dumps(data))
-        response_data = response.json()
-        
+        if use_fixture and fixture_file:
+            path = Path(fixture_file)
+            if path.is_file():
+                response_data = json.loads(path.read_text(encoding="utf-8"))
+            else:
+                return f"Error checking vulnerabilities: fixture not found: {path}"
+        else:
+            url = "https://api.osv.dev/v1/query"
+            response = requests.post(url, data=json.dumps(data))
+            response.raise_for_status()
+            response_data = response.json()
+
         # Clean up response to reduce size
         if "vulns" in response_data:
             for vuln in response_data["vulns"]:
-                # Remove references to reduce payload size
                 if "references" in vuln:
                     del vuln["references"]
-                # Remove version lists to reduce size
                 if "affected" in vuln:
                     for affected in vuln["affected"]:
                         if "versions" in affected:
                             del affected["versions"]
-        
+
         return f"Vulnerability check results:\n{json.dumps(response_data, indent=2)}"
-        
+
     except Exception as e:
         return f"Error checking vulnerabilities: {str(e)}"
+    # =============================================================================
+    # [BENCHMARK-E2E] end
+    # =============================================================================
+
+    # =============================================================================
+    # [ORIGINAL DepsRAG]
+    # =============================================================================
+    # try:
+    #     # Send request to OSV API
+    #     url = "https://api.osv.dev/v1/query"
+    #
+    #     response = requests.post(url, data=json.dumps(data))
+    #     response_data = response.json()
+    #
+    #     # Clean up response to reduce size
+    #     if "vulns" in response_data:
+    #         for vuln in response_data["vulns"]:
+    #             # Remove references to reduce payload size
+    #             if "references" in vuln:
+    #                 del vuln["references"]
+    #             # Remove version lists to reduce size
+    #             if "affected" in vuln:
+    #                 for affected in vuln["affected"]:
+    #                     if "versions" in affected:
+    #                         del affected["versions"]
+    #
+    #     return f"Vulnerability check results:\n{json.dumps(response_data, indent=2)}"
+    #
+    # except Exception as e:
+    #     return f"Error checking vulnerabilities: {str(e)}"
+    # =============================================================================
+    # [ORIGINAL] end
+    # =============================================================================
 
 
 @tool
@@ -226,15 +285,34 @@ def web_search(query: str, num_results: int = 3) -> str:
     Returns:
         str: Search results
     """
+    # =============================================================================
+    # [BENCHMARK-E2E] Set by benchmark/E2E/e2e_evaluator.py (BENCHMARK_E2E=1).
+    # Disables DuckDuckGo during E2E so answers use graph + OSV fixture only.
+    # To restore original version only:
+    #   1. Comment out this entire block
+    #   2. Uncomment the [ORIGINAL] block below
+    # =============================================================================
+    if os.getenv("BENCHMARK_E2E", "").lower() in ("1", "true", "yes"):
+        return (
+            "Web search is disabled for E2E benchmark (BENCHMARK_E2E=1). "
+            "Use check_vulnerability for OSV and execute_cypher_query for the graph."
+        )
+    # =============================================================================
+    # [BENCHMARK-E2E] end
+    # =============================================================================
+
+    # =============================================================================
+    # [ORIGINAL] DuckDuckGo web search
+    # =============================================================================
     try:
         from duckduckgo_search import DDGS
-        
+
         ddgs = DDGS()
         results = list(ddgs.text(query, max_results=num_results))
-        
+
         if not results:
             return "No search results found."
-        
+
         formatted_results = []
         for i, result in enumerate(results, 1):
             formatted_results.append(
@@ -242,13 +320,16 @@ def web_search(query: str, num_results: int = 3) -> str:
                 f"   {result.get('body', 'No description')}\n"
                 f"   URL: {result.get('href', 'No URL')}"
             )
-        
+
         return "\n\n".join(formatted_results)
-        
+
     except ImportError:
         return "DuckDuckGo search library not installed. Please install duckduckgo-search."
     except Exception as e:
         return f"Error performing web search: {str(e)}"
+    # =============================================================================
+    # [ORIGINAL] end
+    # =============================================================================
 
 
 # ============================================================================

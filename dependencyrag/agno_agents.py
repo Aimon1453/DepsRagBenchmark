@@ -36,7 +36,7 @@ def _create_model(model_id: str = "gpt-4o", provider: Optional[str] = None) -> M
     # Explicit provider specified
     if provider == "google":
         # Use GOOGLE_MODEL_ID from env if model_id is default
-        gemini_model = os.getenv("GOOGLE_MODEL_ID", "gemini-2.0-flash-exp") if model_id == "gpt-4o" else model_id
+        gemini_model = os.getenv("GOOGLE_MODEL_ID", "gemini-3.1-flash-lite") if model_id == "gpt-4o" else model_id
         return Gemini(id=gemini_model)
     elif provider == "azure":
         deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT") or os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME") or model_id
@@ -55,7 +55,7 @@ def _create_model(model_id: str = "gpt-4o", provider: Optional[str] = None) -> M
             azure_deployment=deployment,
         )
     elif os.getenv("GOOGLE_API_KEY"):
-        gemini_model = os.getenv("GOOGLE_MODEL_ID", "gemini-2.0-flash-exp") if model_id == "gpt-4o" else model_id
+        gemini_model = os.getenv("GOOGLE_MODEL_ID", "gemini-3.1-flash-lite") if model_id == "gpt-4o" else model_id
         return Gemini(id=gemini_model)
     
     # Default to OpenAI
