@@ -4,8 +4,6 @@ Pull a small **dependency subgraph** from the [Purdue SecureChain knowledge grap
 
 The public graph is exposed via SPARQL; DepsRAG talks to Neo4j. This folder contains the scripts that move data between the two.
 
-> **Note:** Opening the SPARQL URL in a browser shows `Unknown path` — that is normal. The endpoint expects POST requests with SPARQL queries, not a GET from the address bar.
-
 ## Prerequisites
 
 - **Docker** (local Neo4j)
