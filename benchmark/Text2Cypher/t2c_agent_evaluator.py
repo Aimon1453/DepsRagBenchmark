@@ -1,5 +1,7 @@
 """
-Text2Cypher benchmark: DepsRAG Team → extract Cypher → score vs t2c_purdue_dataset.json.
+Text2Cypher benchmark: DependencyGraphAgent → extract Cypher → score vs t2c_purdue_dataset.json.
+
+Measures the DependencyGraphAgent alone (no Team coordinator / Search / Critic).
 
 Usage (repo root):
   python benchmark/Text2Cypher/t2c_agent_evaluator.py
@@ -22,7 +24,7 @@ sys.path.insert(0, str(T2C_DIR))
 
 load_dotenv(REPO_ROOT / ".env")
 
-from dependencyrag.depsrag_team import create_depsrag_team
+from dependencyrag.agno_agents import create_dependency_graph_agent
 from dependencyrag.neo4j_tools import get_neo4j_connection
 from t2c_evaluator import evaluate_single_case
 
@@ -52,8 +54,9 @@ CRITICAL INSTRUCTIONS (Purdue SecureChain subgraph in Neo4j):
 7. CWE types: `(c)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)` with `w.cweId`.
 8. Do NOT use Spanish-schema labels (`PyPIPackage`, `Version`, `HAVE`, `REQUIRE`) or `Version.vulnerabilities`.
 9. Do NOT query `SecureChainImport` unless the question asks for import metadata.
-10. DO NOT execute the query.
-11. Final response: ONLY the Cypher in ```cypher ... ``` blocks, no other text.
+10. Do NOT call any tools (no construct_dependency_graph, execute_cypher_query, get_graph_schema, or visualize).
+11. Do NOT execute the query. Write Cypher only.
+12. Final response: ONLY the Cypher in ```cypher ... ``` blocks, no other text.
 """
 
 
@@ -70,8 +73,8 @@ if __name__ == "__main__":
         print("Please ensure your .env file is loaded or Neo4j environment variables are set.")
         sys.exit(1)
 
-    print("Initializing DepsRAG Team for evaluation...\n")
-    team = create_depsrag_team()
+    print("Initializing DependencyGraphAgent for evaluation...\n")
+    agent = create_dependency_graph_agent()
 
     print(f"Dataset: {dataset_name}")
     print("Neo4j: Purdue SecureChain (see NEO4J_URI in .env, expected bolt://127.0.0.1:7689)")
@@ -86,8 +89,9 @@ if __name__ == "__main__":
         print(f"Question: {case['question']}")
 
         prompt = f"""
-You are being tested in a benchmark.
-Ask the DependencyGraphAgent to write Cypher for:
+You are being tested in a Text2Cypher benchmark.
+Write a Cypher query that answers the question below.
+Do not call tools. Do not execute the query. Output only ```cypher```.
 
 Question: {case['question']}
 
@@ -95,7 +99,7 @@ Question: {case['question']}
 """
 
         print("  Waiting for Agent response...")
-        response = team.run(prompt)
+        response = agent.run(prompt)
 
         generated_cypher = extract_cypher_from_response(response.content)
         print(f"  [Extracted Cypher]:\n{generated_cypher}\n")

@@ -132,7 +132,8 @@ def test_team_creation():
         print("\nCreating DepsRAG team...")
         team = create_depsrag_team(model_id="gpt-4o", db_file="test.db")
         print(f"✓ Team created: {team.name}")
-        print(f"  Leader: {team.leader.name}")
+        # Agno TeamMode.coordinate: Team itself is the coordinator (no separate leader agent)
+        print(f"  Mode: {getattr(team, 'mode', None)}")
         print(f"  Members: {[member.name for member in team.members]}")
         
         return True

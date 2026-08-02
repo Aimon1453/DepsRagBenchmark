@@ -1,5 +1,7 @@
 # SecureChain → Neo4j import
 
+> Full benchmark onboarding (install → import → Text2Cypher) lives in the [root README](../README.md). This page is the **import step** only.
+
 Pull a small **dependency subgraph** from the [Purdue SecureChain knowledge graph](https://frink.apps.renci.org/securechainkg/sparql) into a local Neo4j instance for `benchmark/Text2Cypher` and DepsRAG queries.
 
 The public graph is exposed via SPARQL; DepsRAG talks to Neo4j. This folder contains the scripts that move data between the two.
