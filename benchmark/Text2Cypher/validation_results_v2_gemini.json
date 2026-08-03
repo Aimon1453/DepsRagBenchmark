@@ -1,0 +1,3373 @@
+{
+  "run": {
+    "run_type": "single-agent Text2Cypher",
+    "dataset": "t2c_purdue_dataset_v2.json",
+    "model": "gemini-3.1-flash-lite",
+    "started_utc": "20260801T125738Z",
+    "note": "Dataset validation run; Text2Cypher track per methodology (DependencyGraphAgent only)."
+  },
+  "summary": {
+    "total_cases": 170,
+    "executed_successfully": 166,
+    "execution_rate": 0.9765,
+    "avg_score": 0.6824,
+    "by_template": {
+      "C1.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C1.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.1
+      },
+      "C1.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.6
+      },
+      "C2.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.4": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C3.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.6
+      },
+      "C3.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C3.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.1
+      },
+      "C4.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C4.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.9
+      },
+      "C4.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C4.4": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.9
+      },
+      "C5.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.4
+      },
+      "C5.2": {
+        "n": 10,
+        "executed": 7,
+        "avg_score": 0.0
+      },
+      "C5.3": {
+        "n": 10,
+        "executed": 9,
+        "avg_score": 0.0
+      }
+    },
+    "by_category": {
+      "C1": {
+        "n": 30,
+        "executed": 30,
+        "avg_score": 0.7
+      },
+      "C2": {
+        "n": 40,
+        "executed": 40,
+        "avg_score": 0.9
+      },
+      "C3": {
+        "n": 30,
+        "executed": 30,
+        "avg_score": 0.5667
+      },
+      "C4": {
+        "n": 40,
+        "executed": 40,
+        "avg_score": 0.95
+      },
+      "C5": {
+        "n": 30,
+        "executed": 26,
+        "avg_score": 0.1333
+      }
+    },
+    "by_difficulty": {
+      "Easy": {
+        "n": 80,
+        "executed": 80,
+        "avg_score": 0.825
+      },
+      "Hard": {
+        "n": 20,
+        "executed": 20,
+        "avg_score": 0.25
+      },
+      "Medium": {
+        "n": 70,
+        "executed": 66,
+        "avg_score": 0.6429
+      }
+    },
+    "by_query_type": {
+      "CR": {
+        "n": 60,
+        "executed": 60,
+        "avg_score": 0.6167
+      },
+      "SA": {
+        "n": 100,
+        "executed": 96,
+        "avg_score": 0.69
+      },
+      "SR": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "C1_1-perl",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'perl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.61
+    },
+    {
+      "id": "C1_1-openssl",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'openssl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.15
+    },
+    {
+      "id": "C1_1-quickcheck",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'quickcheck'?",
+      "gold_cypher": "MATCH (s:Software {name: 'quickcheck'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'quickcheck'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 1.97
+    },
+    {
+      "id": "C1_1-env_logger",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'env_logger'?",
+      "gold_cypher": "MATCH (s:Software {name: 'env_logger'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'env_logger'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 1.94
+    },
+    {
+      "id": "C1_1-rand",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'rand'?",
+      "gold_cypher": "MATCH (s:Software {name: 'rand'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'rand'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 1.97
+    },
+    {
+      "id": "C1_1-itertools",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'itertools'?",
+      "gold_cypher": "MATCH (s:Software {name: 'itertools'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'itertools'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.11
+    },
+    {
+      "id": "C1_1-toml",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'toml'?",
+      "gold_cypher": "MATCH (s:Software {name: 'toml'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'toml'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C1_1-base64",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'base64'?",
+      "gold_cypher": "MATCH (s:Software {name: 'base64'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'base64'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 1.99
+    },
+    {
+      "id": "C1_1-syn",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'syn'?",
+      "gold_cypher": "MATCH (s:Software {name: 'syn'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'syn'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_1-criterion",
+      "template_id": "C1.1",
+      "query_type": "SR",
+      "difficulty": "Easy",
+      "question": "What are the available versions for software 'criterion'?",
+      "gold_cypher": "MATCH (s:Software {name: 'criterion'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+      "generated_cypher": "MATCH (s:Software {name: 'criterion'})-[:HAS_VERSION]->(v:SoftwareVersion)\nRETURN v.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C1_2-django-4_2_11",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'django' version '4.2.11' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 1.97
+    },
+    {
+      "id": "C1_2-aiohttp-3_8_0",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'aiohttp' version '3.8.0' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 1.98
+    },
+    {
+      "id": "C1_2-urllib3-1_18_0",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'urllib3' version '1.18.0' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_2-yasm-1_3_0",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'yasm' version '1.3.0' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.3.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.11
+    },
+    {
+      "id": "C1_2-lock_api-0_3_4",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'lock_api' version '0.3.4' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'lock_api'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.3.4'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'lock_api'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.3.4'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C1_2-flask-2_3_3",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'flask' version '2.3.3' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.2
+    },
+    {
+      "id": "C1_2-pandas-2_0_0",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'pandas' version '2.0.0' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C1_2-click-0_6_1",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'click' version '0.6.1' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) > 0 AS has_vulnerabilities",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C1_2-reqwest-0_11_23",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'reqwest' version '0.11.23' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.11.23'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.11.23'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_2-tokio-1_44_2",
+      "template_id": "C1.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'tokio' version '1.44.2' have any known vulnerabilities?",
+      "gold_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.44.2'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) > 0 AS has_vuln",
+      "generated_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.44.2'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId AS VulnerabilityID",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C1_3-requests-2_31_0",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'requests' version '2.31.0' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_3-openssl-0_9_6c_2_woody_7",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'openssl' version '0.9.6c-2.woody.7' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C1_3-ffmpeg-4_2_1",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'ffmpeg' version '4.2.1' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.0
+    },
+    {
+      "id": "C1_3-js_lodash-4_17_4",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'js-lodash' version '4.17.4' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.4'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.4'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_3-perl-5_10_1_17squeeze6",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'perl' version '5.10.1-17squeeze6' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.10.1-17squeeze6'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.10.1-17squeeze6'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C1_3-hyper-0_14_32",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'hyper' version '0.14.32' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'hyper'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.14.32'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'hyper'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.14.32'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C1_3-cryptography-2_2_0",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'cryptography' version '2.2.0' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nRETURN COUNT(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.97
+    },
+    {
+      "id": "C1_3-requests-1_0_0",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'requests' version '1.0.0' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.0.0'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.0.0'})\nRETURN COUNT(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C1_3-lodash-4_17_21",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'lodash' version '4.17.21' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.21'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.21'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.19
+    },
+    {
+      "id": "C1_3-torch-2_0_0",
+      "template_id": "C1.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'torch' version '2.0.0' exist in the graph?",
+      "gold_cypher": "MATCH (s:Software {name: 'torch'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'}) RETURN count(v) > 0 AS exists",
+      "generated_cypher": "MATCH (s:Software {name: 'torch'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nRETURN count(v) > 0 AS exists",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.99
+    },
+    {
+      "id": "C2_1-django-4_2_11",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name, dep.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C2_1-flask-2_3_3",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'flask' version '2.3.3'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.18
+    },
+    {
+      "id": "C2_1-aiohttp-3_8_0",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name, dep.versionName AS version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.25
+    },
+    {
+      "id": "C2_1-cryptography-2_2_0",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C2_1-pandas-2_0_0",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.21
+    },
+    {
+      "id": "C2_1-openssl-0_9_6c_2_woody_7",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'openssl' version '0.9.6c-2.woody.7'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name, dep.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C2_1-ffmpeg-4_2_1",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.09
+    },
+    {
+      "id": "C2_1-urllib3-1_18_0",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C2_1-js_lodash-4_17_4",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'js-lodash' version '4.17.4'?",
+      "gold_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.17.4'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.4'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN ds.name AS dependency_name, dep.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.18
+    },
+    {
+      "id": "C2_1-reqwest-0_11_23",
+      "template_id": "C2.1",
+      "query_type": "CR",
+      "difficulty": "Easy",
+      "question": "What are the direct dependencies of software 'reqwest' version '0.11.23'?",
+      "gold_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.11.23'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.11.23'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name, dep.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C2_2-flask-2_3_3-click",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'flask' version '2.3.3' directly depend on software 'click'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'click'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nWHERE ds.name = 'click'\nRETURN count(*) > 0 AS directs_depends",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C2_2-aiohttp-3_8_0-yarl",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'aiohttp' version '3.8.0' directly depend on software 'yarl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'yarl'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nWHERE ds.name = 'yarl'\nRETURN count(ds) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.2
+    },
+    {
+      "id": "C2_2-pandas-2_0_0-numpy",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'pandas' version '2.0.0' directly depend on software 'numpy'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'numpy'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nWHERE ds.name = 'numpy'\nRETURN count(*) > 0 AS directly_depends",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.07
+    },
+    {
+      "id": "C2_2-ffmpeg-4_2_1-openssl",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'ffmpeg' version '4.2.1' directly depend on software 'openssl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'openssl'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software {name: 'openssl'})-[:HAS_VERSION]->(dep)\nRETURN count(*) > 0 AS depends_directly",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.15
+    },
+    {
+      "id": "C2_2-openssl-0_9_6c_2_woody_7-perl",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'openssl' version '0.9.6c-2.woody.7' directly depend on software 'perl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'perl'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (s2:Software {name: 'perl'})-[:HAS_VERSION]->(v2:SoftwareVersion)\nMATCH (v1)-[:DEPENDS_ON]->(v2)\nRETURN count(*) > 0 AS depends_directly",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.16
+    },
+    {
+      "id": "C2_2-flask-2_3_3-markupsafe",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'flask' version '2.3.3' directly depend on software 'markupsafe'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'markupsafe'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v1)-[:DEPENDS_ON]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'markupsafe'})\nRETURN count(v2) > 0 AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.23
+    },
+    {
+      "id": "C2_2-aiohttp-3_8_0-idna",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'aiohttp' version '3.8.0' directly depend on software 'idna'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'idna'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software {name: 'idna'})-[:HAS_VERSION]->(dep)\nRETURN count(*) > 0 AS direct_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C2_2-django-4_2_11-typing_extensions",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'django' version '4.2.11' directly depend on software 'typing-extensions'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'typing-extensions'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nWHERE ds.name = 'typing-extensions'\nRETURN count(dep) > 0 AS depends_directly",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C2_2-cryptography-2_2_0-pycparser",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'cryptography' version '2.2.0' directly depend on software 'pycparser'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'pycparser'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'pycparser'})\nRETURN count(dep) > 0 AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C2_2-requests-2_31_0-six",
+      "template_id": "C2.2",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "Does software 'requests' version '2.31.0' directly depend on software 'six'?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'six'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nMATCH (ds:Software {name: 'six'})-[:HAS_VERSION]->(dep)\nRETURN count(dep) > 0 AS directly_depends",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.15
+    },
+    {
+      "id": "C2_3-django-4_2_11",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C2_3-aiohttp-3_8_0",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C2_3-urllib3-1_18_0",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C2_3-openssl-0_9_6c_2_woody_7",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'openssl' version '0.9.6c-2.woody.7'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C2_3-ffmpeg-4_2_1",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 1.91
+    },
+    {
+      "id": "C2_3-cryptography-2_2_0",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.07
+    },
+    {
+      "id": "C2_3-yasm-1_3_0",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'yasm' version '1.3.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.3.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'})\nMATCH (v)-[:VULNERABLE_TO]->(vuln:Vulnerability)\nRETURN vuln.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C2_3-perl-5_10_1_17squeeze6",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'perl' version '5.10.1-17squeeze6'?",
+      "gold_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '5.10.1-17squeeze6'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.10.1-17squeeze6'})-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.0
+    },
+    {
+      "id": "C2_3-flask-2_3_3",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'flask' version '2.3.3'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(sv:SoftwareVersion {versionName: '2.3.3'})\nMATCH (sv)-[:VULNERABLE_TO]->(v:Vulnerability)\nRETURN v.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.08
+    },
+    {
+      "id": "C2_3-pandas-2_0_0",
+      "template_id": "C2.3",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are the CVE IDs of known vulnerabilities affecting software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN DISTINCT c.cveId AS cveId ORDER BY cveId",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN c.cveId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.0
+    },
+    {
+      "id": "C2_4-django-4_2_11",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C2_4-aiohttp-3_8_0",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C2_4-urllib3-1_18_0",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C2_4-openssl-0_9_6c_2_woody_7",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'openssl' version '0.9.6c-2.woody.7'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C2_4-ffmpeg-4_2_1",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C2_4-cryptography-2_2_0",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C2_4-requests-2_31_0",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'requests' version '2.31.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nMATCH (c)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C2_4-yasm-1_3_0",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'yasm' version '1.3.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.3.0'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C2_4-click-0_6_1",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'click' version '0.6.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C2_4-flask-2_3_3",
+      "template_id": "C2.4",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What CWE IDs are associated with vulnerabilities of software 'flask' version '2.3.3'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN DISTINCT w.cweId AS cweId ORDER BY cweId",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN DISTINCT w.cweId",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.07
+    },
+    {
+      "id": "C3_1-flask-2_3_3",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'flask' version '2.3.3'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_1-aiohttp-3_8_0",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON*1..]->(transitiveDepVersion:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(transitiveDepVersion)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_1-cryptography-2_2_0",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name, dep.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C3_1-pandas-2_0_0",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON*]->(transitiveDep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(transitiveDep)\nRETURN DISTINCT ds.name AS dependency_name, transitiveDep.versionName AS version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_1-django-4_2_11",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})-[:DEPENDS_ON*1..6]->(transitiveDep:SoftwareVersion)\nMATCH (depSoftware:Software)-[:HAS_VERSION]->(transitiveDep)\nRETURN DISTINCT depSoftware.name AS transitive_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_1-ffmpeg-4_2_1",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name, dep.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C3_1-openssl-0_9_6c_2_woody_7",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'openssl' version '0.9.6c-2.woody.7'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:DEPENDS_ON*]->(transitiveDep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(transitiveDep)\nRETURN DISTINCT ds.name, transitiveDep.versionName",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C3_1-urllib3-1_18_0",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'})\nMATCH (root)-[:DEPENDS_ON*]->(depVersion:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(depVersion)\nRETURN DISTINCT ds.name AS dependency_name, depVersion.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C3_1-tokio-0_1_22",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'tokio' version '0.1.22'?",
+      "gold_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.1.22'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.22'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C3_1-click-0_6_1",
+      "template_id": "C3.1",
+      "query_type": "CR",
+      "difficulty": "Medium",
+      "question": "What are all transitive dependencies of software 'click' version '0.6.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) RETURN DISTINCT ds.name AS software, dep.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (v)-[:DEPENDS_ON*1..]->(dep:SoftwareVersion)\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS dependency_name, dep.versionName AS dependency_version",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C3_2-flask-2_3_3-markupsafe",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'flask' version '2.3.3' depend on software 'markupsafe' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'markupsafe'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.3.3'})\nMATCH (s2:Software {name: 'markupsafe'})-[:HAS_VERSION]->(v2:SoftwareVersion)\nMATCH (v1)-[:DEPENDS_ON*1..6]->(v2)\nRETURN count(v2) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.24
+    },
+    {
+      "id": "C3_2-django-4_2_11-typing_extensions",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'django' version '4.2.11' depend on software 'typing-extensions' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'typing-extensions'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (root:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (depSoftware:Software {name: 'typing-extensions'})-[:HAS_VERSION]->(depVersion:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(depVersion)\nRETURN count(*) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C3_2-aiohttp-3_8_0-propcache",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'aiohttp' version '3.8.0' depend on software 'propcache' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'propcache'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (depSoftware:Software {name: 'propcache'})-[:HAS_VERSION]->(depVersion:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..]->(depVersion)\nRETURN count(depVersion) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_2-cryptography-2_2_0-pycparser",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'cryptography' version '2.2.0' depend on software 'pycparser' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'pycparser'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (ds:Software {name: 'pycparser'})-[:HAS_VERSION]->(dv:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(dv)\nRETURN count(*) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.22
+    },
+    {
+      "id": "C3_2-ffmpeg-4_2_1-ninja",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'ffmpeg' version '4.2.1' depend on software 'ninja' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'ninja'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s1:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '4.2.1'})\nMATCH (s2:Software {name: 'ninja'})-[:HAS_VERSION]->(v2:SoftwareVersion)\nMATCH (v1)-[:DEPENDS_ON*1..]->(v2)\nRETURN count(*) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C3_2-click-0_6_1-adler",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'click' version '0.6.1' depend on software 'adler' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'adler'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (depSoftware:Software {name: 'adler'})-[:HAS_VERSION]->(depVersion:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(depVersion)\nRETURN count(*) > 0 AS dependsOn",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.45
+    },
+    {
+      "id": "C3_2-pandas-2_0_0-numpy",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'pandas' version '2.0.0' depend on software 'numpy' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'numpy'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (root:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (dep:Software {name: 'numpy'})-[:HAS_VERSION]->(dv:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(dv)\nRETURN count(dv) > 0 AS dependsOnNumpy",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C3_2-requests-2_31_0-six",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'requests' version '2.31.0' depend on software 'six' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'six'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (root:Software {name: 'requests'})-[:HAS_VERSION]->(rv:SoftwareVersion {versionName: '2.31.0'})\nMATCH (dep:Software {name: 'six'})-[:HAS_VERSION]->(dv:SoftwareVersion)\nMATCH (rv)-[:DEPENDS_ON*1..6]->(dv)\nRETURN count(*) > 0 AS depends_on_six",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.39
+    },
+    {
+      "id": "C3_2-urllib3-1_18_0-idna",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'urllib3' version '1.18.0' depend on software 'idna' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'idna'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (depSoftware:Software {name: 'idna'})-[:HAS_VERSION]->(depVersion:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(depVersion)\nRETURN count(depVersion) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.38
+    },
+    {
+      "id": "C3_2-openssl-0_9_6c_2_woody_7-libpng",
+      "template_id": "C3.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Does software 'openssl' version '0.9.6c-2.woody.7' depend on software 'libpng' at any depth?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {name: 'libpng'}) RETURN count(dep) > 0 AS depends",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (target:Software {name: 'libpng'})-[:HAS_VERSION]->(dv:SoftwareVersion)\nMATCH (v)-[:DEPENDS_ON*1..6]->(dv)\nRETURN count(*) > 0 AS depends_on",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.16
+    },
+    {
+      "id": "C3_3-pandas-2_0_0-numpy",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'pandas' version '2.0.0' to software 'numpy'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) MATCH (ds:Software {name: 'numpy'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'pandas'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.0.0'})-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'numpy'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.22
+    },
+    {
+      "id": "C3_3-openssl-0_9_6c_2_woody_7-perl",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'openssl' version '0.9.6c-2.woody.7' to software 'perl'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (ds:Software {name: 'perl'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'perl'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_3-flask-2_3_3-markupsafe",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'flask' version '2.3.3' to software 'markupsafe'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (ds:Software {name: 'markupsafe'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH (startS:Software {name: 'flask'}), (startV:SoftwareVersion {versionName: '2.3.3'})\nMATCH (startS)-[:HAS_VERSION]->(startV)\nMATCH (endS:Software {name: 'markupsafe'})\nMATCH (endS)-[:HAS_VERSION]->(endV)\nMATCH path = (startV)-[:DEPENDS_ON*1..6]->(endV)\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C3_3-django-4_2_11-typing_extensions",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'django' version '4.2.11' to software 'typing-extensions'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) MATCH (ds:Software {name: 'typing-extensions'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'django'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '4.2.11'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'typing-extensions'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C3_3-aiohttp-3_8_0-propcache",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'aiohttp' version '3.8.0' to software 'propcache'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) MATCH (ds:Software {name: 'propcache'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '3.8.0'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'propcache'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C3_3-cryptography-2_2_0-pycparser",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'cryptography' version '2.2.0' to software 'pycparser'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) MATCH (ds:Software {name: 'pycparser'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'cryptography'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.2.0'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'pycparser'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C3_3-ffmpeg-4_2_1-ninja",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'ffmpeg' version '4.2.1' to software 'ninja'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) MATCH (ds:Software {name: 'ninja'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '4.2.1'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'ninja'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C3_3-click-0_6_1-aes",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'click' version '0.6.1' to software 'aes'?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) MATCH (ds:Software {name: 'aes'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'click'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.6.1'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'aes'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.37
+    },
+    {
+      "id": "C3_3-click-0_6_1-adler",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'click' version '0.6.1' to software 'adler'?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) MATCH (ds:Software {name: 'adler'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH (s1:Software {name: 'click'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.6.1'})\nMATCH (s2:Software {name: 'adler'})-[:HAS_VERSION]->(v2:SoftwareVersion)\nMATCH path = (v1)-[:DEPENDS_ON*1..6]->(v2)\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.42
+    },
+    {
+      "id": "C3_3-flask-2_3_3-numpy",
+      "template_id": "C3.3",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What dependency path exists from software 'flask' version '2.3.3' to software 'numpy'?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) MATCH (ds:Software {name: 'numpy'})-[:HAS_VERSION]->(target:SoftwareVersion) MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(target)) RETURN [n IN nodes(p) | n.versionName] AS path",
+      "generated_cypher": "MATCH path = (s1:Software {name: 'flask'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.3.3'})-[:DEPENDS_ON*1..6]->(v2:SoftwareVersion)<-[:HAS_VERSION]-(s2:Software {name: 'numpy'})\nRETURN path",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.1
+    },
+    {
+      "id": "C4_1-django-4_2_11",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'django' version '4.2.11' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.95
+    },
+    {
+      "id": "C4_1-flask-2_3_3",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'flask' version '2.3.3' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.18
+    },
+    {
+      "id": "C4_1-aiohttp-3_8_0",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'aiohttp' version '3.8.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.44
+    },
+    {
+      "id": "C4_1-cryptography-2_2_0",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'cryptography' version '2.2.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C4_1-pandas-2_0_0",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'pandas' version '2.0.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C4_1-openssl-0_9_6c_2_woody_7",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'openssl' version '0.9.6c-2.woody.7' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C4_1-ffmpeg-4_2_1",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'ffmpeg' version '4.2.1' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C4_1-urllib3-1_18_0",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'urllib3' version '1.18.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.96
+    },
+    {
+      "id": "C4_1-reqwest-0_11_23",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'reqwest' version '0.11.23' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.11.23'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'reqwest'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.11.23'})-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.99
+    },
+    {
+      "id": "C4_1-hyper-0_14_32",
+      "template_id": "C4.1",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many direct dependencies does software 'hyper' version '0.14.32' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'hyper'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.14.32'}) OPTIONAL MATCH (root)-[:DEPENDS_ON]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'hyper'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.14.32'})-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN count(dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.05
+    },
+    {
+      "id": "C4_2-flask-2_3_3",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'flask' version '2.3.3' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:DEPENDS_ON*]->(dependency:SoftwareVersion)\nRETURN count(DISTINCT dependency)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C4_2-aiohttp-3_8_0",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'aiohttp' version '3.8.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:DEPENDS_ON*]->(transitive_dep:SoftwareVersion)\nRETURN count(DISTINCT transitive_dep) AS total_transitive_dependencies",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.14
+    },
+    {
+      "id": "C4_2-django-4_2_11",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'django' version '4.2.11' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:DEPENDS_ON*1..]->(dep:SoftwareVersion)\nRETURN COUNT(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C4_2-cryptography-2_2_0",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'cryptography' version '2.2.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:DEPENDS_ON*1..]->(transitiveDep:SoftwareVersion)\nRETURN count(DISTINCT transitiveDep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.97
+    },
+    {
+      "id": "C4_2-pandas-2_0_0",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'pandas' version '2.0.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nRETURN count(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.0
+    },
+    {
+      "id": "C4_2-ffmpeg-4_2_1",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'ffmpeg' version '4.2.1' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nRETURN COUNT(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.1
+    },
+    {
+      "id": "C4_2-openssl-0_9_6c_2_woody_7",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'openssl' version '0.9.6c-2.woody.7' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (root)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nRETURN count(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.23
+    },
+    {
+      "id": "C4_2-urllib3-1_18_0",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'urllib3' version '1.18.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'})\nMATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion)\nRETURN count(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.01
+    },
+    {
+      "id": "C4_2-tokio-1_44_2",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'tokio' version '1.44.2' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.44.2'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'tokio'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.44.2'})\nMATCH (root)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nRETURN count(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.03
+    },
+    {
+      "id": "C4_2-click-0_6_1",
+      "template_id": "C4.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "How many total transitive dependencies does software 'click' version '0.6.1' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) OPTIONAL MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) RETURN count(DISTINCT dep) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (v)-[:DEPENDS_ON*]->(dep:SoftwareVersion)\nRETURN count(DISTINCT dep)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.04
+    },
+    {
+      "id": "C4_3-django-4_2_11",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'django' version '4.2.11' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.02
+    },
+    {
+      "id": "C4_3-aiohttp-3_8_0",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'aiohttp' version '3.8.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.09
+    },
+    {
+      "id": "C4_3-urllib3-1_18_0",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'urllib3' version '1.18.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C4_3-openssl-0_9_6c_2_woody_7",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'openssl' version '0.9.6c-2.woody.7' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerabilityCount",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.99
+    },
+    {
+      "id": "C4_3-ffmpeg-4_2_1",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'ffmpeg' version '4.2.1' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 1.93
+    },
+    {
+      "id": "C4_3-cryptography-2_2_0",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'cryptography' version '2.2.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.11
+    },
+    {
+      "id": "C4_3-yasm-1_3_0",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'yasm' version '1.3.0' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.3.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.06
+    },
+    {
+      "id": "C4_3-perl-5_10_1_17squeeze6",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'perl' version '5.10.1-17squeeze6' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '5.10.1-17squeeze6'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.10.1-17squeeze6'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.24
+    },
+    {
+      "id": "C4_3-flask-2_3_3",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'flask' version '2.3.3' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.07
+    },
+    {
+      "id": "C4_3-click-0_6_1",
+      "template_id": "C4.3",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many vulnerabilities (CVEs) does software 'click' version '0.6.1' have?",
+      "gold_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.6.1'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) RETURN count(c) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'click'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.6.1'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN count(c) AS vulnerability_count",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.08
+    },
+    {
+      "id": "C4_4-django-4_2_11",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'})\nMATCH (v)-[:VULNERABLE_TO]->(vuln:Vulnerability)-[:VULNERABILITY_TYPE]->(cwe:VulnerabilityType)\nRETURN count(DISTINCT cwe.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.1
+    },
+    {
+      "id": "C4_4-aiohttp-3_8_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN count(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.08
+    },
+    {
+      "id": "C4_4-urllib3-1_18_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)\nMATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN COUNT(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.16
+    },
+    {
+      "id": "C4_4-openssl-0_9_6c_2_woody_7",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'openssl' version '0.9.6c-2.woody.7'?",
+      "gold_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN count(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C4_4-ffmpeg-4_2_1",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)\nMATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN COUNT(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.12
+    },
+    {
+      "id": "C4_4-cryptography-2_2_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'cryptography'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)\nMATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN count(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C4_4-requests-2_31_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'requests' version '2.31.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'requests'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.31.0'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(all_versions)\nMATCH (all_versions)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN COUNT(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.15
+    },
+    {
+      "id": "C4_4-yasm-1_3_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'yasm' version '1.3.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '1.3.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'})\nMATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN count(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C4_4-pandas-2_0_0",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)\nMATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN COUNT(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.13
+    },
+    {
+      "id": "C4_4-js_lodash-4_17_4",
+      "template_id": "C4.4",
+      "query_type": "SA",
+      "difficulty": "Easy",
+      "question": "How many distinct CWE types affect software 'js-lodash' version '4.17.4'?",
+      "gold_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(root:SoftwareVersion {versionName: '4.17.4'}) OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) RETURN count(DISTINCT w) AS cnt",
+      "generated_cypher": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.4'})\nMATCH (v)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)\nMATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType)\nRETURN COUNT(DISTINCT w.cweId)",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": true,
+        "f1": 1.0
+      },
+      "score": 1.0,
+      "latency_s": 2.23
+    },
+    {
+      "id": "C5_1-reqwest-0_11_23-trust_dns_proto-0_23_2",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'reqwest' version '0.11.23' and software 'trust-dns-proto' version '0.23.2'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'reqwest'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.11.23'}) MATCH (s2:Software {name: 'trust-dns-proto'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.23.2'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'reqwest'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.11.23'})-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software)\nMATCH (s2:Software {name: 'trust-dns-proto'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '0.23.2'})-[:DEPENDS_ON]->(d)\nRETURN DISTINCT ds.name AS common_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C5_1-tokio-0_1_22-tokio_core-0_1_18",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'tokio' version '0.1.22' and software 'tokio-core' version '0.1.18'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'tokio'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.1.22'}) MATCH (s2:Software {name: 'tokio-core'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.1.18'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'tokio'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.1.22'})-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '0.1.18'})<-[:HAS_VERSION]-(s2:Software {name: 'tokio-core'})\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name AS common_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.41
+    },
+    {
+      "id": "C5_1-hyper-0_14_32-reqwest-0_11_23",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'hyper' version '0.14.32' and software 'reqwest' version '0.11.23'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'hyper'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.14.32'}) MATCH (s2:Software {name: 'reqwest'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.11.23'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'hyper'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.14.32'})-[:DEPENDS_ON]->(dep1:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software),\n      (s2:Software {name: 'reqwest'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '0.11.23'})-[:DEPENDS_ON]->(dep2:SoftwareVersion)<-[:HAS_VERSION]-(ds)\nRETURN ds.name AS common_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.35
+    },
+    {
+      "id": "C5_1-async_io-1_13_0-smol-1_3_0",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'async-io' version '1.13.0' and software 'smol' version '1.3.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'async-io'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '1.13.0'}) MATCH (s2:Software {name: 'smol'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '1.3.0'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'async-io'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '1.13.0'})-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '1.3.0'})<-[:HAS_VERSION]-(s2:Software {name: 'smol'})\nMATCH (dep)-[:HAS_VERSION]-(shared:Software)\nRETURN DISTINCT shared.name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.15
+    },
+    {
+      "id": "C5_1-h2-0_3_26-hyper-0_14_32",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'h2' version '0.3.26' and software 'hyper' version '0.14.32'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'h2'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.3.26'}) MATCH (s2:Software {name: 'hyper'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.14.32'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'h2'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.3.26'})-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '0.14.32'})<-[:HAS_VERSION]-(s2:Software {name: 'hyper'})\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.19
+    },
+    {
+      "id": "C5_1-requests-2_31_0-cryptography-2_2_0",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'requests' version '2.31.0' and software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) MATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.2.0'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.31.0'})-[:DEPENDS_ON]->(d1:SoftwareVersion)<-[:HAS_VERSION]-(shared:Software),\n      (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '2.2.0'})-[:DEPENDS_ON]->(d2:SoftwareVersion)<-[:HAS_VERSION]-(shared)\nRETURN DISTINCT shared.name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "exact_match": false
+      },
+      "score": 0.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C5_1-flask-2_3_3-django-4_2_11",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'flask' version '2.3.3' and software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.3.3'}) MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.3.3'})-[:DEPENDS_ON]->(dep:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '4.2.11'})<-[:HAS_VERSION]-(s2:Software {name: 'django'})\nMATCH (ds:Software)-[:HAS_VERSION]->(dep)\nRETURN DISTINCT ds.name",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.21
+    },
+    {
+      "id": "C5_1-aiohttp-3_8_0-pandas-2_0_0",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'aiohttp' version '3.8.0' and software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'aiohttp'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '3.8.0'}) MATCH (s2:Software {name: 'pandas'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.0.0'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '3.8.0'})-[:DEPENDS_ON]->(shared:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '2.0.0'})<-[:HAS_VERSION]-(s2:Software {name: 'pandas'})\nMATCH (sharedParent:Software)-[:HAS_VERSION]->(shared)\nRETURN DISTINCT sharedParent.name AS CommonDirectDependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.3
+    },
+    {
+      "id": "C5_1-openssl-0_9_6c_2_woody_7-ffmpeg-4_2_1",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'openssl' version '0.9.6c-2.woody.7' and software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) MATCH (s2:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.1'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})-[:DEPENDS_ON]->(commonDep:SoftwareVersion)<-[:DEPENDS_ON]-(v2:SoftwareVersion {versionName: '4.2.1'})<-[:HAS_VERSION]-(s2:Software {name: 'ffmpeg'})\nMATCH (ds:Software)-[:HAS_VERSION]->(commonDep)\nRETURN DISTINCT ds.name AS common_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.24
+    },
+    {
+      "id": "C5_1-urllib3-1_18_0-js_lodash-4_17_4",
+      "template_id": "C5.1",
+      "query_type": "CR",
+      "difficulty": "Hard",
+      "question": "What common direct dependencies are shared by software 'urllib3' version '1.18.0' and software 'js-lodash' version '4.17.4'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'urllib3'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '1.18.0'}) MATCH (s2:Software {name: 'js-lodash'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.17.4'}) MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version",
+      "generated_cypher": "MATCH (s1:Software {name: 'urllib3'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '1.18.0'})-[:DEPENDS_ON]->(d1:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software)\nMATCH (s2:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '4.17.4'})-[:DEPENDS_ON]->(d2:SoftwareVersion)<-[:HAS_VERSION]-(ds)\nRETURN ds.name AS common_dependency",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "exact_match": true
+      },
+      "score": 1.0,
+      "latency_s": 2.3
+    },
+    {
+      "id": "C5_2-flask-2_3_3-aiohttp-3_8_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'flask' version '2.3.3' or software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'aiohttp'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'flask' AND v.versionName = '2.3.3') OR (s.name = 'aiohttp' AND v.versionName = '3.8.0')\nOPTIONAL MATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nRETURN s.name AS software, count(dep) AS direct_dependency_count\nORDER BY direct_dependency_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.38
+    },
+    {
+      "id": "C5_2-django-4_2_11-cryptography-2_2_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'django' version '4.2.11' or software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'django'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '4.2.11'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS django_deps\nMATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '2.2.0'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nRETURN \n  CASE \n    WHEN django_deps > count(d2) THEN 'django 4.2.11'\n    WHEN count(d2) > django_deps THEN 'cryptography 2.2.0'\n    ELSE 'equal'\n  END AS result",
+      "agent_error": null,
+      "executed_successfully": false,
+      "error_message": "{code: Neo.ClientError.Statement.SyntaxError} {message: Aggregation column contains implicit grouping expressions. For example, in 'RETURN n.a, n.a + n.b + count(*)' the aggregation expression 'n.a + n.b + count(*)' includes the implicit grouping key 'n.b'. It may be possible to rewrite the query by extracting these grouping/aggregation expressions into a preceding WITH clause. Illegal expression(s): django_deps (line 8, column 10 (offset: 367))\n\"    WHEN django_deps > count(d2) THEN 'django 4.2.11'\"\n          ^}",
+      "metrics": {
+        "f1": 0.0,
+        "exact_match": false,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.43
+    },
+    {
+      "id": "C5_2-openssl-0_9_6c_2_woody_7-ffmpeg-4_2_1",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'openssl' version '0.9.6c-2.woody.7' or software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS openssl_deps\nMATCH (s2:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '4.2.1'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nWITH openssl_deps, count(d2) AS ffmpeg_deps\nRETURN CASE \n    WHEN openssl_deps > ffmpeg_deps THEN 'openssl'\n    WHEN ffmpeg_deps > openssl_deps THEN 'ffmpeg'\n    ELSE 'equal' \nEND AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.39
+    },
+    {
+      "id": "C5_2-urllib3-1_18_0-pandas-2_0_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'urllib3' version '1.18.0' or software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'urllib3'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'pandas'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.18.0'})\nOPTIONAL MATCH (v)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS urllib3_deps\nMATCH (s2:Software {name: 'pandas'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '2.0.0'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nRETURN CASE \n    WHEN urllib3_deps > count(d2) THEN 'urllib3'\n    WHEN count(d2) > urllib3_deps THEN 'pandas'\n    ELSE 'equal'\nEND AS result",
+      "agent_error": null,
+      "executed_successfully": false,
+      "error_message": "{code: Neo.ClientError.Statement.SyntaxError} {message: Aggregation column contains implicit grouping expressions. For example, in 'RETURN n.a, n.a + n.b + count(*)' the aggregation expression 'n.a + n.b + count(*)' includes the implicit grouping key 'n.b'. It may be possible to rewrite the query by extracting these grouping/aggregation expressions into a preceding WITH clause. Illegal expression(s): urllib3_deps (line 7, column 10 (offset: 358))\n\"    WHEN urllib3_deps > count(d2) THEN 'urllib3'\"\n          ^}",
+      "metrics": {
+        "f1": 0.0,
+        "exact_match": false,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.3
+    },
+    {
+      "id": "C5_2-reqwest-0_11_23-hyper-0_14_32",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'reqwest' version '0.11.23' or software 'hyper' version '0.14.32'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'reqwest'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.11.23'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'hyper'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.14.32'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s1:Software {name: 'reqwest'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.11.23'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS reqwestDeps\nMATCH (s2:Software {name: 'hyper'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '0.14.32'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nRETURN CASE \n    WHEN reqwestDeps > count(d2) THEN 'reqwest'\n    WHEN count(d2) > reqwestDeps THEN 'hyper'\n    ELSE 'equal'\nEND AS more_dependencies",
+      "agent_error": null,
+      "executed_successfully": false,
+      "error_message": "{code: Neo.ClientError.Statement.SyntaxError} {message: Aggregation column contains implicit grouping expressions. For example, in 'RETURN n.a, n.a + n.b + count(*)' the aggregation expression 'n.a + n.b + count(*)' includes the implicit grouping key 'n.b'. It may be possible to rewrite the query by extracting these grouping/aggregation expressions into a preceding WITH clause. Illegal expression(s): reqwestDeps (line 7, column 10 (offset: 362))\n\"    WHEN reqwestDeps > count(d2) THEN 'reqwest'\"\n          ^}",
+      "metrics": {
+        "f1": 0.0,
+        "exact_match": false,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.28
+    },
+    {
+      "id": "C5_2-click-0_6_1-ffmpeg-4_2_1",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'click' version '0.6.1' or software 'ffmpeg' version '4.2.1'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'click'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.6.1'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s1:Software {name: 'click'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.6.1'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS click_deps\n\nMATCH (s2:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '4.2.1'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nWITH click_deps, count(d2) AS ffmpeg_deps\n\nRETURN CASE \n    WHEN click_deps > ffmpeg_deps THEN 'click'\n    WHEN ffmpeg_deps > click_deps THEN 'ffmpeg'\n    ELSE 'equal'\nEND AS more_dependencies",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.29
+    },
+    {
+      "id": "C5_2-aiohttp-3_8_0-cryptography-2_2_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'aiohttp' version '3.8.0' or software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'aiohttp'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s1:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '3.8.0'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(DISTINCT d1) AS count1\n\nMATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '2.2.0'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nWITH count1, count(DISTINCT d2) AS count2\n\nRETURN CASE \n    WHEN count1 > count2 THEN 'aiohttp' \n    WHEN count2 > count1 THEN 'cryptography' \n    ELSE 'equal' \nEND AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.35
+    },
+    {
+      "id": "C5_2-flask-2_3_3-pandas-2_0_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'flask' version '2.3.3' or software 'pandas' version '2.0.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'pandas'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'flask' AND v.versionName = '2.3.3') \n   OR (s.name = 'pandas' AND v.versionName = '2.0.0')\nOPTIONAL MATCH (v)-[:DEPENDS_ON]->(dep:SoftwareVersion)\nWITH s.name AS software, count(dep) AS dependencyCount\nRETURN software\nORDER BY dependencyCount DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.22
+    },
+    {
+      "id": "C5_2-django-4_2_11-urllib3-1_18_0",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'django' version '4.2.11' or software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'django'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'urllib3'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '4.2.11'})\nOPTIONAL MATCH (v1)-[:DEPENDS_ON]->(d1:SoftwareVersion)\nWITH count(d1) AS django_deps\nMATCH (s2:Software {name: 'urllib3'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '1.18.0'})\nOPTIONAL MATCH (v2)-[:DEPENDS_ON]->(d2:SoftwareVersion)\nWITH django_deps, count(d2) AS urllib3_deps\nRETURN CASE \n    WHEN django_deps > urllib3_deps THEN 'django'\n    WHEN urllib3_deps > django_deps THEN 'urllib3'\n    ELSE 'equal'\nEND AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.44
+    },
+    {
+      "id": "C5_2-requests-2_31_0-flask-2_3_3",
+      "template_id": "C5.2",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more direct dependencies: software 'requests' version '2.31.0' or software 'flask' version '2.3.3'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) WITH count(DISTINCT d1) AS c1 MATCH (s2:Software {name: 'flask'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'requests' AND v.versionName = '2.31.0') \n   OR (s.name = 'flask' AND v.versionName = '2.3.3')\nOPTIONAL MATCH (v)-[:DEPENDS_ON]->(d:SoftwareVersion)\nWITH s.name AS name, count(d) AS direct_dependencies\nRETURN name, direct_dependencies\nORDER BY direct_dependencies DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.17
+    },
+    {
+      "id": "C5_3-django-4_2_11-aiohttp-3_8_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'django' version '4.2.11' or software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'django'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'aiohttp'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'django' AND v.versionName = '4.2.11') \n   OR (s.name = 'aiohttp' AND v.versionName = '3.8.0')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, COUNT(c) AS cve_count\nORDER BY cve_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.18
+    },
+    {
+      "id": "C5_3-openssl-0_9_6c_2_woody_7-yasm-1_3_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'openssl' version '0.9.6c-2.woody.7' or software 'yasm' version '1.3.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'yasm'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '1.3.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nOPTIONAL MATCH (v1)-[:VULNERABLE_TO]->(cve1:Vulnerability)\nWITH count(cve1) AS countOpenSSL\nMATCH (s2:Software {name: 'yasm'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '1.3.0'})\nOPTIONAL MATCH (v2)-[:VULNERABLE_TO]->(cve2:Vulnerability)\nRETURN CASE \n    WHEN countOpenSSL > count(cve2) THEN 'openssl 0.9.6c-2.woody.7'\n    WHEN count(cve2) > countOpenSSL THEN 'yasm 1.3.0'\n    ELSE 'equal'\nEND AS more_vulnerabilities",
+      "agent_error": null,
+      "executed_successfully": false,
+      "error_message": "{code: Neo.ClientError.Statement.SyntaxError} {message: Aggregation column contains implicit grouping expressions. For example, in 'RETURN n.a, n.a + n.b + count(*)' the aggregation expression 'n.a + n.b + count(*)' includes the implicit grouping key 'n.b'. It may be possible to rewrite the query by extracting these grouping/aggregation expressions into a preceding WITH clause. Illegal expression(s): countOpenSSL (line 7, column 10 (offset: 376))\n\"    WHEN countOpenSSL > count(cve2) THEN 'openssl 0.9.6c-2.woody.7'\"\n          ^}",
+      "metrics": {
+        "f1": 0.0,
+        "exact_match": false,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.42
+    },
+    {
+      "id": "C5_3-urllib3-1_18_0-cryptography-2_2_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'urllib3' version '1.18.0' or software 'cryptography' version '2.2.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'urllib3'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s1:Software {name: 'urllib3'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '1.18.0'})\nOPTIONAL MATCH (v1)-[:VULNERABLE_TO]->(cve1:Vulnerability)\nWITH count(DISTINCT cve1) AS vuls1\n\nMATCH (s2:Software {name: 'cryptography'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '2.2.0'})\nOPTIONAL MATCH (v2)-[:VULNERABLE_TO]->(cve2:Vulnerability)\nWITH vuls1, count(DISTINCT cve2) AS vuls2\n\nRETURN CASE \n    WHEN vuls1 > vuls2 THEN 'urllib3 1.18.0' \n    WHEN vuls2 > vuls1 THEN 'cryptography 2.2.0' \n    ELSE 'Equal' END AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.52
+    },
+    {
+      "id": "C5_3-flask-2_3_3-django-4_2_11",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'flask' version '2.3.3' or software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.3.3'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s1:Software {name: 'flask'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '2.3.3'})\nOPTIONAL MATCH (v1)-[:VULNERABLE_TO]->(cve1:Vulnerability)\nWITH count(cve1) AS flask_vulnerabilities\n\nMATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '4.2.11'})\nOPTIONAL MATCH (v2)-[:VULNERABLE_TO]->(cve2:Vulnerability)\nWITH flask_vulnerabilities, count(cve2) AS django_vulnerabilities\n\nRETURN CASE \n    WHEN flask_vulnerabilities > django_vulnerabilities THEN 'flask'\n    WHEN django_vulnerabilities > flask_vulnerabilities THEN 'django'\n    ELSE 'equal'\nEND AS result",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.41
+    },
+    {
+      "id": "C5_3-ffmpeg-4_2_1-aiohttp-3_8_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'ffmpeg' version '4.2.1' or software 'aiohttp' version '3.8.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '4.2.1'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'aiohttp'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '3.8.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'ffmpeg' AND v.versionName = '4.2.1') OR (s.name = 'aiohttp' AND v.versionName = '3.8.0')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, v.versionName AS version, COUNT(c) AS vulnerability_count\nORDER BY vulnerability_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.26
+    },
+    {
+      "id": "C5_3-pandas-2_0_0-click-0_6_1",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'pandas' version '2.0.0' or software 'click' version '0.6.1'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'pandas'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.0.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'click'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '0.6.1'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'pandas' AND v.versionName = '2.0.0') \n   OR (s.name = 'click' AND v.versionName = '0.6.1')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, v.versionName AS version, COUNT(c) AS vulnerability_count\nORDER BY vulnerability_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.28
+    },
+    {
+      "id": "C5_3-requests-2_31_0-urllib3-1_18_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'requests' version '2.31.0' or software 'urllib3' version '1.18.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'requests'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'urllib3'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '1.18.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'requests' AND v.versionName = '2.31.0') OR (s.name = 'urllib3' AND v.versionName = '1.18.0')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, count(c) AS cve_count\nORDER BY cve_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.16
+    },
+    {
+      "id": "C5_3-openssl-0_9_6c_2_woody_7-django-4_2_11",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'openssl' version '0.9.6c-2.woody.7' or software 'django' version '4.2.11'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '4.2.11'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s1:Software {name: 'openssl'})-[:HAS_VERSION]->(v1:SoftwareVersion {versionName: '0.9.6c-2.woody.7'})\nOPTIONAL MATCH (v1)-[:VULNERABLE_TO]->(c1:Vulnerability)\nWITH COUNT(c1) AS openssl_cves\n\nMATCH (s2:Software {name: 'django'})-[:HAS_VERSION]->(v2:SoftwareVersion {versionName: '4.2.11'})\nOPTIONAL MATCH (v2)-[:VULNERABLE_TO]->(c2:Vulnerability)\nWITH openssl_cves, COUNT(c2) AS django_cves\n\nRETURN CASE \n    WHEN openssl_cves > django_cves THEN 'openssl'\n    WHEN django_cves > openssl_cves THEN 'django'\n    ELSE 'equal'\nEND AS more_vulnerable",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.7
+    },
+    {
+      "id": "C5_3-yasm-1_3_0-perl-5_10_1_17squeeze6",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'yasm' version '1.3.0' or software 'perl' version '5.10.1-17squeeze6'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'yasm'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '1.3.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'perl'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '5.10.1-17squeeze6'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'yasm' AND v.versionName = '1.3.0')\n   OR (s.name = 'perl' AND v.versionName = '5.10.1-17squeeze6')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, v.versionName AS version, COUNT(c) AS cve_count\nORDER BY cve_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.27
+    },
+    {
+      "id": "C5_3-cryptography-2_2_0-requests-2_31_0",
+      "template_id": "C5.3",
+      "query_type": "SA",
+      "difficulty": "Medium",
+      "question": "Which has more known vulnerabilities (CVEs): software 'cryptography' version '2.2.0' or software 'requests' version '2.31.0'?",
+      "gold_cypher": "MATCH (s1:Software {name: 'cryptography'})-[:HAS_VERSION]->(r1:SoftwareVersion {versionName: '2.2.0'}) OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) WITH count(cve1) AS n1 MATCH (s2:Software {name: 'requests'})-[:HAS_VERSION]->(r2:SoftwareVersion {versionName: '2.31.0'}) OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) WITH n1, count(cve2) AS n2 RETURN n1, n2",
+      "generated_cypher": "MATCH (s:Software)-[:HAS_VERSION]->(v:SoftwareVersion)\nWHERE (s.name = 'cryptography' AND v.versionName = '2.2.0') \n   OR (s.name = 'requests' AND v.versionName = '2.31.0')\nOPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability)\nRETURN s.name AS software, count(c) AS cve_count\nORDER BY cve_count DESC",
+      "agent_error": null,
+      "executed_successfully": true,
+      "error_message": null,
+      "metrics": {
+        "exact_match": false,
+        "f1": 0.0
+      },
+      "score": 0.0,
+      "latency_s": 2.23
+    }
+  ]
+}

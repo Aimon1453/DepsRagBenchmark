@@ -6,7 +6,7 @@ Root README has the full install → Neo4j → import → run pipeline. This pag
 
 ## Prerequisites
 
-1. `neo4j-securechain` running (`bolt://127.0.0.1:7689`) with three-anchor import done — see [`securechain_import/README.md`](../../securechain_import/README.md)
+1. `neo4j-securechain` running (`bolt://127.0.0.1:7689`) with the import done — see [`securechain_import/README.md`](../../securechain_import/README.md). The 17-case dataset needs the three original anchors; the 170-case v2 dataset needs the full 11-anchor import (anchor table in [`DATASET_V2.md`](DATASET_V2.md))
 2. `.env` at repo root with Neo4j + an LLM key
 3. Run commands from the **repo root**
 
@@ -27,10 +27,15 @@ poetry run python benchmark/Text2Cypher/t2c_agent_evaluator.py
 
 | File | Role |
 |------|------|
-| `t2c_purdue_dataset.json` | Gold dataset (17 cases): question, gold Cypher, `expected_result` |
+| `t2c_purdue_dataset.json` | Gold dataset (17 cases, smoke test): question, gold Cypher, `expected_result` |
+| `t2c_purdue_dataset_v2.json` | Scaled gold dataset (170 cases, 17 templates × 10 instances) — see [`DATASET_V2.md`](DATASET_V2.md) |
 | `t2c_purdue_cypher_templates.md` | Human-editable templates (IDs C1.1–C5.3) matching `template_id` in the JSON |
+| `t2c_generate_dataset.py` | Generates the v2 dataset from curated bindings; executes gold Cypher for `expected_result` |
 | `t2c_agent_evaluator.py` | DependencyGraphAgent → extract ```cypher``` → score |
+| `t2c_single_agent_evaluator.py` | Campaign runner: per-case JSON persistence, resume, query timeout, provider-error guard |
 | `t2c_evaluator.py` | Execute Cypher on Neo4j; F1 / exact match |
+| `DATASET_V2.md` | How the 170-case dataset was built (anchors, bindings, validation) |
+| `t2c_v2_validation_report.md` | Full validation run of the v2 dataset (two protocols, failure taxonomy) |
 
 ### Templates vs dataset
 

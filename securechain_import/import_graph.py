@@ -252,12 +252,23 @@ def run_import(
     neo4j_user: Optional[str],
     neo4j_password: Optional[str],
     neo4j_database: Optional[str],
+    host: Optional[str] = None,
 ) -> int:
     load_env()
 
     roots = find_root_versions(software, version, endpoint=endpoint, timeout=timeout)
+    if host is not None:
+        # The KG contains same-named software across ecosystems (pypi.org,
+        # crates.io, sources.debian.org, conan.io ...); the version URI's host
+        # identifies the ecosystem, so filter roots down to the intended one.
+        roots = [r for r in roots if host.lower() in r["ver"].lower()]
     if not roots:
-        logger.error("No SoftwareVersion found for name=%r version=%r", software, version)
+        logger.error(
+            "No SoftwareVersion found for name=%r version=%r host=%r",
+            software,
+            version,
+            host,
+        )
         return 1
 
     if len(roots) > 1 and version is None:
@@ -382,6 +393,16 @@ def main() -> None:
     p.add_argument("--software", required=True, help='schema:name, e.g. "openssl"')
     p.add_argument("--version", default=None, help="Optional sc:versionName to pin one root")
     p.add_argument(
+        "--host",
+        default=None,
+        help=(
+            "Optional ecosystem filter: substring of the version URI host, "
+            'e.g. "pypi.org", "crates.io", "sources.debian.org", "conan.io". '
+            "Same-named software exists across ecosystems; without this the "
+            "first match wins."
+        ),
+    )
+    p.add_argument(
         "--endpoint",
         default=sparql_client.DEFAULT_ENDPOINT,
         help="SPARQL endpoint URL",
@@ -416,6 +437,7 @@ def main() -> None:
         run_import(
             software=args.software,
             version=args.version,
+            host=args.host,
             endpoint=args.endpoint,
             dry_run=args.dry_run,
             timeout=args.timeout,
