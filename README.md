@@ -8,10 +8,20 @@ This repository is **not** the upstream DepsRAG project. It bundles a copy of De
 
 | In scope | Out of scope |
 |----------|-----------------------------------------------|
-| Text2Cypher: Nature language question → Cypher → execute on Neo4j → score vs gold | Unpublished E2E answer-level benchmark |
-| Reproducible pipeline: import graph → run agent → score |  |
+| Text2Cypher: natural-language question → Cypher → execute on Neo4j → score vs gold | End-to-end answer-level benchmark (cut) |
+| Reproducible pipeline: import graph → generate dataset → run any model → score | Claims about real-world ecosystem proportions |
+| Ranking several models on one fixed dataset | |
 
-The benchmark reports **execution success** and **F1 / exact-match** against a fixed gold dataset. Those scores characterize the system under test on this task; the research contribution here is the **evaluation setup** (graph, templates, dataset, scorer), not a claim that DepsRAG is “good” or “bad” at a particular percentage.
+The benchmark reports **execution success** and **F1 / exact-match** against a fixed gold dataset. Those scores characterize the system under test on this task; the research contribution here is the **evaluation setup** (graph, templates, dataset, scorer), not a claim that any one model is “good” or “bad” at a particular percentage.
+
+### The two halves
+
+Keeping these apart is what makes the benchmark reusable:
+
+- **Benchmark** — the static specification: 10,000 cases (question, gold Cypher, frozen `expected_result`, template/difficulty/type labels) **plus the definition of what counts as correct** (F1 for SR/CR, exact match for SA, empty-vs-empty scores 1.0, result normalisation ignoring column names and row order).
+- **Harness** — the executable machinery that turns *a model* plus *the benchmark* into *scores*: model slot, prompt construction, Cypher extraction, query timeout, provider-error bypass, concurrency, resume, persistence.
+
+In short: the benchmark says what counts as right, the harness says how to get the run done.
 
 ## Repository map
 
@@ -26,12 +36,35 @@ The benchmark reports **execution success** and **F1 / exact-match** against a f
 
 | File | Role |
 |------|------|
-| `t2c_purdue_dataset.json` | Gold cases (question, gold Cypher, expected Neo4j result) |
-| `t2c_purdue_cypher_templates.md` | Human-readable Cypher templates |
-| `t2c_agent_evaluator.py` | Runs DependencyGraphAgent on each question, extracts Cypher, scores |
+| `t2c_purdue_dataset_v3.json` | **Current dataset — 10,000 gold cases** |
+| `t2c_bindings_v3.json` | The 2,000 parameter bindings the dataset was built from, plus the sampling report |
+| `t2c_enumerate_bindings.py` | Draws stratified bindings from the graph (replaces hand-curated binding lists) |
+| `t2c_generate_dataset.py` | Templates + phrasings + bindings → executes gold Cypher → writes the dataset |
+| `t2c_single_agent_evaluator.py` | **Campaign runner** — concurrent, resumable, any OpenAI-compatible model |
 | `t2c_evaluator.py` | Executes Cypher; F1 for set retrieval (SR/CR), exact match for SA |
+| `t2c_agent_evaluator.py` | Older runner that drives the full DepsRAG Team (not the Text2Cypher track) |
+| `DATASET_V3.md` | How the 10,000 cases were built, validated, and where they fall short |
+| `DIFFICULTY_RUBRIC.md` | The structural rubric that assigns Easy / Medium / Hard |
+| `t2c_purdue_cypher_templates.md` | Human-readable Cypher templates (v2 set) |
+| `t2c_purdue_dataset_v2.json` / `t2c_purdue_dataset.json` | 170-case regression set / original 17-case smoke test |
 
-**How they relate:** templates document the intended gold queries → dataset instantiates them for anchors (e.g. `requests` @ `2.31.0`) with frozen `expected_result` → agent evaluator asks **DependencyGraphAgent** for Cypher **without executing it**, then the scorer runs generated Cypher on Neo4j and compares to gold.
+**How they relate:** the enumerator reads candidate bindings out of the frozen graph → the generator fills each template with each binding and each phrasing, runs the gold Cypher, and freezes the result as `expected_result` → the runner asks a model for Cypher **without executing it**, then the scorer runs the generated Cypher and compares against gold.
+
+### How 10,000 cases are constructed
+
+```
+25 templates  (structural diversity — what shape of Cypher is required)
+  × 5 phrasings   (surface diversity — how the question is worded)
+  × 80 bindings   (data diversity — which packages/versions fill the slots)
+  = 10,000 cases
+```
+
+These three numbers measure different things and should be reported separately.
+A model that cannot express a template's structure fails all 400 of its cases,
+so the effective structural coverage is 25 — not 10,000.
+
+The five phrasings of a binding share one gold Cypher and one `expected_result`,
+so building the dataset costs 2,000 database round-trips, not 10,000.
 
 ## Benchmark pipeline
 
@@ -54,11 +87,20 @@ NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=password
 NEO4J_DATABASE=neo4j
 
-# Plus one LLM provider, e.g.:
-# OPENAI_API_KEY=...
-# or GOOGLE_API_KEY=...
-# or Azure OpenAI vars (see .env-template)
+# Plus at least one LLM provider:
+# GOOGLE_API_KEY=...            # --provider google
+# OPENAI_API_KEY=...            # --provider openai
+# Azure OpenAI vars             # --provider azure   (see .env-template)
+
+# OpenAI-compatible endpoints — each provider reads its own pair, so several
+# can be configured side by side:
+# DEEPSEEK_API_KEY=...   DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
+# KIMI_API_KEY=...       KIMI_BASE_URL=https://api.moonshot.cn/v1
+# VLLM_BASE_URL=http://localhost:8000/v1     # self-hosted, key optional
+# OPENAI_COMPAT_API_KEY / OPENAI_COMPAT_BASE_URL are the shared fallback
 ```
+
+`.env` is gitignored. Never put keys anywhere else in the repo.
 
 ### 2. Start Neo4j (`neo4j-securechain`)
 
@@ -75,7 +117,10 @@ From the repo root (PowerShell):
 | Bolt | `bolt://127.0.0.1:7689` |
 | Auth | `neo4j` / `password` |
 
-> This script recreates the container. To keep existing data, start the container from Docker Desktop instead.
+> **This script deletes and recreates the container, and the container has no
+> volume — running it destroys an imported graph.** The import takes hours of
+> SPARQL BFS, so to restart an existing container use `docker start
+> neo4j-securechain` and only run the script when building a graph from scratch.
 
 Details: [`securechain_import/README.md`](securechain_import/README.md).
 
@@ -85,29 +130,83 @@ Details: [`securechain_import/README.md`](securechain_import/README.md).
 .\securechain_import\import_three.ps1
 ```
 
-Default anchors (BFS over the public SPARQL endpoint): `requests` 2.31.0, `django` 4.2.11, and a lodash-side / `js-lodash` fallback. Schema uses `Software`, `SoftwareVersion`, `DEPENDS_ON`, `Vulnerability`, etc. (not DepsRAG’s deps.dev `Package` construction path).
+`import_three.ps1` pulls the three original anchors. The frozen graph the v3
+dataset is built against holds **11 anchors** imported one at a time with
+ecosystem pinning:
+
+```powershell
+poetry run python -m securechain_import --software flask --version 2.3.3 --host pypi.org
+```
+
+The `--host` filter matters: package names collide across ecosystems (`click`,
+`flask` and `cryptography` exist on both PyPI and crates.io), and an import that
+resolves a name to its first SPARQL hit will silently pull the wrong one.
+
+Frozen snapshot **2026-08-01**: 1,131 `Software` / 1,650 `SoftwareVersion` /
+6,286 `DEPENDS_ON` / 196 `VULNERABLE_TO`. Schema uses `Software`,
+`SoftwareVersion`, `DEPENDS_ON`, `Vulnerability`, etc. (not DepsRAG’s deps.dev
+`Package` construction path).
+
+Two properties of this graph shape everything downstream, and are documented in
+full under Limitations in [`DATASET_V3.md`](benchmark/Text2Cypher/DATASET_V3.md):
+by version count it is **94% crates.io** (the enumerator counteracts this by
+sampling ecosystems round-robin), and only **47 versions carry a CVE**, which
+caps what the vulnerability templates can measure.
 
 ### 4. Run Text2Cypher evaluation
 
 ```powershell
-poetry run python benchmark/Text2Cypher/t2c_agent_evaluator.py
+# hosted provider
+poetry run python benchmark/Text2Cypher/t2c_single_agent_evaluator.py `
+    --dataset t2c_purdue_dataset_v3.json --provider google --model gemini-3.1-flash-lite `
+    --workers 16 --format-hints
+
+# OpenAI-compatible provider (DeepSeek, Kimi, self-hosted vLLM, …)
+poetry run python benchmark/Text2Cypher/t2c_single_agent_evaluator.py `
+    --dataset t2c_purdue_dataset_v3.json --provider deepseek --model deepseek-v4-flash `
+    --workers 16 --format-hints
 ```
 
-Optional: `BENCHMARK_DATASET=...` to point at another JSON file in `benchmark/Text2Cypher/`.
+| Flag | Meaning |
+|------|---------|
+| `--workers N` | Cases in flight. ~0.5 s/case at 8 workers, so 10,000 cases ≈ 80 min; ≈ 40 min at 16 |
+| `--format-hints` | Append the answer-format contract to the prompt. **This is a protocol variable, not a tweak** — it moved one model from 0.682 to 0.882, so bare and contract runs must be reported separately |
+| `--query-timeout` | Per-query execution limit, default 30 s. A generated query with an unbounded `DEPENDS_ON*` once ran 96 minutes; exceeding the limit scores as a failed execution |
+| `--limit` / `--verbose` | Smoke-test a few cases / print per-case expected-vs-actual dumps |
 
-Example summary line:
+Results append to a JSONL file named after dataset, model and protocol, with a
+`.summary.json` sidecar written at the end. **Rerunning the identical command
+resumes an interrupted campaign** — completed cases are skipped by id, so a
+crash or a rate-limit pause costs nothing.
+
+If three consecutive provider errors occur the campaign aborts rather than
+recording a run of zeros: an API outage is not a model being wrong.
 
 ```text
-=== Overall Text2Cypher Results ===
-Total Cases: 17
-Successful Executions: …/17
-Average Score (F1/EM): …
+=== Overall (single-agent Text2Cypher) ===
+Cases    : 10000
+Executed : …/10000
+Avg score: …
 ```
 
-- **Successful Executions** — generated Cypher ran without Neo4j error  
-- **Average Score** — mean of per-case F1 (SR/CR) or exact match (SA)
+- **Executed** — generated Cypher ran without a Neo4j error
+- **Avg score** — mean of per-case F1 (SR/CR) or exact match (SA)
 
-More detail: [`benchmark/Text2Cypher/README.md`](benchmark/Text2Cypher/README.md).
+More detail: [`benchmark/Text2Cypher/README.md`](benchmark/Text2Cypher/README.md),
+[`DATASET_V3.md`](benchmark/Text2Cypher/DATASET_V3.md).
+
+### 5. Rebuild the dataset (optional)
+
+```powershell
+poetry run python benchmark/Text2Cypher/t2c_enumerate_bindings.py            # -> t2c_bindings_v3.json
+poetry run python benchmark/Text2Cypher/t2c_generate_dataset.py `
+    --bindings t2c_bindings_v3.json --out t2c_purdue_dataset_v3.json
+```
+
+Sampling is seeded, so the same graph and seed reproduce the same dataset.
+`t2c_enumerate_bindings.py --report-only` prints how many candidate bindings the
+graph can supply per template — the quickest way to see what a quota change
+would cost before making it.
 
 ## Graph schema (SecureChain import)
 

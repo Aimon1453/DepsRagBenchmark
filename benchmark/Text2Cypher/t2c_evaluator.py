@@ -13,6 +13,17 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 from dependencyrag.neo4j_tools import get_neo4j_connection
 
+# Per-case comparison dumps are useful when debugging a handful of cases and
+# ruinous at campaign scale: a single transitive-closure case prints 1,557 rows,
+# and concurrent workers interleave the lines into noise. Runners set this.
+VERBOSE = False
+
+
+def _debug(label, value):
+    if VERBOSE:
+        print(f"    [DEBUG] {label}: {value}")
+
+
 def normalize_result(result):
     """
     Result Normalization: 
@@ -40,15 +51,14 @@ def calculate_f1(expected, actual):
     Calculate F1-Score for Retrieval queries (SR, CR).
     Utilizes Precision and Recall to tolerate partial omissions.
     """
-    # Debug prints to see what exactly is being compared
-    print(f"    [DEBUG] Raw Expected: {expected}")
-    print(f"    [DEBUG] Raw Actual: {actual}")
-    
+    _debug("Raw Expected", expected)
+    _debug("Raw Actual", actual)
+
     norm_expected = set(normalize_result(expected))
     norm_actual = set(normalize_result(actual))
-    
-    print(f"    [DEBUG] Norm Expected: {norm_expected}")
-    print(f"    [DEBUG] Norm Actual: {norm_actual}")
+
+    _debug("Norm Expected", norm_expected)
+    _debug("Norm Actual", norm_actual)
 
     # Both empty (e.g. no common dependencies): treat as correct retrieval.
     if len(norm_expected) == 0 and len(norm_actual) == 0:
@@ -79,14 +89,14 @@ def calculate_em(expected, actual):
     Calculate Exact Match for Aggregation/Exact queries (SA, CA, EQ).
     The answer is unique and requires an absolute match.
     """
-    print(f"    [DEBUG] Raw Expected: {expected}")
-    print(f"    [DEBUG] Raw Actual: {actual}")
-    
+    _debug("Raw Expected", expected)
+    _debug("Raw Actual", actual)
+
     norm_expected = normalize_result(expected)
     norm_actual = normalize_result(actual)
-    
-    print(f"    [DEBUG] Norm Expected: {norm_expected}")
-    print(f"    [DEBUG] Norm Actual: {norm_actual}")
+
+    _debug("Norm Expected", norm_expected)
+    _debug("Norm Actual", norm_actual)
     
     is_match = (norm_expected == norm_actual)
     return {

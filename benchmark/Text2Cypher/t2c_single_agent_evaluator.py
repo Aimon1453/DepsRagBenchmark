@@ -5,14 +5,22 @@ initializes ONLY the DependencyGraphAgent, so the score isolates NL->Cypher
 query generation: no team coordinator, no SearchAgent, no CriticAgent.
 This matches the benchmark methodology's Text2Cypher track definition.
 
-Per-case results are persisted incrementally to a JSON file (crash-safe:
-the file is rewritten after every case), including the generated Cypher,
-execution status, and metrics, plus a summary by template and difficulty.
+Cases run concurrently (--workers) and each result is appended to a JSONL file
+as it completes, including the generated Cypher, execution status, and metrics.
+A summary by template and difficulty is written to a .summary.json sidecar at
+the end. Because the output filename is derived from dataset/model/protocol,
+rerunning an interrupted campaign with the same command line resumes it: cases
+already present in the JSONL are skipped by id.
 
 Usage (repo root, Neo4j running, LLM key in .env):
   python benchmark/Text2Cypher/t2c_single_agent_evaluator.py
   python benchmark/Text2Cypher/t2c_single_agent_evaluator.py --dataset t2c_purdue_dataset_v2.json --provider google
   python benchmark/Text2Cypher/t2c_single_agent_evaluator.py --limit 3   # smoke test
+
+  # self-hosted vLLM / DeepSeek / Kimi (any OpenAI-compatible endpoint)
+  python benchmark/Text2Cypher/t2c_single_agent_evaluator.py \
+      --provider vllm --model Qwen/Qwen3-32B --base-url http://localhost:8000/v1 \
+      --dataset t2c_purdue_dataset_v2.json --workers 16 --format-hints
 """
 
 from __future__ import annotations
@@ -22,7 +30,9 @@ import json
 import os
 import re
 import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -39,7 +49,11 @@ load_dotenv(REPO_ROOT / ".env")
 from dependencyrag.agno_agents import create_dependency_graph_agent
 from dependencyrag.model_factory import create_model
 from dependencyrag.neo4j_tools import get_neo4j_connection
+import t2c_evaluator
 from t2c_evaluator import evaluate_single_case
+
+# Consecutive provider errors (in completion order) that abort the campaign.
+PROVIDER_ERROR_ABORT = 3
 
 PURDUE_SCHEMA_INSTRUCTIONS = """
 CRITICAL INSTRUCTIONS (Purdue SecureChain subgraph in Neo4j):
@@ -89,6 +103,9 @@ class TimeoutConnection:
                 result = tx.run(query, parameters or {})
                 return [record.data() for record in result]
 
+    def close(self):
+        self._driver.close()
+
 
 def detect_provider_error(response_text: str) -> str | None:
     """Return an error description if the response is an LLM-provider error payload.
@@ -134,6 +151,75 @@ Question: {question}
 """
 
 
+def evaluate_case(case: dict, agent, conn, format_hints: bool) -> dict:
+    """Run one case end to end: generate Cypher, execute it, score it."""
+    t0 = time.time()
+    try:
+        response = agent.run(build_prompt(case["question"], format_hints=format_hints))
+        raw = response.content or ""
+        provider_error = detect_provider_error(raw)
+        if provider_error:
+            generated_cypher, agent_error = "", provider_error
+        else:
+            generated_cypher, agent_error = extract_cypher_from_response(raw), None
+    except Exception as e:  # noqa: BLE001 - record and continue the campaign
+        generated_cypher, agent_error = "", f"{type(e).__name__}: {e}"
+
+    if generated_cypher:
+        eval_result = evaluate_single_case(conn, case, generated_cypher)
+    else:
+        eval_result = {
+            "executed_successfully": False,
+            "error_message": agent_error or "empty response",
+            "metrics": {},
+        }
+
+    metrics = eval_result.get("metrics") or {}
+    if case["query_type"] in ("SR", "CR"):
+        score = float(metrics.get("f1", 0.0))
+    else:
+        score = float(metrics.get("exact_match", 0.0))
+    if not eval_result["executed_successfully"]:
+        score = 0.0
+
+    return {
+        "id": case["id"],
+        "template_id": case["template_id"],
+        "query_type": case["query_type"],
+        "difficulty": case["difficulty"],
+        "question": case["question"],
+        "gold_cypher": case["cypher_query"],
+        "generated_cypher": generated_cypher,
+        "agent_error": agent_error,
+        "executed_successfully": eval_result["executed_successfully"],
+        "error_message": eval_result.get("error_message"),
+        "metrics": metrics,
+        "score": round(score, 4),
+        "latency_s": round(time.time() - t0, 2),
+    }
+
+
+def load_completed(path: Path) -> tuple[list[dict], set[str]]:
+    """Read an existing results JSONL so an interrupted campaign can resume.
+
+    Concurrency makes positional resume (`--start N`) meaningless, so completed
+    work is identified by case id instead.
+    """
+    if not path.exists():
+        return [], set()
+    records = []
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                records.append(json.loads(line))
+            except ValueError:
+                continue  # tolerate a torn final line from a hard kill
+    return records, {r["id"] for r in records}
+
+
 def summarize(results: list[dict]) -> dict:
     def bucket(keyfn):
         out: dict = {}
@@ -167,10 +253,18 @@ def main() -> int:
     p = argparse.ArgumentParser(description="Single-agent Text2Cypher benchmark runner.")
     p.add_argument("--dataset", default=os.getenv("BENCHMARK_DATASET", "t2c_purdue_dataset.json"))
     p.add_argument("--out", default=None, help="Results JSON (default: results_<dataset>_<timestamp>.json)")
-    p.add_argument("--provider", default=None, help='"openai" | "azure" | "google" (default: auto-detect)')
+    p.add_argument(
+        "--provider",
+        default=None,
+        help='"openai" | "azure" | "google" | "openai_like"/"local"/"vllm"/"deepseek"/"kimi" (default: auto-detect)',
+    )
     p.add_argument("--model", default="gpt-4o", help="Model id (google default comes from GOOGLE_MODEL_ID)")
+    p.add_argument("--base-url", default=None, help="Endpoint for OpenAI-compatible providers (or OPENAI_COMPAT_BASE_URL)")
+    p.add_argument("--api-key", default=None, help="Key for OpenAI-compatible providers (or OPENAI_COMPAT_API_KEY)")
     p.add_argument("--limit", type=int, default=None, help="Run only the first N cases (smoke test)")
-    p.add_argument("--start", type=int, default=0, help="Skip the first N cases (resume)")
+    p.add_argument("--start", type=int, default=0, help="Skip the first N cases before selecting work")
+    p.add_argument("--workers", type=int, default=8, help="Concurrent cases in flight")
+    p.add_argument("--verbose", action="store_true", help="Print per-case expected/actual comparison dumps")
     p.add_argument(
         "--format-hints",
         action="store_true",
@@ -189,110 +283,121 @@ def main() -> int:
         dataset = json.load(f)
     cases = dataset[args.start : (args.start + args.limit) if args.limit else None]
 
+    t2c_evaluator.VERBOSE = args.verbose
+
     conn = TimeoutConnection(get_neo4j_connection(), args.query_timeout)
 
-    model = create_model(args.model, provider=args.provider)
-    agent = create_dependency_graph_agent(model=model, db=None)
-    model_id = getattr(model, "id", args.model)
+    def build_model():
+        return create_model(
+            args.model, provider=args.provider, base_url=args.base_url, api_key=args.api_key
+        )
+
+    model_id = getattr(build_model(), "id", args.model)
+
+    # agno Agents are not documented as thread-safe, so each worker gets its own.
+    local = threading.local()
+
+    def agent_for_thread():
+        if not hasattr(local, "agent"):
+            local.agent = create_dependency_graph_agent(model=build_model(), db=None)
+        return local.agent
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_name = args.out or f"results_{Path(args.dataset).stem}_{stamp}.json"
-    out_path = T2C_DIR / out_name
+    protocol = "hints" if args.format_hints else "bare"
+    default_name = f"results_{Path(args.dataset).stem}_{re.sub(r'[^A-Za-z0-9]+', '-', model_id)}_{protocol}.jsonl"
+    out_path = T2C_DIR / (args.out or default_name)
+
+    # Resume: a stable filename plus id-based skipping means an interrupted
+    # campaign is restarted with the same command line.
+    results, done_ids = load_completed(out_path)
+    pending = [c for c in cases if c["id"] not in done_ids]
 
     print(f"Dataset : {args.dataset} ({len(cases)} cases, start={args.start})")
     print(f"Model   : {model_id} (single DependencyGraphAgent, no team)")
+    print(f"Protocol: {protocol}, workers={args.workers}")
+    if done_ids:
+        print(f"Resuming: {len(done_ids)} already done, {len(pending)} to run")
     print(f"Results : {out_path}\n")
 
-    results: list[dict] = []
     run_meta = {
         "run_type": "single-agent Text2Cypher",
         "dataset": args.dataset,
         "model": model_id,
         "format_hints": args.format_hints,
         "query_timeout_s": args.query_timeout,
+        "workers": args.workers,
         "started_utc": stamp,
         "note": "Dataset validation run; Text2Cypher track per methodology (DependencyGraphAgent only).",
     }
 
+    write_lock = threading.Lock()
+    abort = threading.Event()
     consecutive_provider_errors = 0
+    done_count = len(results)
 
-    for i, case in enumerate(cases, 1):
-        print(f"[{i}/{len(cases)}] {case['id']} ({case['query_type']}/{case['difficulty']})")
-        t0 = time.time()
-        try:
-            response = agent.run(build_prompt(case["question"], format_hints=args.format_hints))
-            raw = response.content or ""
-            provider_error = detect_provider_error(raw)
-            if provider_error:
-                generated_cypher = ""
-                agent_error = provider_error
-                print(f"    PROVIDER ERROR: {provider_error}")
-            else:
-                generated_cypher = extract_cypher_from_response(raw)
-                agent_error = None
-        except Exception as e:  # noqa: BLE001 - record and continue the campaign
-            generated_cypher = ""
-            agent_error = f"{type(e).__name__}: {e}"
-            print(f"    AGENT ERROR: {agent_error}")
+    # Append-only: rewriting the whole file per case is O(n^2) I/O and becomes
+    # the bottleneck well before 10k cases.
+    with out_path.open("a", encoding="utf-8") as sink:
 
-        # An infrastructure outage must abort the campaign, not be scored as a
-        # run of wrong answers.
-        if agent_error and agent_error.startswith("provider error"):
-            consecutive_provider_errors += 1
-            if consecutive_provider_errors >= 3:
+        def work(case):
+            if abort.is_set():
+                return None
+            return evaluate_case(case, agent_for_thread(), conn, args.format_hints)
+
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            futures = {pool.submit(work, c): c for c in pending}
+            for fut in as_completed(futures):
+                record = fut.result()
+                if record is None:
+                    continue
+                with write_lock:
+                    results.append(record)
+                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    sink.flush()
+                    done_count += 1
+                    n = done_count
+
+                    # An infrastructure outage must abort the campaign, not be
+                    # scored as a run of wrong answers. Under concurrency
+                    # "consecutive" is in completion order, which still trips
+                    # promptly on a real outage.
+                    if (record["agent_error"] or "").startswith("provider error"):
+                        consecutive_provider_errors += 1
+                        tripped = consecutive_provider_errors >= PROVIDER_ERROR_ABORT
+                    else:
+                        consecutive_provider_errors = 0
+                        tripped = False
+
+                status = "PASS" if record["executed_successfully"] else "FAIL"
                 print(
-                    f"\nABORTING after {consecutive_provider_errors} consecutive provider errors "
-                    f"— results so far are in {out_path}. Fix the provider issue and resume with "
-                    f"--start {args.start + i - consecutive_provider_errors}."
+                    f"[{n}/{len(cases)}] {record['id']} ({record['query_type']}/{record['difficulty']}) "
+                    f"{status} score={record['score']:.2f} ({record['latency_s']}s)"
                 )
-                break
-        else:
-            consecutive_provider_errors = 0
+                if record["agent_error"]:
+                    print(f"    ERROR: {record['agent_error']}")
 
-        if generated_cypher:
-            eval_result = evaluate_single_case(conn, case, generated_cypher)
-        else:
-            eval_result = {"executed_successfully": False, "error_message": agent_error or "empty response", "metrics": {}}
+                if tripped and not abort.is_set():
+                    abort.set()
+                    print(
+                        f"\nABORTING after {PROVIDER_ERROR_ABORT} consecutive provider errors "
+                        f"— results so far are in {out_path}. Fix the provider issue and rerun "
+                        f"the same command; completed cases are skipped automatically."
+                    )
 
-        metrics = eval_result.get("metrics") or {}
-        if case["query_type"] in ("SR", "CR"):
-            score = float(metrics.get("f1", 0.0))
-        else:
-            score = float(metrics.get("exact_match", 0.0))
-        if not eval_result["executed_successfully"]:
-            score = 0.0
-
-        results.append(
-            {
-                "id": case["id"],
-                "template_id": case["template_id"],
-                "query_type": case["query_type"],
-                "difficulty": case["difficulty"],
-                "question": case["question"],
-                "gold_cypher": case["cypher_query"],
-                "generated_cypher": generated_cypher,
-                "agent_error": agent_error,
-                "executed_successfully": eval_result["executed_successfully"],
-                "error_message": eval_result.get("error_message"),
-                "metrics": metrics,
-                "score": round(score, 4),
-                "latency_s": round(time.time() - t0, 2),
-            }
-        )
-        status = "PASS" if eval_result["executed_successfully"] else "FAIL"
-        print(f"    {status} score={score:.2f} ({results[-1]['latency_s']}s)")
-
-        # Crash-safe incremental persistence
-        with out_path.open("w", encoding="utf-8") as f:
-            json.dump({"run": run_meta, "summary": summarize(results), "results": results}, f, indent=2, ensure_ascii=False)
+    conn.close()
 
     summary = summarize(results)
+    summary_path = out_path.with_suffix(".summary.json")
+    with summary_path.open("w", encoding="utf-8") as f:
+        json.dump({"run": run_meta, "summary": summary}, f, indent=2, ensure_ascii=False)
+
     print("\n=== Overall (single-agent Text2Cypher) ===")
     print(f"Cases    : {summary['total_cases']}")
     print(f"Executed : {summary['executed_successfully']} ({summary['execution_rate']*100:.1f}%)")
     print(f"Avg score: {summary['avg_score']:.3f}")
     print(f"Saved    : {out_path}")
-    return 0
+    print(f"Summary  : {summary_path}")
+    return 1 if abort.is_set() else 0
 
 
 if __name__ == "__main__":
