@@ -79,6 +79,7 @@ ANSWER_FORMAT_INSTRUCTIONS = """
     - Comparison questions ("Which has more ...?"): RETURN the two counts (first subject first) — do NOT return the winner's name or a CASE expression.
     - Dependency-path questions: use shortestPath over DEPENDS_ON and RETURN the list of versionName values along the path, e.g. RETURN [n IN nodes(p) | n.versionName] AS path.
     - CVE / CWE listing questions: RETURN the id values only.
+    - Top-N questions ("Which ... has the most ...?"): RETURN two columns — the winning software's name, and the quantity the question asks you to maximise — with ORDER BY on that quantity and LIMIT 1. Do NOT return only the name, and do NOT return only the quantity. (What the quantity means is stated in the question; this rule only fixes the shape of the answer.)
 """
 
 
