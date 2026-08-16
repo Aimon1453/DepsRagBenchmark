@@ -24,29 +24,39 @@ def _debug(label, value):
         print(f"    [DEBUG] {label}: {value}")
 
 
-def normalize_result(result):
+def normalize_result(result, ordered_columns=False):
     """
-    Result Normalization: 
-    To eliminate misjudgments caused by random database return orders and 
-    different Cypher return aliases (e.g. 'dep.name' vs 'name'), 
+    Result Normalization:
+    To eliminate misjudgments caused by random database return orders and
+    different Cypher return aliases (e.g. 'dep.name' vs 'name'),
     we extract only the values, convert them to strings, and sort them.
+
+    `ordered_columns=True` keeps the values in their RETURN order instead.
+    Sorting within a row is what makes column naming irrelevant, but it also
+    erases position — and for the comparison templates (C5.2/C5.3, "which has
+    more?") position *is* the answer: gold {c1: 1, c2: 4} and a backwards
+    {c1: 4, c2: 1} both flatten to ('1','4') and score identically. Rows are
+    still sorted, so row order remains irrelevant either way.
     """
     if not isinstance(result, list):
         return result
-    
+
     normalized = []
     for item in result:
         if isinstance(item, dict):
-            # Extract values, convert to string, and sort to ignore column order
-            vals = sorted([str(v) for v in item.values()])
+            # Extract values and convert to string; sort to ignore column order
+            # unless the caller says position carries meaning.
+            vals = [str(v) for v in item.values()]
+            if not ordered_columns:
+                vals = sorted(vals)
             normalized.append(tuple(vals))
         else:
             normalized.append(str(item))
-    
+
     # Sort the list of tuples lexicographically
     return sorted(normalized)
 
-def calculate_f1(expected, actual):
+def calculate_f1(expected, actual, ordered_columns=False):
     """
     Calculate F1-Score for Retrieval queries (SR, CR).
     Utilizes Precision and Recall to tolerate partial omissions.
@@ -54,8 +64,8 @@ def calculate_f1(expected, actual):
     _debug("Raw Expected", expected)
     _debug("Raw Actual", actual)
 
-    norm_expected = set(normalize_result(expected))
-    norm_actual = set(normalize_result(actual))
+    norm_expected = set(normalize_result(expected, ordered_columns))
+    norm_actual = set(normalize_result(actual, ordered_columns))
 
     _debug("Norm Expected", norm_expected)
     _debug("Norm Actual", norm_actual)
@@ -84,7 +94,7 @@ def calculate_f1(expected, actual):
         "exact_match": f1 == 1.0
     }
 
-def calculate_em(expected, actual):
+def calculate_em(expected, actual, ordered_columns=False):
     """
     Calculate Exact Match for Aggregation/Exact queries (SA, CA, EQ).
     The answer is unique and requires an absolute match.
@@ -92,8 +102,8 @@ def calculate_em(expected, actual):
     _debug("Raw Expected", expected)
     _debug("Raw Actual", actual)
 
-    norm_expected = normalize_result(expected)
-    norm_actual = normalize_result(actual)
+    norm_expected = normalize_result(expected, ordered_columns)
+    norm_actual = normalize_result(actual, ordered_columns)
 
     _debug("Norm Expected", norm_expected)
     _debug("Norm Actual", norm_actual)
@@ -112,7 +122,10 @@ def evaluate_single_case(conn, test_case, generated_cypher):
     """
     query_type = test_case["query_type"]
     expected_result = test_case["expected_result"]
-    
+    # Set by templates whose answer is carried by column position rather than by
+    # the set of values; absent on every other case, so scoring is unchanged.
+    ordered_columns = bool(test_case.get("ordered_columns", False))
+
     result_metrics = {
         "id": test_case["id"],
         "executed_successfully": False,
@@ -133,8 +146,8 @@ def evaluate_single_case(conn, test_case, generated_cypher):
         return result_metrics
         
     if query_type in ["SR", "CR"]:
-        result_metrics["metrics"] = calculate_f1(expected_result, actual_result)
+        result_metrics["metrics"] = calculate_f1(expected_result, actual_result, ordered_columns)
     elif query_type in ["SA", "CA", "EQ"]:
-        result_metrics["metrics"] = calculate_em(expected_result, actual_result)
+        result_metrics["metrics"] = calculate_em(expected_result, actual_result, ordered_columns)
         
     return result_metrics

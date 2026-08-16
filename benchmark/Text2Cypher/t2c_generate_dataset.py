@@ -201,6 +201,9 @@ TEMPLATES = {
     "C5.2": {
         "query_type": "SA",
         "difficulty": "Hard",
+        # The answer is "which of the two", carried by the position of the counts.
+        # Without this the scorer sorts the row and a backwards answer matches.
+        "ordered_columns": True,
         "question": (
             "Which has more direct dependencies: software '{pkg}' version '{ver}' "
             "or software '{dep}' version '{dep_ver}'?"
@@ -218,6 +221,7 @@ TEMPLATES = {
     "C5.3": {
         "query_type": "SA",
         "difficulty": "Hard",
+        "ordered_columns": True,
         "question": (
             "Which has more known vulnerabilities (CVEs): software '{pkg}' version '{ver}' "
             "or software '{dep}' version '{dep_ver}'?"
@@ -836,8 +840,7 @@ def generate(session, bindings_by_tpl: dict[str, list[dict]] | None = None) -> l
                 if cid in seen_ids:
                     raise ValueError(f"duplicate case id: {cid}")
                 seen_ids.add(cid)
-                cases.append(
-                    {
+                case = {
                         "id": cid,
                         "template_id": tid,
                         "phrasing": f"P{pi}",
@@ -850,8 +853,12 @@ def generate(session, bindings_by_tpl: dict[str, list[dict]] | None = None) -> l
                         "question": phrasing.format(**b),
                         "cypher_query": cypher,
                         "expected_result": result,
-                    }
-                )
+                }
+                # Only carried where it applies, so every other case keeps the
+                # exact schema — and the exact scoring — it had before.
+                if tpl.get("ordered_columns"):
+                    case["ordered_columns"] = True
+                cases.append(case)
     return cases
 
 

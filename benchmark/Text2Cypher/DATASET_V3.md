@@ -151,6 +151,31 @@ patterns are expected and worth stating plainly:
   sharing stratum is now read out of the graph directly; it is 23% empty with 40
   distinct answers.
 
+## One scoring rule the dataset carries
+
+Cases normally compare answers as *sets of rows with the values inside each row
+sorted*. Sorting within a row is what makes column naming irrelevant — a model
+returning `pkg`/`v` instead of `software`/`version` should not be marked wrong for
+it.
+
+Two templates cannot be scored that way. **C5.2 and C5.3 ask "which has more?"**
+and answer with two counts whose meaning is carried by their position: gold
+`{c1: 1, c2: 4}` says the second subject wins. Sorting the row flattens that to
+`('1','4')`, which is also what a backwards `{c1: 4, c2: 1}` flattens to, so the
+metric could not tell a correct comparison from a reversed one. Those templates
+are 810 cases, 640 of them non-ties, all labelled Hard.
+
+They now carry `"ordered_columns": true`, and the scorer keeps their values in
+RETURN order. Row order is still ignored, and no other template is affected — the
+field is absent everywhere else, so their scoring is byte-for-byte what it was.
+
+**This was a latent defect, not an inflated result.** Re-scoring a 24-case
+non-tie probe (deepseek-v4-flash, format contract) under both rules gives 0.875
+either way: the model never actually reversed a comparison it otherwise got
+right. The metric simply could not have caught it. Weaker models are the ones
+where this is likely to bite, which is exactly the part of the ranking the Hard
+tier exists to resolve.
+
 ## Validation
 
 - **Freeze check:** all 170 v2 cases regenerate byte-identical
