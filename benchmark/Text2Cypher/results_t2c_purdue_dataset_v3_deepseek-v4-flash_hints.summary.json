@@ -1,0 +1,206 @@
+{
+  "run": {
+    "run_type": "single-agent Text2Cypher",
+    "dataset": "t2c_purdue_dataset_v3.json",
+    "model": "deepseek-v4-flash",
+    "format_hints": true,
+    "query_timeout_s": 30.0,
+    "workers": 16,
+    "started_utc": "20260817T022001Z",
+    "note": "Dataset validation run; Text2Cypher track per methodology (DependencyGraphAgent only)."
+  },
+  "summary": {
+    "total_cases": 10000,
+    "executed_successfully": 9670,
+    "execution_rate": 0.967,
+    "avg_score": 0.8974,
+    "by_template": {
+      "C1.1": {
+        "n": 400,
+        "executed": 400,
+        "avg_score": 0.985
+      },
+      "C1.2": {
+        "n": 410,
+        "executed": 306,
+        "avg_score": 0.7463
+      },
+      "C1.3": {
+        "n": 410,
+        "executed": 409,
+        "avg_score": 0.9976
+      },
+      "C2.1": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 0.9975
+      },
+      "C2.2": {
+        "n": 405,
+        "executed": 339,
+        "avg_score": 0.8321
+      },
+      "C2.3": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 0.9736
+      },
+      "C2.4": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 1.0
+      },
+      "C2.5": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 0.9951
+      },
+      "C3.1": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 0.9402
+      },
+      "C3.2": {
+        "n": 405,
+        "executed": 342,
+        "avg_score": 0.716
+      },
+      "C3.3": {
+        "n": 405,
+        "executed": 403,
+        "avg_score": 0.9711
+      },
+      "C3.4": {
+        "n": 405,
+        "executed": 396,
+        "avg_score": 0.943
+      },
+      "C3.5": {
+        "n": 340,
+        "executed": 340,
+        "avg_score": 0.9972
+      },
+      "C3.6": {
+        "n": 340,
+        "executed": 339,
+        "avg_score": 0.8533
+      },
+      "C4.1": {
+        "n": 405,
+        "executed": 393,
+        "avg_score": 0.9704
+      },
+      "C4.2": {
+        "n": 405,
+        "executed": 401,
+        "avg_score": 0.4765
+      },
+      "C4.3": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 1.0
+      },
+      "C4.4": {
+        "n": 405,
+        "executed": 405,
+        "avg_score": 0.9852
+      },
+      "C4.5": {
+        "n": 405,
+        "executed": 404,
+        "avg_score": 0.9136
+      },
+      "C4.6": {
+        "n": 405,
+        "executed": 390,
+        "avg_score": 0.8593
+      },
+      "C4.7": {
+        "n": 405,
+        "executed": 403,
+        "avg_score": 0.6691
+      },
+      "C5.1": {
+        "n": 405,
+        "executed": 404,
+        "avg_score": 0.9572
+      },
+      "C5.2": {
+        "n": 405,
+        "executed": 364,
+        "avg_score": 0.8963
+      },
+      "C5.3": {
+        "n": 405,
+        "executed": 404,
+        "avg_score": 0.9432
+      },
+      "C5.4": {
+        "n": 405,
+        "executed": 398,
+        "avg_score": 0.8276
+      }
+    },
+    "by_category": {
+      "C1": {
+        "n": 1220,
+        "executed": 1115,
+        "avg_score": 0.909
+      },
+      "C2": {
+        "n": 2025,
+        "executed": 1959,
+        "avg_score": 0.9597
+      },
+      "C3": {
+        "n": 2300,
+        "executed": 2225,
+        "avg_score": 0.9022
+      },
+      "C4": {
+        "n": 2835,
+        "executed": 2801,
+        "avg_score": 0.8392
+      },
+      "C5": {
+        "n": 1620,
+        "executed": 1570,
+        "avg_score": 0.9061
+      }
+    },
+    "by_difficulty": {
+      "Easy": {
+        "n": 2435,
+        "executed": 2264,
+        "avg_score": 0.9217
+      },
+      "Hard": {
+        "n": 4390,
+        "executed": 4315,
+        "avg_score": 0.8502
+      },
+      "Medium": {
+        "n": 3175,
+        "executed": 3091,
+        "avg_score": 0.9442
+      }
+    },
+    "by_query_type": {
+      "CR": {
+        "n": 4325,
+        "executed": 4305,
+        "avg_score": 0.9513
+      },
+      "SA": {
+        "n": 5275,
+        "executed": 4965,
+        "avg_score": 0.8466
+      },
+      "SR": {
+        "n": 400,
+        "executed": 400,
+        "avg_score": 0.985
+      }
+    }
+  }
+}

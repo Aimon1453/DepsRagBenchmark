@@ -1,0 +1,166 @@
+{
+  "run": {
+    "run_type": "single-agent Text2Cypher",
+    "dataset": "t2c_purdue_dataset_v2.json",
+    "model": "gemini-3.1-flash-lite",
+    "format_hints": true,
+    "query_timeout_s": 30.0,
+    "workers": 8,
+    "started_utc": "20260817T022455Z",
+    "note": "Dataset validation run; Text2Cypher track per methodology (DependencyGraphAgent only)."
+  },
+  "summary": {
+    "total_cases": 170,
+    "executed_successfully": 156,
+    "execution_rate": 0.9176,
+    "avg_score": 0.8927,
+    "by_template": {
+      "C1.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C1.2": {
+        "n": 10,
+        "executed": 3,
+        "avg_score": 0.3
+      },
+      "C1.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.2": {
+        "n": 10,
+        "executed": 8,
+        "avg_score": 0.7
+      },
+      "C2.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C2.4": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C3.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.9766
+      },
+      "C3.2": {
+        "n": 10,
+        "executed": 9,
+        "avg_score": 0.8
+      },
+      "C3.3": {
+        "n": 10,
+        "executed": 6,
+        "avg_score": 0.6
+      },
+      "C4.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C4.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.9
+      },
+      "C4.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C4.4": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 0.9
+      },
+      "C5.1": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C5.2": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      },
+      "C5.3": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      }
+    },
+    "by_category": {
+      "C1": {
+        "n": 30,
+        "executed": 23,
+        "avg_score": 0.7667
+      },
+      "C2": {
+        "n": 40,
+        "executed": 38,
+        "avg_score": 0.925
+      },
+      "C3": {
+        "n": 30,
+        "executed": 25,
+        "avg_score": 0.7922
+      },
+      "C4": {
+        "n": 40,
+        "executed": 40,
+        "avg_score": 0.95
+      },
+      "C5": {
+        "n": 30,
+        "executed": 30,
+        "avg_score": 1.0
+      }
+    },
+    "by_difficulty": {
+      "Easy": {
+        "n": 80,
+        "executed": 71,
+        "avg_score": 0.8625
+      },
+      "Hard": {
+        "n": 20,
+        "executed": 16,
+        "avg_score": 0.8
+      },
+      "Medium": {
+        "n": 70,
+        "executed": 69,
+        "avg_score": 0.9538
+      }
+    },
+    "by_query_type": {
+      "CR": {
+        "n": 60,
+        "executed": 56,
+        "avg_score": 0.9294
+      },
+      "SA": {
+        "n": 100,
+        "executed": 90,
+        "avg_score": 0.86
+      },
+      "SR": {
+        "n": 10,
+        "executed": 10,
+        "avg_score": 1.0
+      }
+    }
+  }
+}
