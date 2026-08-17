@@ -172,3 +172,7 @@ _upstream/
 References/
 BenchmarkAgenticworkflow/
 benchmark/E2E/
+
+# Campaign raw results are tens of MB per model; only the .summary.json sidecars are committed
+benchmark/Text2Cypher/results_*.jsonl
+benchmark/Text2Cypher/smoke_*.jsonl

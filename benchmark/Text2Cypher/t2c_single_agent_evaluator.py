@@ -119,6 +119,11 @@ def detect_provider_error(response_text: str) -> str | None:
     scored as wrong answers.
     """
     text = (response_text or "").strip()
+    # A TLS-inspecting corporate proxy (observed: Netskope) can substitute an
+    # HTML block page for the API response; that is infrastructure, not a model
+    # answer, and must not be executed as Cypher.
+    if text[:15].lower().startswith(("<html", "<!doctype")):
+        return f"provider error: HTML response (proxy block page?): {text[:120]}"
     if not text.startswith("{") or '"error"' not in text:
         return None
     try:
@@ -361,8 +366,12 @@ def main() -> int:
                     # An infrastructure outage must abort the campaign, not be
                     # scored as a run of wrong answers. Under concurrency
                     # "consecutive" is in completion order, which still trips
-                    # promptly on a real outage.
-                    if (record["agent_error"] or "").startswith("provider error"):
+                    # promptly on a real outage. Any agent_error counts: it is
+                    # only ever set by a provider-error payload or an exception
+                    # out of agent.run (network/SDK failure), never by a wrong
+                    # answer — an SSL outage once scored 170 straight zeros here
+                    # without tripping the old provider-error-prefix check.
+                    if record["agent_error"]:
                         consecutive_provider_errors += 1
                         tripped = consecutive_provider_errors >= PROVIDER_ERROR_ABORT
                     else:
