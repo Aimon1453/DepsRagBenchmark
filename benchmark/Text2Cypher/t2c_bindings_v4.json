@@ -1,0 +1,68 @@
+{
+ "seed": 20260819,
+ "quota": 80,
+ "report": {
+  "C1.1": {
+   "quota": 80,
+   "strata": {
+    "multi_version": {
+     "available": 296,
+     "wanted": 44,
+     "drawn": 44
+    },
+    "single_version": {
+     "available": 835,
+     "wanted": 24,
+     "drawn": 23
+    },
+    "absent_package": {
+     "available": 20,
+     "wanted": 12,
+     "drawn": 12
+    }
+   },
+   "topped_up": 1,
+   "total": 80,
+   "ecosystems": {
+    "conan.io": 12,
+    "crates.io": 45,
+    "pypi.org": 9,
+    "sources.debian.org": 2,
+    "absent": 12
+   },
+   "dropped_duplicates": 0,
+   "built": 80
+  },
+  "C1.2": {
+   "quota": 80,
+   "strata": {
+    "exists": {
+     "available": 1650,
+     "wanted": 44,
+     "drawn": 44
+    },
+    "near_miss_version": {
+     "available": 66,
+     "wanted": 22,
+     "drawn": 22
+    },
+    "absent_package": {
+     "available": 20,
+     "wanted": 14,
+     "drawn": 14
+    }
+   },
+   "topped_up": 0,
+   "total": 80,
+   "ecosystems": {
+    "conan.io": 12,
+    "crates.io": 30,
+    "pypi.org": 13,
+    "sources.debian.org": 11,
+    "absent": 14
+   },
+   "dropped_duplicates": 0,
+   "built": 80
+  }
+ }
+}

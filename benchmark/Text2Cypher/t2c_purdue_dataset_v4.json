@@ -1,0 +1,3839 @@
+[
+ {
+  "id": "C1_1-meson",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "meson"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'meson'?",
+  "cypher_query": "MATCH (s:Software {name: 'meson'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.2.2"
+   },
+   {
+    "version": "1.3.2"
+   },
+   {
+    "version": "1.4.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-syn",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "syn"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'syn'?",
+  "cypher_query": "MATCH (s:Software {name: 'syn'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.14.9"
+   },
+   {
+    "version": "0.15.44"
+   },
+   {
+    "version": "1.0.109"
+   },
+   {
+    "version": "2.0.101"
+   },
+   {
+    "version": "2.0.56"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-urllib3",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "urllib3"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'urllib3'?",
+  "cypher_query": "MATCH (s:Software {name: 'urllib3'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.18.0"
+   },
+   {
+    "version": "2.4.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-perl",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "perl"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'perl'?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "5.004.04-6"
+   },
+   {
+    "version": "5.004.04-7.0.1"
+   },
+   {
+    "version": "5.004.05-2"
+   },
+   {
+    "version": "5.10.0-19lenny5"
+   },
+   {
+    "version": "5.10.1-17squeeze6"
+   },
+   {
+    "version": "5.14.2-21+deb7u3"
+   },
+   {
+    "version": "5.20.2-3"
+   },
+   {
+    "version": "5.20.2-3+deb8u11"
+   },
+   {
+    "version": "5.24.1-3+deb9u7"
+   },
+   {
+    "version": "5.28.1-6+deb10u1"
+   },
+   {
+    "version": "5.32.1-4+deb11u3"
+   },
+   {
+    "version": "5.36.0-7+deb12u1"
+   },
+   {
+    "version": "5.38.2-5"
+   },
+   {
+    "version": "5.40.0-1"
+   },
+   {
+    "version": "5.40.0-2"
+   },
+   {
+    "version": "5.6.1-8.9"
+   },
+   {
+    "version": "5.8.4-8sarge6"
+   },
+   {
+    "version": "5.8.8-7"
+   },
+   {
+    "version": "5.8.8-7etch6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-zlib",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "zlib"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'zlib'?",
+  "cypher_query": "MATCH (s:Software {name: 'zlib'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.2.13"
+   },
+   {
+    "version": "1.3.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-windows_i686_gnu",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "windows_i686_gnu"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'windows_i686_gnu'?",
+  "cypher_query": "MATCH (s:Software {name: 'windows_i686_gnu'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.48.5"
+   },
+   {
+    "version": "0.52.6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-charset_normalizer",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "charset-normalizer"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'charset-normalizer'?",
+  "cypher_query": "MATCH (s:Software {name: 'charset-normalizer'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.1.1"
+   },
+   {
+    "version": "3.4.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-nasm",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "nasm"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'nasm'?",
+  "cypher_query": "MATCH (s:Software {name: 'nasm'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.15.05"
+   },
+   {
+    "version": "2.16.01"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-futures",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "futures"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'futures'?",
+  "cypher_query": "MATCH (s:Software {name: 'futures'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.31"
+   },
+   {
+    "version": "0.3.31"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-pkgconf",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "pkgconf"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'pkgconf'?",
+  "cypher_query": "MATCH (s:Software {name: 'pkgconf'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.1.0"
+   },
+   {
+    "version": "2.2.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-rand_core",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "rand_core"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'rand_core'?",
+  "cypher_query": "MATCH (s:Software {name: 'rand_core'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.2"
+   },
+   {
+    "version": "0.3.1"
+   },
+   {
+    "version": "0.4.2"
+   },
+   {
+    "version": "0.5.1"
+   },
+   {
+    "version": "0.6.4"
+   },
+   {
+    "version": "0.9.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-libpng",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "libpng"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'libpng'?",
+  "cypher_query": "MATCH (s:Software {name: 'libpng'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.6.40"
+   },
+   {
+    "version": "1.6.42"
+   },
+   {
+    "version": "1.6.43"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-servo_fontconfig",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "servo-fontconfig"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'servo-fontconfig'?",
+  "cypher_query": "MATCH (s:Software {name: 'servo-fontconfig'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.4.0"
+   },
+   {
+    "version": "0.5.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-hex_literal",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "hex-literal"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'hex-literal'?",
+  "cypher_query": "MATCH (s:Software {name: 'hex-literal'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.2"
+   },
+   {
+    "version": "0.3.4"
+   },
+   {
+    "version": "0.4.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-ryu",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "ryu"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'ryu'?",
+  "cypher_query": "MATCH (s:Software {name: 'ryu'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.0.20"
+   },
+   {
+    "version": "1.0.6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-core_foundation",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "core-foundation"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'core-foundation'?",
+  "cypher_query": "MATCH (s:Software {name: 'core-foundation'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.7.0"
+   },
+   {
+    "version": "0.9.4"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-autocfg",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "autocfg"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'autocfg'?",
+  "cypher_query": "MATCH (s:Software {name: 'autocfg'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.8"
+   },
+   {
+    "version": "1.4.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-duct",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "duct"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'duct'?",
+  "cypher_query": "MATCH (s:Software {name: 'duct'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.13.7"
+   },
+   {
+    "version": "0.9.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-half",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "half"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'half'?",
+  "cypher_query": "MATCH (s:Software {name: 'half'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.8.3"
+   },
+   {
+    "version": "2.6.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-prettyplease",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "prettyplease"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'prettyplease'?",
+  "cypher_query": "MATCH (s:Software {name: 'prettyplease'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.17"
+   },
+   {
+    "version": "0.2.32"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-phf_codegen",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "phf_codegen"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'phf_codegen'?",
+  "cypher_query": "MATCH (s:Software {name: 'phf_codegen'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.10.0"
+   },
+   {
+    "version": "0.8.0"
+   },
+   {
+    "version": "0.9.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-bit_set",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "bit-set"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'bit-set'?",
+  "cypher_query": "MATCH (s:Software {name: 'bit-set'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.5.3"
+   },
+   {
+    "version": "0.8.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-async_native_tls",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "async-native-tls"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'async-native-tls'?",
+  "cypher_query": "MATCH (s:Software {name: 'async-native-tls'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.3.3"
+   },
+   {
+    "version": "0.4.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-idna",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "idna"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'idna'?",
+  "cypher_query": "MATCH (s:Software {name: 'idna'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.5"
+   },
+   {
+    "version": "0.2.3"
+   },
+   {
+    "version": "0.4.0"
+   },
+   {
+    "version": "1.0.3"
+   },
+   {
+    "version": "3.10.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-phf_macros",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "phf_macros"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'phf_macros'?",
+  "cypher_query": "MATCH (s:Software {name: 'phf_macros'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.10.0"
+   },
+   {
+    "version": "0.11.3"
+   },
+   {
+    "version": "0.8.0"
+   },
+   {
+    "version": "0.9.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-console",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "console"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'console'?",
+  "cypher_query": "MATCH (s:Software {name: 'console'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.15.11"
+   },
+   {
+    "version": "0.7.7"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-snapbox_macros",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "snapbox-macros"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'snapbox-macros'?",
+  "cypher_query": "MATCH (s:Software {name: 'snapbox-macros'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.1"
+   },
+   {
+    "version": "0.3.10"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-wasmparser",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "wasmparser"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'wasmparser'?",
+  "cypher_query": "MATCH (s:Software {name: 'wasmparser'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.102.0"
+   },
+   {
+    "version": "0.57.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-windows_aarch64_gnullvm",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "windows_aarch64_gnullvm"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'windows_aarch64_gnullvm'?",
+  "cypher_query": "MATCH (s:Software {name: 'windows_aarch64_gnullvm'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.48.5"
+   },
+   {
+    "version": "0.52.6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-redox_syscall",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "redox_syscall"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'redox_syscall'?",
+  "cypher_query": "MATCH (s:Software {name: 'redox_syscall'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.57"
+   },
+   {
+    "version": "0.2.16"
+   },
+   {
+    "version": "0.3.5"
+   },
+   {
+    "version": "0.5.11"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-aho_corasick",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "aho-corasick"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'aho-corasick'?",
+  "cypher_query": "MATCH (s:Software {name: 'aho-corasick'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.5.3"
+   },
+   {
+    "version": "0.6.10"
+   },
+   {
+    "version": "0.7.20"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-errno",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "errno"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'errno'?",
+  "cypher_query": "MATCH (s:Software {name: 'errno'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.8"
+   },
+   {
+    "version": "0.3.11"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-proptest",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "proptest"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'proptest'?",
+  "cypher_query": "MATCH (s:Software {name: 'proptest'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.10.1"
+   },
+   {
+    "version": "0.7.2"
+   },
+   {
+    "version": "0.8.7"
+   },
+   {
+    "version": "0.9.6"
+   },
+   {
+    "version": "1.2.0"
+   },
+   {
+    "version": "1.6.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-pulldown_cmark",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "pulldown-cmark"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'pulldown-cmark'?",
+  "cypher_query": "MATCH (s:Software {name: 'pulldown-cmark'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.2"
+   },
+   {
+    "version": "0.4.1"
+   },
+   {
+    "version": "0.9.6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-predicates",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "predicates"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'predicates'?",
+  "cypher_query": "MATCH (s:Software {name: 'predicates'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.1.1"
+   },
+   {
+    "version": "3.1.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-socket2",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "socket2"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'socket2'?",
+  "cypher_query": "MATCH (s:Software {name: 'socket2'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.4.10"
+   },
+   {
+    "version": "0.5.9"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-parking_lot_core",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "parking_lot_core"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'parking_lot_core'?",
+  "cypher_query": "MATCH (s:Software {name: 'parking_lot_core'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.6.3"
+   },
+   {
+    "version": "0.8.6"
+   },
+   {
+    "version": "0.9.10"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-fastrand",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "fastrand"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'fastrand'?",
+  "cypher_query": "MATCH (s:Software {name: 'fastrand'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.9.0"
+   },
+   {
+    "version": "2.3.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-windows_sys",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "windows-sys"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'windows-sys'?",
+  "cypher_query": "MATCH (s:Software {name: 'windows-sys'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.45.0"
+   },
+   {
+    "version": "0.48.0"
+   },
+   {
+    "version": "0.52.0"
+   },
+   {
+    "version": "0.59.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-serde_big_array",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "serde-big-array"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'serde-big-array'?",
+  "cypher_query": "MATCH (s:Software {name: 'serde-big-array'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.5"
+   },
+   {
+    "version": "0.3.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-crossbeam_deque",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "crossbeam-deque"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'crossbeam-deque'?",
+  "cypher_query": "MATCH (s:Software {name: 'crossbeam-deque'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.7.4"
+   },
+   {
+    "version": "0.8.6"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-log",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "log"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'log'?",
+  "cypher_query": "MATCH (s:Software {name: 'log'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.3.9"
+   },
+   {
+    "version": "0.4.17"
+   },
+   {
+    "version": "0.4.27"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-wasm_bindgen_test_macro",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "wasm-bindgen-test-macro"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'wasm-bindgen-test-macro'?",
+  "cypher_query": "MATCH (s:Software {name: 'wasm-bindgen-test-macro'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.19"
+   },
+   {
+    "version": "0.2.50"
+   },
+   {
+    "version": "0.3.23"
+   },
+   {
+    "version": "0.3.37"
+   },
+   {
+    "version": "0.3.50"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-http",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "http"
+  },
+  "stratum": "multi_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'http'?",
+  "cypher_query": "MATCH (s:Software {name: 'http'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.21"
+   },
+   {
+    "version": "0.2.12"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-libmp3lame",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "libmp3lame"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'libmp3lame'?",
+  "cypher_query": "MATCH (s:Software {name: 'libmp3lame'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "3.100"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-similar",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "similar"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'similar'?",
+  "cypher_query": "MATCH (s:Software {name: 'similar'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.7.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-multidict",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "multidict"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'multidict'?",
+  "cypher_query": "MATCH (s:Software {name: 'multidict'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "6.4.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-openssl",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "openssl"
+  },
+  "stratum": "single_version",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'openssl'?",
+  "cypher_query": "MATCH (s:Software {name: 'openssl'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.10.72"
+   },
+   {
+    "version": "0.7.14"
+   },
+   {
+    "version": "0.9.6c-2.woody.7"
+   },
+   {
+    "version": "3.3.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-libfdk_aac",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "libfdk_aac"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'libfdk_aac'?",
+  "cypher_query": "MATCH (s:Software {name: 'libfdk_aac'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "2.0.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-crokey",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "crokey"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'crokey'?",
+  "cypher_query": "MATCH (s:Software {name: 'crokey'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.4.3"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-typing_extensions",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "typing-extensions"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'typing-extensions'?",
+  "cypher_query": "MATCH (s:Software {name: 'typing-extensions'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "4.13.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-yasm",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "yasm"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'yasm'?",
+  "cypher_query": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.3.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-futures_sink",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "futures-sink"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'futures-sink'?",
+  "cypher_query": "MATCH (s:Software {name: 'futures-sink'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.3.31"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-six",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "six"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'six'?",
+  "cypher_query": "MATCH (s:Software {name: 'six'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.17.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-opus",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "opus"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'opus'?",
+  "cypher_query": "MATCH (s:Software {name: 'opus'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.4"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-rawslice",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "rawslice"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'rawslice'?",
+  "cypher_query": "MATCH (s:Software {name: 'rawslice'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-js_lodash",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "js-lodash"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'js-lodash'?",
+  "cypher_query": "MATCH (s:Software {name: 'js-lodash'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "4.17.4"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-libwebp",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "libwebp"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'libwebp'?",
+  "cypher_query": "MATCH (s:Software {name: 'libwebp'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.3.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-termtree",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "termtree"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'termtree'?",
+  "cypher_query": "MATCH (s:Software {name: 'termtree'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.5.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-asgiref",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "asgiref"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'asgiref'?",
+  "cypher_query": "MATCH (s:Software {name: 'asgiref'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "3.8.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-libaom_av1",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "libaom-av1"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'libaom-av1'?",
+  "cypher_query": "MATCH (s:Software {name: 'libaom-av1'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "3.6.1"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-paw_attributes",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "paw-attributes"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'paw-attributes'?",
+  "cypher_query": "MATCH (s:Software {name: 'paw-attributes'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.0.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-aiosignal",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "aiosignal"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'aiosignal'?",
+  "cypher_query": "MATCH (s:Software {name: 'aiosignal'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.3.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-num_integer",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "num-integer"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'num-integer'?",
+  "cypher_query": "MATCH (s:Software {name: 'num-integer'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.46"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-yarl",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "yarl"
+  },
+  "stratum": "single_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'yarl'?",
+  "cypher_query": "MATCH (s:Software {name: 'yarl'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "1.20.0"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-gnu_config",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "gnu-config"
+  },
+  "stratum": "single_version",
+  "ecosystem": "conan.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'gnu-config'?",
+  "cypher_query": "MATCH (s:Software {name: 'gnu-config'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "cci.20210814"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-utf8parse",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "utf8parse"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'utf8parse'?",
+  "cypher_query": "MATCH (s:Software {name: 'utf8parse'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.2.2"
+   }
+  ]
+ },
+ {
+  "id": "C1_1-react",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "react"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'react'?",
+  "cypher_query": "MATCH (s:Software {name: 'react'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-discard2",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "discard2"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'discard2'?",
+  "cypher_query": "MATCH (s:Software {name: 'discard2'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-importlib_metadatajs",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "importlib-metadatajs"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'importlib-metadatajs'?",
+  "cypher_query": "MATCH (s:Software {name: 'importlib-metadatajs'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-matrixmultiply_dev",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "matrixmultiply-dev"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'matrixmultiply-dev'?",
+  "cypher_query": "MATCH (s:Software {name: 'matrixmultiply-dev'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-warpjs",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "warpjs"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'warpjs'?",
+  "cypher_query": "MATCH (s:Software {name: 'warpjs'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-tensorflow",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "tensorflow"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'tensorflow'?",
+  "cypher_query": "MATCH (s:Software {name: 'tensorflow'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-kv_log_macro_rs",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "kv-log-macro-rs"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'kv-log-macro-rs'?",
+  "cypher_query": "MATCH (s:Software {name: 'kv-log-macro-rs'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-express",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "express"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'express'?",
+  "cypher_query": "MATCH (s:Software {name: 'express'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-lodash",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "lodash"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'lodash'?",
+  "cypher_query": "MATCH (s:Software {name: 'lodash'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-pytorch",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "pytorch"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'pytorch'?",
+  "cypher_query": "MATCH (s:Software {name: 'pytorch'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-getrandom_rs",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "getrandom-rs"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'getrandom-rs'?",
+  "cypher_query": "MATCH (s:Software {name: 'getrandom-rs'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-symfony",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "symfony"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'symfony'?",
+  "cypher_query": "MATCH (s:Software {name: 'symfony'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": []
+ },
+ {
+  "id": "C1_1-argh",
+  "template_id": "C1.1",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.1",
+  "params": {
+   "pkg": "argh"
+  },
+  "stratum": "single_version",
+  "ecosystem": "crates.io",
+  "query_type": "SR",
+  "difficulty": "Easy",
+  "answer_shape": "list",
+  "question": "What are the available versions for software 'argh'?",
+  "cypher_query": "MATCH (s:Software {name: 'argh'})-[:HAS_VERSION]->(v:SoftwareVersion) RETURN v.versionName AS version ORDER BY version",
+  "expected_result": [
+   {
+    "version": "0.1.13"
+   }
+  ]
+ },
+ {
+  "id": "C1_2-nasm-2_16_01",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "nasm",
+   "ver": "2.16.01"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'nasm' version '2.16.01' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'nasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.16.01'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-untrusted-0_7_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "untrusted",
+   "ver": "0.7.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'untrusted' version '0.7.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'untrusted'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.7.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-attrs-25_3_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "attrs",
+   "ver": "25.3.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'attrs' version '25.3.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'attrs'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '25.3.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_32_1_4_deb11u3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.32.1-4+deb11u3"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.32.1-4+deb11u3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.32.1-4+deb11u3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-zlib-1_3_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "zlib",
+   "ver": "1.3.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'zlib' version '1.3.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'zlib'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-palette_derive-0_5_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "palette_derive",
+   "ver": "0.5.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'palette_derive' version '0.5.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'palette_derive'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.5.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-itsdangerous-2_2_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "itsdangerous",
+   "ver": "2.2.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'itsdangerous' version '2.2.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'itsdangerous'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_004_04_7_0_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.004.04-7.0.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.004.04-7.0.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.004.04-7.0.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-pkgconf-2_2_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "pkgconf",
+   "ver": "2.2.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'pkgconf' version '2.2.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'pkgconf'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-num_iter-0_1_45",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "num-iter",
+   "ver": "0.1.45"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'num-iter' version '0.1.45' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'num-iter'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.45'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-flask-2_3_3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "flask",
+   "ver": "2.3.3"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'flask' version '2.3.3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'flask'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_20_2_3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.20.2-3"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.20.2-3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.20.2-3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-ffmpeg-4_2_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "ffmpeg",
+   "ver": "4.2.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'ffmpeg' version '4.2.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'ffmpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-rstest-0_19_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "rstest",
+   "ver": "0.19.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'rstest' version '0.19.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'rstest'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.19.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-aiosignal-1_3_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "aiosignal",
+   "ver": "1.3.2"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'aiosignal' version '1.3.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'aiosignal'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_36_0_7_deb12u1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.36.0-7+deb12u1"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.36.0-7+deb12u1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.36.0-7+deb12u1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-openh264-2_3_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "openh264",
+   "ver": "2.3.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'openh264' version '2.3.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'openh264'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-vcpkg-0_2_15",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "vcpkg",
+   "ver": "0.2.15"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'vcpkg' version '0.2.15' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'vcpkg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.2.15'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-jinja2-3_1_6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "jinja2",
+   "ver": "3.1.6"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'jinja2' version '3.1.6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'jinja2'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.1.6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_14_2_21_deb7u3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.14.2-21+deb7u3"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.14.2-21+deb7u3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.14.2-21+deb7u3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-zlib-1_2_13",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "zlib",
+   "ver": "1.2.13"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'zlib' version '1.2.13' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'zlib'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.2.13'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-cairo_rs-0_8_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "cairo-rs",
+   "ver": "0.8.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'cairo-rs' version '0.8.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'cairo-rs'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.8.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-charset_normalizer-3_4_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "charset-normalizer",
+   "ver": "3.4.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'charset-normalizer' version '3.4.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'charset-normalizer'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.4.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_8_8_7etch6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.8.8-7etch6"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.8.8-7etch6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.8.8-7etch6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-bzip2-1_0_8",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "bzip2",
+   "ver": "1.0.8"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'bzip2' version '1.0.8' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'bzip2'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.0.8'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-strum-0_23_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "strum",
+   "ver": "0.23.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'strum' version '0.23.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'strum'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.23.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-cffi-1_17_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "cffi",
+   "ver": "1.17.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'cffi' version '1.17.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'cffi'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.17.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_20_2_3_deb8u11",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.20.2-3+deb8u11"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.20.2-3+deb8u11' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.20.2-3+deb8u11'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-opus-1_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "opus",
+   "ver": "1.4"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'opus' version '1.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'opus'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-futures_task-0_3_31",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "futures-task",
+   "ver": "0.3.31"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'futures-task' version '0.3.31' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'futures-task'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.3.31'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-aiohttp-3_8_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "aiohttp",
+   "ver": "3.8.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'aiohttp' version '3.8.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'aiohttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.8.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_38_2_5",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.38.2-5"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.38.2-5' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.38.2-5'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-meson-1_4_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "meson",
+   "ver": "1.4.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'meson' version '1.4.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'meson'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.4.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-strum_macros-0_20_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "strum_macros",
+   "ver": "0.20.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'strum_macros' version '0.20.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'strum_macros'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.20.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-pandas-2_0_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "pandas",
+   "ver": "2.0.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'pandas' version '2.0.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'pandas'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.0.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_40_0_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.40.0-1"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.40.0-1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.40.0-1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-yasm-1_3_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "yasm",
+   "ver": "1.3.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'yasm' version '1.3.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'yasm'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.3.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-heck-0_5_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "heck",
+   "ver": "0.5.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'heck' version '0.5.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'heck'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.5.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-multidict-6_4_3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "multidict",
+   "ver": "6.4.3"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'multidict' version '6.4.3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'multidict'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '6.4.3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_28_1_6_deb10u1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.28.1-6+deb10u1"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.28.1-6+deb10u1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.28.1-6+deb10u1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-openjpeg-2_5_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "openjpeg",
+   "ver": "2.5.0"
+  },
+  "stratum": "exists",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'openjpeg' version '2.5.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'openjpeg'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.5.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-pem-1_1_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "pem",
+   "ver": "1.1.1"
+  },
+  "stratum": "exists",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'pem' version '1.1.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'pem'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.1.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-django-4_2_11",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "django",
+   "ver": "4.2.11"
+  },
+  "stratum": "exists",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'django' version '4.2.11' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'django'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.2.11'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-perl-5_40_0_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "perl",
+   "ver": "5.40.0-2"
+  },
+  "stratum": "exists",
+  "ecosystem": "sources.debian.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'perl' version '5.40.0-2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'perl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.40.0-2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": true
+   }
+  ]
+ },
+ {
+  "id": "C1_2-pkgconf-2_2_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "pkgconf",
+   "ver": "2.2.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "conan.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'pkgconf' version '2.2.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'pkgconf'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-ref_cast_impl-1_0_25",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "ref-cast-impl",
+   "ver": "1.0.25"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'ref-cast-impl' version '1.0.25' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'ref-cast-impl'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.0.25'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-charset_normalizer-3_4_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "charset-normalizer",
+   "ver": "3.4.2"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'charset-normalizer' version '3.4.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'charset-normalizer'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '3.4.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-uncased-0_9_11",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "uncased",
+   "ver": "0.9.11"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'uncased' version '0.9.11' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'uncased'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.11'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-sqlparse-0_5_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "sqlparse",
+   "ver": "0.5.4"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "pypi.org",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'sqlparse' version '0.5.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'sqlparse'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.5.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-servo_fontconfig_sys-4_0_10",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "servo-fontconfig-sys",
+   "ver": "4.0.10"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'servo-fontconfig-sys' version '4.0.10' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'servo-fontconfig-sys'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.0.10'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-portable_atomic_util-0_2_5",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "portable-atomic-util",
+   "ver": "0.2.5"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'portable-atomic-util' version '0.2.5' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'portable-atomic-util'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.2.5'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-strfmt-0_1_7",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "strfmt",
+   "ver": "0.1.7"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'strfmt' version '0.1.7' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'strfmt'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.7'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-r_efi-5_2_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "r-efi",
+   "ver": "5.2.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'r-efi' version '5.2.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'r-efi'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '5.2.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-itertools-0_10_6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "itertools",
+   "ver": "0.10.6"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'itertools' version '0.10.6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'itertools'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.10.6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-inotify_sys-0_1_6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "inotify-sys",
+   "ver": "0.1.6"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'inotify-sys' version '0.1.6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'inotify-sys'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-bitvec-1_0_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "bitvec",
+   "ver": "1.0.2"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'bitvec' version '1.0.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'bitvec'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.0.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-regex_syntax-0_8_6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "regex-syntax",
+   "ver": "0.8.6"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'regex-syntax' version '0.8.6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'regex-syntax'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.8.6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-rand_xorshift-0_2_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "rand_xorshift",
+   "ver": "0.2.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'rand_xorshift' version '0.2.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'rand_xorshift'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.2.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-tokio_sync-0_1_9",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "tokio-sync",
+   "ver": "0.1.9"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'tokio-sync' version '0.1.9' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'tokio-sync'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.9'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-bytemuck-1_22_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "bytemuck",
+   "ver": "1.22.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'bytemuck' version '1.22.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'bytemuck'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.22.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-strum-0_20_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "strum",
+   "ver": "0.20.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'strum' version '0.20.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'strum'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.20.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-phf_macros-0_10_1",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "phf_macros",
+   "ver": "0.10.1"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'phf_macros' version '0.10.1' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'phf_macros'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.10.1'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-vte_generate_state_changes-0_1_3",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "vte_generate_state_changes",
+   "ver": "0.1.3"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'vte_generate_state_changes' version '0.1.3' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'vte_generate_state_changes'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.3'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-parking-2_2_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "parking",
+   "ver": "2.2.2"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'parking' version '2.2.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'parking'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.2.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-wait_timeout-0_2_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "wait-timeout",
+   "ver": "0.2.2"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'wait-timeout' version '0.2.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'wait-timeout'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.2.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-rustix-0_38_11",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "rustix",
+   "ver": "0.38.11"
+  },
+  "stratum": "near_miss_version",
+  "ecosystem": "crates.io",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'rustix' version '0.38.11' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'rustix'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.38.11'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-lodash-2_3_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "lodash",
+   "ver": "2.3.4"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'lodash' version '2.3.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'lodash'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-libhttp-0_2_12",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "libhttp",
+   "ver": "0.2.12"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'libhttp' version '0.2.12' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'libhttp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.2.12'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-rustdoc_stripperjs-0_1_19",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "rustdoc-stripperjs",
+   "ver": "0.1.19"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'rustdoc-stripperjs' version '0.1.19' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'rustdoc-stripperjs'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.19'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-unic_emoji_char_dev-0_9_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "unic-emoji-char-dev",
+   "ver": "0.9.0"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'unic-emoji-char-dev' version '0.9.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'unic-emoji-char-dev'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.9.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-express-2_3_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "express",
+   "ver": "2.3.4"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'express' version '2.3.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'express'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-tokio_tcp-0_1_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "tokio_tcp",
+   "ver": "0.1.4"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'tokio_tcp' version '0.1.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'tokio_tcp'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-runtime_native_dev-0_3_0_alpha_6",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "runtime-native-dev",
+   "ver": "0.3.0-alpha.6"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'runtime-native-dev' version '0.3.0-alpha.6' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'runtime-native-dev'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.3.0-alpha.6'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-custom_derive2-0_1_7",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "custom_derive2",
+   "ver": "0.1.7"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'custom_derive2' version '0.1.7' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'custom_derive2'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.7'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-zeroize_derivejs-1_4_2",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "zeroize_derivejs",
+   "ver": "1.4.2"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'zeroize_derivejs' version '1.4.2' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'zeroize_derivejs'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '1.4.2'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-nanoserde_derive2-0_1_22",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "nanoserde-derive2",
+   "ver": "0.1.22"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'nanoserde-derive2' version '0.1.22' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'nanoserde-derive2'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.22'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-pytorch-0_1_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "pytorch",
+   "ver": "0.1.0"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'pytorch' version '0.1.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'pytorch'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-laravel-4_17_21",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "laravel",
+   "ver": "4.17.21"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'laravel' version '4.17.21' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'laravel'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '4.17.21'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-rails-2_3_4",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "rails",
+   "ver": "2.3.4"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'rails' version '2.3.4' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'rails'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '2.3.4'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ },
+ {
+  "id": "C1_2-symfony-0_1_0",
+  "template_id": "C1.2",
+  "family": "C1: Entity / Version Lookup",
+  "source": "luxu",
+  "v3_id": "C1.3",
+  "params": {
+   "pkg": "symfony",
+   "ver": "0.1.0"
+  },
+  "stratum": "absent_package",
+  "ecosystem": "absent",
+  "query_type": "SA",
+  "difficulty": "Easy",
+  "answer_shape": "bool",
+  "question": "Does software 'symfony' version '0.1.0' exist in the graph?",
+  "cypher_query": "MATCH (s:Software {name: 'symfony'})-[:HAS_VERSION]->(v:SoftwareVersion {versionName: '0.1.0'}) RETURN count(v) > 0 AS exists",
+  "expected_result": [
+   {
+    "exists": false
+   }
+  ]
+ }
+]
