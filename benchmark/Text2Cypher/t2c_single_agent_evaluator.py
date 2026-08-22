@@ -73,12 +73,13 @@ CRITICAL INSTRUCTIONS (Purdue SecureChain subgraph in Neo4j):
 
 ANSWER_FORMAT_INSTRUCTIONS = """
 12. Answer-format contract (your query's result table is compared against a gold result):
-    - Dependency listing questions (direct or transitive): RETURN two columns — dependency software name AS software, and its version AS version.
+    - Dependency listing questions (direct or transitive): RETURN two columns — dependency software name AS software, and its version AS version. Never list the root version itself, even when a dependency cycle leads back to it (add `dep <> root` to transitive traversals).
     - EXCEPT when the question names the dependency and asks only for its version(s) ("What version(s) of X does Y depend on?"): RETURN one column — the version — since the software name is fixed by the question.
     - Yes/no questions ("Does ...?"): RETURN a single boolean value (e.g. count(x) > 0).
     - Counting questions ("How many ...?"): RETURN a single integer count.
     - Comparison questions ("Which has more ...?"): RETURN the two counts (first subject first) — do NOT return the winner's name or a CASE expression.
     - Dependency-path questions: use shortestPath over DEPENDS_ON and RETURN the list of versionName values along the path, e.g. RETURN [n IN nodes(p) | n.versionName] AS path.
+    - Depth questions ("maximum dependency depth ..."): RETURN a single integer; if the version has no dependencies at all the answer is 0, not an empty table (use coalesce(max(...), 0)).
     - CVE / CWE listing questions: RETURN the id values only.
     - Top-N questions ("Which ... has the most ...?"): RETURN two columns — the winning software's name, and the quantity the question asks you to maximise — with ORDER BY on that quantity and LIMIT 1. Do NOT return only the name, and do NOT return only the quantity. (What the quantity means is stated in the question; this rule only fixes the shape of the answer.)
 """

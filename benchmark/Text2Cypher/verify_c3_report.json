@@ -1,0 +1,78 @@
+{
+ "verified_at": "2026-08-22 21:33",
+ "n_cases": 1440,
+ "n_failures": 0,
+ "failures": [],
+ "gold_ms": {
+  "median": 7.3,
+  "p95": 98.1,
+  "max": 1123.1
+ },
+ "templates": {
+  "C3.1": {
+   "n": 250,
+   "empty": 82,
+   "strata": {
+    "has_indirect": 125,
+    "direct_only": 43,
+    "leaf_version": 55,
+    "absent_package": 27
+   },
+   "distinct": 158
+  },
+  "C3.2": {
+   "n": 250,
+   "empty": 0,
+   "strata": {
+    "indirect_true": 88,
+    "direct_true": 37,
+    "reverse_only": 75,
+    "unreachable": 50
+   },
+   "distinct": 2
+  },
+  "C3.3": {
+   "n": 250,
+   "empty": 99,
+   "strata": {
+    "unique_path_2plus": 113,
+    "unique_path_direct": 38,
+    "no_path": 62,
+    "absent_dep": 37
+   },
+   "distinct": 152
+  },
+  "C3.4": {
+   "n": 250,
+   "empty": 95,
+   "strata": {
+    "has_dist2": 155,
+    "deps_no_dist2": 40,
+    "leaf_version": 28,
+    "absent_package": 27
+   },
+   "distinct": 142
+  },
+  "C3.5": {
+   "n": 190,
+   "empty": 0,
+   "strata": {
+    "depth_ge2": 57,
+    "depth_exactly1": 70,
+    "leaf_version": 63
+   },
+   "distinct": 6
+  },
+  "C3.6": {
+   "n": 250,
+   "empty": 95,
+   "strata": {
+    "has_indirect": 155,
+    "all_deps_direct": 40,
+    "leaf_version": 28,
+    "absent_package": 27
+   },
+   "distinct": 150
+  }
+ }
+}

@@ -68,7 +68,8 @@ class Context:
         self.ses = ses
         self.versions = run(ses, (
             f"MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
-            f"RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+            f"RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco, "
+            f"EXISTS {{ (v)-[:DEPENDS_ON]->() }} AS hasdeps"
         ))
         self.package_names = {r["pkg"] for r in self.versions}
         self.pkg_ver = {(r["pkg"], r["ver"]) for r in self.versions}
@@ -170,6 +171,33 @@ def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
             if cand is None:
                 continue
             out.append({"pkg": r["pkg"], "ver": cand, "eco": r["eco"]})
+
+    elif kind == "absent_dep":
+        # A real root (with dependencies, so emptiness is attributable to the
+        # absent dep and not to the root being a leaf) asked about a dep name
+        # that is not in the graph. Same half-and-half mix as absent_package.
+        roots = [r for r in ctx.versions if r.get("hasdeps")]
+        rng.shuffle(roots)
+        real_world = [q for q in ABSENT_PACKAGES if q not in ctx.package_names]
+        pool = sorted(ctx.package_names)
+        seen = set()
+        attempts = 0
+        while len(out) < n and attempts < n * 80 and roots:
+            attempts += 1
+            r = roots[attempts % len(roots)]
+            if len(out) % 2 == 0 and real_world:
+                name = real_world.pop()
+            else:
+                base = rng.choice(pool)
+                cands = [c for c in _near_miss_names(base) if c not in ctx.package_names]
+                if not cands:
+                    continue
+                name = rng.choice(cands)
+            key = (r["pkg"], r["ver"], name)
+            if key in seen or name in ctx.package_names:
+                continue
+            seen.add(key)
+            out.append({"pkg": r["pkg"], "ver": r["ver"], "dep": name, "eco": r["eco"]})
 
     else:
         raise ValueError("unknown synthetic stratum: " + kind)
@@ -287,7 +315,9 @@ def _check_shape(rows: list[dict], shape: dict, where: str) -> None:
     # duplicate is a missing DISTINCT in the gold, and it silently changes what
     # a row-level F1 score means.
     if kind in ("list", "table") and not shape.get("allow_duplicate_rows"):
-        keys = [tuple(sorted(r.items())) for r in rows]
+        # json round-trip because a cell can hold a list (C3.3's path column),
+        # which raw tuples cannot hash.
+        keys = [json.dumps(r, sort_keys=True) for r in rows]
         if len(keys) != len(set(keys)):
             raise BuildError(where + ": V8 gold returned duplicate rows "
                              "(" + str(len(keys) - len(set(keys))) + " of " + str(len(keys))
@@ -308,6 +338,14 @@ def _check_expect(rows: list[dict], expect: str | None, shape: dict, where: str)
         if not rows or rows[0][col] is not want:
             raise BuildError(where + ": V4 stratum expects " + col + "=" + str(want)
                              + ", got " + repr(rows))
+    # Scalar strata: "zero" pins the no-dependencies answer, "positive" any
+    # real depth/count. Without these a scalar template's strata could not
+    # declare what they are for, and V4 would have nothing to check.
+    if expect == "zero" and (not rows or rows[0][col] != 0):
+        raise BuildError(where + ": V4 stratum expects " + col + "=0, got " + repr(rows))
+    if expect == "positive" and (not rows or not isinstance(rows[0][col], (int, float))
+                                 or rows[0][col] <= 0):
+        raise BuildError(where + ": V4 stratum expects " + col + ">0, got " + repr(rows))
 
 
 def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict]:
@@ -319,13 +357,17 @@ def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict
 
     for tid in tids:
         tpl = TEMPLATES[tid]
+        # A template may declare a capacity ceiling below the campaign quota
+        # (C3.5: only 127 roots have a truthful bounded answer). The ceiling is
+        # a property of the graph, and the per-template n column reports it.
+        tpl_quota = min(quota, tpl.get("max_quota", quota))
         # Seeded per template, not per run: the bank is built a family at a
         # time, and a shared stream would make a template's bindings depend on
         # which *other* templates happened to be built alongside it. With this,
         # rebuilding one template reproduces exactly the cases it had before.
         rng = random.Random("%d:%s" % (seed, tid))
         check_template(tid, tpl)                                       # V7
-        bindings, report = enumerate_bindings(ses, tid, quota, rng, ctx)
+        bindings, report = enumerate_bindings(ses, tid, tpl_quota, rng, ctx)
         dropped = 0
         for raw in bindings:
             params = {k: v for k, v in raw.items() if k in PARAM_KEYS}

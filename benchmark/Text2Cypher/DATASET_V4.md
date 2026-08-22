@@ -71,9 +71,9 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**1,250 cases, 250 per template, 219 with an empty answer (17.5 %).** Ecosystem
-split: crates.io 620, pypi.org 289, conan.io 189, absent 109,
-sources.debian.org 43.
+**2,690 cases, 11 templates, 590 with an empty answer (21.9 %).** 250 per
+template except C3.5, which ships at its measured capacity of 190 (see the C3
+notes below).
 
 | id | sheet family | v3 id | shape | n | strata (drawn / pool) |
 |---|---|---|---|---|---|
@@ -82,6 +82,12 @@ sources.debian.org 43.
 | C2.1 | C2 Direct DEPENDS_ON (out) | C2.1 | table | 250 | has_direct_deps 168/1121 · **leaf_version 55/529** · **absent_package 27/81** |
 | C2.2 | C2 Direct DEPENDS_ON (out) | C2.2 | bool | 250 | direct_dep 100/6241 · **grandchild_not_direct 88/20242** · **unrelated_dep 62/4000** |
 | C2.3 | C2 Direct DEPENDS_ON (out) | — | list | 250 | direct_dep 150/6241 · **grandchild_not_direct 63/20242** · **unrelated_dep 37/4000** |
+| C3.1 | C3 Transitive / path | C3.1 | table | 250 | has_indirect 125/1051 · direct_only 43/70 · **leaf_version 55/529** · **absent_package 27/81** |
+| C3.2 | C3 Transitive / path | C3.2 | bool | 250 | **indirect_true 88/25000** · direct_true 37/6241 · **reverse_only 75/6000** · **unreachable 50/5000** |
+| C3.3 | C3 Transitive / path | C3.3 | list | 250 | **unique_path_2plus 113/20000** · unique_path_direct 38/1286 · **no_path 62/5000** · **absent_dep 37/111** |
+| C3.4 | C3 Transitive / path | — | table | 250 | has_dist2 155/1049 · **deps_no_dist2 40/72** · leaf 28/529 · absent 27/81 |
+| C3.5 | C3 Transitive / path | — | scalar | **190** | depth_ge2 57/57 · depth_exactly1 70/70 · leaf 63/529 |
+| C3.6 | C3 Transitive / path | — | table | 250 | has_indirect 155/1049 · **all_deps_direct 40/72** · leaf 28/529 · absent 27/81 |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -139,6 +145,56 @@ answer is a list, and an unordered list has no defined row order to build
 against. v4 adds `DISTINCT` + `ORDER BY` and the question asks for
 "version(s)", so the question asked and the answer scored are the same question.
 
+### C3: the depth-6 convention, cycles, and a capacity ceiling
+
+The sheet lists seven C3 rows; C3.7 is struck out, C3.1-C3.6 are live.
+
+**The depth-6 convention.** Schema instruction 4 tells every model "Multi-hop:
+`[:DEPENDS_ON*1..6]`", and every C3 gold uses the same bound, so gold and an
+obedient model compute the same answer *by protocol*. This is not a formality:
+993 of the 1,121 roots have dependency walks beyond 6 hops. For the two
+templates where the convention would produce a wrong-or-degenerate answer the
+bindings are restricted instead:
+
+- **C3.5 (max depth) ships at 190, not 250.** Only 127 roots keep their whole
+  walk structure inside 6 hops; for the other 994 the capped gold would answer
+  a constant 6 — "always say 6" would score ~90% — while the true depth is
+  larger. So C3.5 binds the 127 shallow roots (57 with depth ≥ 2, 70 with depth
+  exactly 1) plus 63 leaves (answer 0), and the template declares `max_quota:
+  190`. This is a property of the graph, reported, not papered over.
+- **C3.2's false strata are exact, not conventional.** `reverse_only` and
+  `unreachable` draw their roots from versions whose closure is fully inside 6
+  hops, so "not reachable within 6" is "not reachable at all".
+
+**Cycles: the root is not its own dependency.** This graph has real dependency
+cycles (serde ↔ serde_derive), so a `*1..6` walk can return to the root and
+list the software as a dependency of itself. The Python BFS cross-check caught
+exactly this in **118 of 750** nonempty C3.1/C3.4/C3.6 answers before the
+golds got `dep <> root`. The contract's dependency-listing clause now states
+the same resolution.
+
+**C3.3 (dependency path) is bound to provably unique answers.**
+`shortestPath()` returns an arbitrary representative when several shortest
+paths tie, so a scoreable path question must leave nothing to arbitrate:
+nonempty cases bind only (root, dep) pairs with exactly one reachable target
+version and exactly one shortest path (verified independently by a Python
+BFS path-counting pass). The gold also gains `ORDER BY path` (V7).
+
+**Two golds repaired the way the sheet's own C8.7 does it** (G2): C3.4
+"exactly 2 hops away" and C3.6 "indirect (not direct)" both get
+`WHERE NOT (root)-[:DEPENDS_ON]->(dep)` — without it a node that is both a
+direct dependency and 2 hops away contradicts the question text. C3.4's
+question says "(and not also direct dependencies)" so the asked question and
+the scored answer coincide.
+
+**Verification and smoke (2026-08-22):** all 1,440 C3 cases recomputed in
+Python from the raw edge list (BFS reachability/distances, DFS walk depth,
+BFS shortest-path counting — no Cypher shared with the golds): **0 failures**
+after the cycle fix. Smoke (60 stratified cases, deepseek-v4-flash): bare
+0.717 / contract 0.967; the contract's new depth clause turns C3.5's leaf
+cases from 0.00 to 1.00, and C3.3 goes 0.30 → 1.00 under the path clause. The
+remaining failures are the known Neo4j-5 pattern-expression weakness (C3.2).
+
 ### On the quota
 
 **250 bindings per template.** The pool column shows the C1 and C2 families are
@@ -150,7 +206,9 @@ those families ship with a documented ceiling and the per-template `n` column
 reports it.
 
 Quota is a build flag, not a property of the bank, so the whole bank can be
-rebuilt at another n with one command. Two builder properties make that safe:
+rebuilt at another n with one command. A template may declare `max_quota` — a
+capacity ceiling measured on the graph (C3.5: 190) — and ships short with the
+ceiling reported rather than padding with degenerate cases. Two builder properties make that safe:
 per-stratum quotas are allocated by largest remainder (so every template ships
 exactly `n`, never `n + 1`), and each template is seeded independently
 (`seed:template_id`), so rebuilding one template reproduces the cases it already
@@ -165,16 +223,17 @@ The frozen SecureChain subgraph, 11 anchors, imported 2026-08-01, container
 |---|---|
 | `Software` | 1,131 |
 | `SoftwareVersion` | 1,650 |
-| `DEPENDS_ON` | **14,052** |
+| `DEPENDS_ON` (SoftwareVersion→SoftwareVersion) | **6,286** |
 | `VULNERABLE_TO` | 196 |
 | `Vulnerability` | 155 |
 
-> **Correction.** `DATASET_V2.md`, `DATASET_V3.md`, `README.md` and
-> `t2c_v2_validation_report.md` state **6,286** `DEPENDS_ON`. That figure was
-> measured immediately after the 2026-08-01 import; an edge-completion pass
-> afterwards raised it to 14,052, and all 14,052 are *distinct* `(a, b)` pairs —
-> not duplicate-import noise — with no node count changed. The v3 dataset was
-> enumerated after that change: re-running 100 stored gold queries spanning all
-> 25 v3 templates on 2026-08-19 produced **0 mismatches**, so the v3 bank and the
-> four finished campaigns are consistent with the graph. Only the documentation
-> is stale.
+> **Correction of the correction (2026-08-22).** The earlier note here claimed
+> the docs' 6,286 was stale and 14,052 was the real count. Measured by label
+> pair, both numbers are real but they count different things:
+> `SoftwareVersion→SoftwareVersion` (the benchmark subgraph every gold query
+> touches) has exactly **6,286** edges — the documented figure was right all
+> along — while the remaining 7,766 `DEPENDS_ON` edges live between `Package`
+> and `Native` nodes that DepsRAG's own `construct_dependency_graph` tool wrote
+> into the same database. Every gold and every pool query pins the
+> `:SoftwareVersion` label, so the benchmark is unaffected by the pollution;
+> the table above counts the benchmark subgraph.
