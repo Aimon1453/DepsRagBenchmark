@@ -133,13 +133,16 @@ def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
         # from near-miss variants of in-graph names.
         want_versioned = kind.endswith("_versioned")
         pool = sorted(ctx.package_names)
+        # Consumed as we go. There are only ~10 of these, so once they run out
+        # every candidate has to come from the near-miss branch - alternating
+        # against an exhausted list would stall the loop at 2x its length.
         real_world = [p for p in ABSENT_PACKAGES if p not in ctx.package_names]
         seen: set[str] = set()
         attempts = 0
         while len(out) < n and attempts < n * 80:
             attempts += 1
             if len(out) % 2 == 0 and real_world:
-                name = real_world[(attempts // 2) % len(real_world)]
+                name = real_world.pop()
                 ver = rng.choice(["1.0.0", "2.3.4", "4.17.21", "0.1.0"])
             else:
                 base = rng.choice(pool)
@@ -186,8 +189,17 @@ def enumerate_bindings(ses, tid: str, quota: int, rng: random.Random,
     report: dict = {"quota": quota, "strata": {}}
     seen: set[tuple] = set()
 
-    for name, share, source, expect in tpl["strata"]:
-        want = int(round(quota * share))
+    # Largest-remainder allocation, so the per-stratum quotas sum to exactly
+    # `quota`. Rounding each share independently overshoots (0.67/0.22/0.11 of
+    # 80 rounds to 54+18+9 = 81), and a template that ships 81 cases while its
+    # neighbours ship 80 puts an inconsistent n in every per-template table.
+    exact = [quota * share for _, share, _, _ in tpl["strata"]]
+    wants = [int(x) for x in exact]
+    order = sorted(range(len(exact)), key=lambda i: exact[i] - wants[i], reverse=True)
+    for i in order[: quota - sum(wants)]:
+        wants[i] += 1
+
+    for (name, share, source, expect), want in zip(tpl["strata"], wants):
         if isinstance(source, str) and source.startswith("SYNTH:"):
             cands = synth(source.split(":", 1)[1], ctx, rng, want * 3)
         else:
@@ -299,14 +311,19 @@ def _check_expect(rows: list[dict], expect: str | None, shape: dict, where: str)
 
 
 def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict]:
-    rng = random.Random(seed)
     ctx = Context(ses)
     cases: list[dict] = []
     reports: dict = {}
     seen_ids: set[str] = set()
+    seen_params: set[tuple] = set()
 
     for tid in tids:
         tpl = TEMPLATES[tid]
+        # Seeded per template, not per run: the bank is built a family at a
+        # time, and a shared stream would make a template's bindings depend on
+        # which *other* templates happened to be built alongside it. With this,
+        # rebuilding one template reproduces exactly the cases it had before.
+        rng = random.Random("%d:%s" % (seed, tid))
         check_template(tid, tpl)                                       # V7
         bindings, report = enumerate_bindings(ses, tid, quota, rng, ctx)
         dropped = 0
@@ -333,11 +350,22 @@ def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict
             _check_shape(rows, tpl["answer_shape"], where)             # V3
             _check_expect(rows, raw.get("_expect"), tpl["answer_shape"], where)  # V4
 
-            cid = "-".join([tid.replace(".", "_")]
-                           + [_slug(str(params[k])) for k in tpl["params"]])
-            if cid in seen_ids:                                        # V6
+            # V6 is about duplicate *questions*, so it compares parameters,
+            # not slugs. Two packages whose names differ only in punctuation
+            # ("typing-extensions" / "typing_extensions") slug to one id while
+            # being two perfectly good questions; those get a suffix instead of
+            # being thrown away.
+            key = (tid, tuple(str(params[k]) for k in tpl["params"]))
+            if key in seen_params:                                     # V6
                 dropped += 1
                 continue
+            seen_params.add(key)
+            base = "-".join([tid.replace(".", "_")]
+                            + [_slug(str(params[k])) for k in tpl["params"]])
+            cid, bump = base, 1
+            while cid in seen_ids:
+                bump += 1
+                cid = base + "-" + str(bump)
             seen_ids.add(cid)
 
             cases.append({
@@ -447,7 +475,13 @@ def main() -> int:
     bout = T2C_DIR / args.bindings_out
     # Merge with whatever is already built, so families can land one at a time.
     existing = json.loads(out.read_text(encoding="utf-8")) if out.exists() else []
-    kept = [c for c in existing if c["template_id"] not in tids]
+    # A template struck out of the shared sheet is deleted from TEMPLATES, and
+    # its cases have to leave the bank with it - otherwise a partial rebuild
+    # silently carries retired questions forward.
+    kept = [c for c in existing if c["template_id"] not in tids and c["template_id"] in TEMPLATES]
+    retired = len(existing) - len(kept) - sum(1 for c in existing if c["template_id"] in tids)
+    if retired:
+        print("dropped %d case(s) of retired templates" % retired)
     merged = kept + cases
     out.write_text(json.dumps(merged, indent=1, ensure_ascii=False), encoding="utf-8")
 

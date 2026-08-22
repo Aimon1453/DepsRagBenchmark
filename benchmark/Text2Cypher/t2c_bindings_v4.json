@@ -1,65 +1,217 @@
 {
  "seed": 20260819,
- "quota": 80,
+ "quota": 250,
  "report": {
   "C1.1": {
-   "quota": 80,
+   "quota": 250,
    "strata": {
     "multi_version": {
      "available": 296,
-     "wanted": 44,
-     "drawn": 44
+     "wanted": 138,
+     "drawn": 138
     },
     "single_version": {
      "available": 835,
-     "wanted": 24,
-     "drawn": 23
+     "wanted": 75,
+     "drawn": 74
     },
     "absent_package": {
-     "available": 20,
-     "wanted": 12,
-     "drawn": 12
+     "available": 111,
+     "wanted": 37,
+     "drawn": 37
     }
    },
    "topped_up": 1,
-   "total": 80,
+   "total": 250,
    "ecosystems": {
-    "conan.io": 12,
-    "crates.io": 45,
-    "pypi.org": 9,
+    "conan.io": 26,
+    "crates.io": 157,
+    "pypi.org": 28,
     "sources.debian.org": 2,
-    "absent": 12
+    "absent": 37
    },
    "dropped_duplicates": 0,
-   "built": 80
+   "built": 250
   },
   "C1.2": {
-   "quota": 80,
+   "quota": 250,
    "strata": {
     "exists": {
      "available": 1650,
-     "wanted": 44,
-     "drawn": 44
+     "wanted": 138,
+     "drawn": 138
     },
     "near_miss_version": {
-     "available": 66,
-     "wanted": 22,
-     "drawn": 22
+     "available": 201,
+     "wanted": 67,
+     "drawn": 67
     },
     "absent_package": {
-     "available": 20,
-     "wanted": 14,
-     "drawn": 14
+     "available": 135,
+     "wanted": 45,
+     "drawn": 45
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 37,
+    "crates.io": 98,
+    "pypi.org": 45,
+    "sources.debian.org": 25,
+    "absent": 45
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C2.1": {
+   "quota": 250,
+   "strata": {
+    "has_direct_deps": {
+     "available": 1121,
+     "wanted": 168,
+     "drawn": 168
+    },
+    "leaf_version": {
+     "available": 529,
+     "wanted": 55,
+     "drawn": 55
+    },
+    "absent_package": {
+     "available": 81,
+     "wanted": 27,
+     "drawn": 27
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 31,
+    "crates.io": 149,
+    "pypi.org": 29,
+    "sources.debian.org": 14,
+    "absent": 27
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C2.2": {
+   "quota": 250,
+   "strata": {
+    "direct_dep": {
+     "available": 6241,
+     "wanted": 100,
+     "drawn": 100
+    },
+    "grandchild_not_direct": {
+     "available": 20242,
+     "wanted": 88,
+     "drawn": 88
+    },
+    "unrelated_dep": {
+     "available": 4000,
+     "wanted": 62,
+     "drawn": 62
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 43,
+    "crates.io": 102,
+    "pypi.org": 104,
+    "sources.debian.org": 1
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C2.3": {
+   "quota": 250,
+   "strata": {
+    "direct_dep": {
+     "available": 6241,
+     "wanted": 150,
+     "drawn": 150
+    },
+    "grandchild_not_direct": {
+     "available": 20242,
+     "wanted": 63,
+     "drawn": 63
+    },
+    "unrelated_dep": {
+     "available": 4000,
+     "wanted": 37,
+     "drawn": 37
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 52,
+    "crates.io": 114,
+    "pypi.org": 83,
+    "sources.debian.org": 1
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C2.4": {
+   "quota": 80,
+   "strata": {
+    "has_direct_deps": {
+     "available": 1121,
+     "wanted": 54,
+     "drawn": 54
+    },
+    "leaf_version": {
+     "available": 529,
+     "wanted": 17,
+     "drawn": 17
+    },
+    "absent_package": {
+     "available": 27,
+     "wanted": 9,
+     "drawn": 9
     }
    },
    "topped_up": 0,
    "total": 80,
    "ecosystems": {
-    "conan.io": 12,
-    "crates.io": 30,
-    "pypi.org": 13,
-    "sources.debian.org": 11,
-    "absent": 14
+    "conan.io": 22,
+    "crates.io": 25,
+    "pypi.org": 19,
+    "sources.debian.org": 5,
+    "absent": 9
+   },
+   "dropped_duplicates": 0,
+   "built": 80
+  },
+  "C2.6": {
+   "quota": 80,
+   "strata": {
+    "grandchild_not_direct": {
+     "available": 20242,
+     "wanted": 28,
+     "drawn": 28
+    },
+    "unrelated_dep": {
+     "available": 4000,
+     "wanted": 20,
+     "drawn": 20
+    },
+    "direct_dep": {
+     "available": 6241,
+     "wanted": 32,
+     "drawn": 32
+    }
+   },
+   "topped_up": 0,
+   "total": 80,
+   "ecosystems": {
+    "conan.io": 21,
+    "crates.io": 19,
+    "pypi.org": 39,
+    "sources.debian.org": 1
    },
    "dropped_duplicates": 0,
    "built": 80

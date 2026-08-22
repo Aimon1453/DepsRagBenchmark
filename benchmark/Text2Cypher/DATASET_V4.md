@@ -38,8 +38,8 @@ Three decisions forced a rebuild rather than another patch of v3:
 # build a family, validate it, write nothing yet
 python benchmark/Text2Cypher/t2c_build_v4.py --templates C1.1 C1.2 --dry-run --samples 9
 
-# build for real; templates not named are carried over from the existing file
-python benchmark/Text2Cypher/t2c_build_v4.py --templates C1.1 C1.2 --quota 80
+# build for real; unnamed templates are carried over, retired ones are dropped
+python benchmark/Text2Cypher/t2c_build_v4.py --templates C2.1 C2.2 C2.3 --quota 250
 ```
 
 ## What the build guarantees
@@ -53,7 +53,7 @@ Nothing enters the bank unvalidated:
 | V3 answer shape | undeclared columns; a bool/scalar template returning ≠ 1 row |
 | V4 stratum expectation | an `absent_package` case that answered non-empty, i.e. enumeration drifted |
 | V5 placeholders | an unfilled `{pkg}` surviving into the question or the query |
-| V6 uniqueness | two cases with the same template and the same parameters |
+| V6 uniqueness | two cases with the same template and the same **parameters** (a slug collision such as `typing-extensions` / `typing_extensions` is two valid questions, so it gets a suffixed id instead of being dropped) |
 | V7 template coherence | a list answer with **no `ORDER BY`**; a bool template with several columns; strata whose shares do not sum to 1 |
 | V8 duplicate rows | a list answer containing the same row twice, i.e. a missing `DISTINCT` |
 
@@ -71,19 +71,31 @@ the answer set is unaffected.
 
 ## In the bank so far
 
+**1,250 cases, 250 per template, 219 with an empty answer (17.5 %).** Ecosystem
+split: crates.io 620, pypi.org 289, conan.io 189, absent 109,
+sources.debian.org 43.
+
 | id | sheet family | v3 id | shape | n | strata (drawn / pool) |
 |---|---|---|---|---|---|
-| C1.1 | C1 Entity / Version Lookup | C1.1 | list | 80 | multi_version 44/296 · single_version 24/835 · **absent_package 12/20** |
-| C1.2 | C1 Entity / Version Lookup | **C1.3** | bool | 80 | exists 44/1650 · **near_miss_version 22/66** · **absent_package 14/20** |
+| C1.1 | C1 Entity / Version Lookup | C1.1 | list | 250 | multi_version 138/296 · single_version 75/835 · **absent_package 37/111** |
+| C1.2 | C1 Entity / Version Lookup | **C1.3** | bool | 250 | exists 138/1650 · **near_miss_version 67/201** · **absent_package 45/135** |
+| C2.1 | C2 Direct DEPENDS_ON (out) | C2.1 | table | 250 | has_direct_deps 168/1121 · **leaf_version 55/529** · **absent_package 27/81** |
+| C2.2 | C2 Direct DEPENDS_ON (out) | C2.2 | bool | 250 | direct_dep 100/6241 · **grandchild_not_direct 88/20242** · **unrelated_dep 62/4000** |
+| C2.3 | C2 Direct DEPENDS_ON (out) | — | list | 250 | direct_dep 150/6241 · **grandchild_not_direct 63/20242** · **unrelated_dep 37/4000** |
 
-160 cases, 12 with an empty answer (7.5 %). Ecosystem split: crates.io 75,
-absent 26, conan.io 24, pypi.org 22, sources.debian.org 13.
+Bold strata are new in v4; the sheet has no notion of a stratum, so a template
+copied from it straight has no empty-answer case, no false case and no
+absent-entity case.
 
-### What v4 adds to these two beyond a straight copy of the sheet
+### Which sheet rows are live
 
-The sheet has no notion of a stratum, so a template copied from it has no
-empty-answer case, no false case, and no absent-entity case. The bold strata
-above are new:
+The shared sheet strikes rows out rather than deleting them, and a struck row is
+not part of the bank. C2 lists six rows and strikes three: **C2.4** (names of the
+direct dependencies), **C2.5** ("does it have any direct dependencies", which is
+exactly `C4.1 > 0`) and **C2.6** (the "not directly depend" negation). Only C2.1,
+C2.2 and C2.3 are built.
+
+### C1: what the strata add
 
 - **`absent_package` on C1.1.** Without it, "list the versions of X" has a
   non-empty answer in every single case, and a system that returns the versions
@@ -103,14 +115,46 @@ above are new:
   entity resolution rather than testing whether a model recognises an obviously
   foreign name.
 
+### C2: two grades of negative, and one gold repair
+
+Every C2 question is about a **direct** dependency, so the interesting way to be
+wrong is to answer the reachability question instead. The negatives are built in
+two grades to measure exactly that:
+
+- **`grandchild_not_direct`** — the named package sits exactly two hops down, so
+  it *is* in the dependency tree and is *not* a direct dependency. A model that
+  reads "depends on" as "reaches" answers these wrong. The pool is large
+  (20,242 pairs), so this stratum scales with any quota.
+- **`unrelated_dep`** — not within four hops in either direction. Kept so the
+  false stratum is not made entirely of trick cases.
+- **`leaf_version`** (C2.1) — a real version with no outgoing `DEPENDS_ON`. 529
+  of the graph's 1,650 versions are leaves, so an empty answer here is an
+  ordinary fact about the graph rather than a synthetic edge case.
+
+**C2.3 deviates from the sheet, and the deviation is the point of V7.** The sheet
+returns a bare `dep.versionName` with neither `DISTINCT` nor `ORDER BY` and calls
+the result a single answer. Both parts are wrong on this graph: 21 (root,
+dependency) pairs resolve to more than one version of the same dependency, so the
+answer is a list, and an unordered list has no defined row order to build
+against. v4 adds `DISTINCT` + `ORDER BY` and the question asks for
+"version(s)", so the question asked and the answer scored are the same question.
+
 ### On the quota
 
-80 bindings per template, matching v3 so per-template results stay comparable.
-The pool column shows this is nowhere near a capacity limit: C1.1 could be bound
-to all **1,131** packages in the graph. It is not, because the 900th "list the
-versions of X" question adds cost and no discrimination. **The bank grows by
-templates, not by bindings** — capacity only binds later, on the
-vulnerability-heavy templates, where just 47 versions in the graph carry a CVE.
+**250 bindings per template.** The pool column shows the C1 and C2 families are
+nowhere near a capacity limit — C2.2 draws 100 of 6,241 available direct pairs —
+so this number is a *design* choice, not a ceiling: it is what ~40 live templates
+need to approach the 10,000-question target. Capacity binds later, on the
+vulnerability-heavy templates, where only 47 versions in the graph carry a CVE;
+those families ship with a documented ceiling and the per-template `n` column
+reports it.
+
+Quota is a build flag, not a property of the bank, so the whole bank can be
+rebuilt at another n with one command. Two builder properties make that safe:
+per-stratum quotas are allocated by largest remainder (so every template ships
+exactly `n`, never `n + 1`), and each template is seeded independently
+(`seed:template_id`), so rebuilding one template reproduces the cases it already
+had instead of depending on which other templates were built alongside it.
 
 ## Graph snapshot
 
