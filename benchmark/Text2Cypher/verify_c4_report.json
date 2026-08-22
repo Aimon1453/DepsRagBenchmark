@@ -1,0 +1,52 @@
+{
+ "n": 500,
+ "failures": [],
+ "gold_ms": {
+  "median": 6.7,
+  "max": 407.9
+ },
+ "divergence": {
+  "C4.3|has_indirect": {
+   "differ": 91,
+   "same": 34,
+   "examples": [
+    "C4_3-pkgconf-2_2_0: *0..6=3 vs *1..6=2",
+    "C4_3-actix_rt-2_10_0: *0..6=761 vs *1..6=760"
+   ]
+  },
+  "C4.3|direct_only": {
+   "differ": 38,
+   "same": 2,
+   "examples": [
+    "C4_3-vorbis-1_3_7: *0..6=2 vs *1..6=1",
+    "C4_3-anstyle-1_0_10: *0..6=2 vs *1..6=1"
+   ]
+  },
+  "C4.3|leaf_version": {
+   "differ": 55,
+   "same": 0,
+   "examples": [
+    "C4_3-gnu_config-cci_20210814: *0..6=1 vs *1..6=0",
+    "C4_3-rustdoc_stripper-0_1_19: *0..6=1 vs *1..6=0"
+   ]
+  },
+  "C4.4|has_indirect": {
+   "differ": 0,
+   "same": 125,
+   "examples": []
+  },
+  "C4.4|direct_only": {
+   "differ": 0,
+   "same": 40,
+   "examples": []
+  },
+  "C4.4|leaf_version": {
+   "differ": 55,
+   "same": 0,
+   "examples": [
+    "C4_4-yasm-1_3_0: *0..6=1 vs *1..6=0",
+    "C4_4-async_session-2_0_1: *0..6=1 vs *1..6=0"
+   ]
+  }
+ }
+}

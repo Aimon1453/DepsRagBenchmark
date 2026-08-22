@@ -71,7 +71,7 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**2,690 cases, 11 templates, 590 with an empty answer (21.9 %).** 250 per
+**3,190 cases, 13 templates, 590 with an empty answer (18.5 %).** 250 per
 template except C3.5, which ships at its measured capacity of 190 (see the C3
 notes below).
 
@@ -88,6 +88,8 @@ notes below).
 | C3.4 | C3 Transitive / path | — | table | 250 | has_dist2 155/1049 · **deps_no_dist2 40/72** · leaf 28/529 · absent 27/81 |
 | C3.5 | C3 Transitive / path | — | scalar | **190** | depth_ge2 57/57 · depth_exactly1 70/70 · leaf 63/529 |
 | C3.6 | C3 Transitive / path | — | table | 250 | has_indirect 155/1049 · **all_deps_direct 40/72** · leaf 28/529 · absent 27/81 |
+| C4.3 | C4 Aggregation (dependency) | — | scalar | 250 | has_indirect 125/1051 · direct_only 40/70 · **leaf_version 55/529** · **absent_package 30/90** |
+| C4.4 | C4 Aggregation (dependency) | — | scalar | 250 | has_indirect 125/1051 · direct_only 40/70 · **leaf_version 55/529** · **absent_package 30/90** |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -194,6 +196,45 @@ after the cycle fix. Smoke (60 stratified cases, deepseek-v4-flash): bare
 0.717 / contract 0.967; the contract's new depth clause turns C3.5's leaf
 cases from 0.00 to 1.00, and C3.3 goes 0.30 → 1.00 under the path clause. The
 remaining failures are the known Neo4j-5 pattern-expression weakness (C3.2).
+
+### C4: two live rows, and a gold kept deliberately unpatched
+
+Only **C4.3** and **C4.4** are live. C4.1 and C4.2 are struck out in the sheet,
+and the C4.5/C4.6/C4.7 hard templates sit in its separate "backup" section,
+not adopted.
+
+Both golds are copied from the sheet **verbatim, including `*0..6`**, which
+matches the root itself at depth 0. This is a hold for discussion, not an
+oversight, so the effect is measured rather than removed:
+
+| | what `*0..6` does | cases where `*1..6` gives a different number |
+|---|---|---|
+| C4.3 | counts the root's own product in the closure | **184 / 220 real roots (84 %)** |
+| C4.4 | a dependency-free root is a "leaf" of its own empty tree, so the answer is 1 | 55 / 220 (25 %), all of them `leaf_version` |
+
+This collides with **schema instruction 4**, which tells every model
+"Multi-hop: `[:DEPENDS_ON*1..6]`". These are SA templates scored by exact
+match, so there is no partial credit for being off by one root, and the
+arithmetic ceiling for an instruction-following model is **0.264 on C4.3** and
+0.780 on C4.4.
+
+The smoke run confirms the arithmetic. 50 stratified cases, deepseek-v4-flash:
+
+| | bare | contract |
+|---|---|---|
+| C4.3 | 0.520 | **0.240** (predicted ceiling 0.264) |
+| C4.4 | 0.560 | 0.600 |
+| `leaf_version` (both templates, both protocols) | **0.000** | **0.000** |
+
+The contract *lowers* C4.3 because it raises compliance: under the contract the
+model wrote `*1..6` in 40 of 40 traversals, while the bare protocol wandered
+into `*0..6` (4) and unbounded `*1..` (10), and the `*0..6` guesses happened to
+match the gold. **A protocol that makes a model follow instructions more
+faithfully scores it lower, because the instruction and the gold disagree.**
+
+C4.4's `has_indirect` misses are not this artefact — `*0..6` and `*1..6` agree
+on every root that has dependencies — so that stratum is genuine signal about
+counting leaves over a closure.
 
 ### On the quota
 

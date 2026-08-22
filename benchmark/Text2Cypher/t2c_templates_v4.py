@@ -530,4 +530,81 @@ TEMPLATES: dict[str, dict] = {
             ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
         ],
     },
+    # ---------------------------------------------------------------------
+    # C4: Aggregation (dependency)
+    #
+    # Only C4.3 and C4.4 are live; C4.1 and C4.2 are struck out in the sheet,
+    # and the C4.5/C4.6/C4.7 hard templates sit in its separate "backup"
+    # section, not adopted.
+    #
+    # BOTH GOLDS ARE COPIED FROM THE SHEET VERBATIM, INCLUDING `*0..6`, which
+    # counts the root itself at depth 0. That is a deliberate hold, not an
+    # oversight: the question text and the gold disagree about whether the
+    # root belongs in its own answer, and the deviation is queued for the
+    # advisor discussion rather than patched here. What it does, measured:
+    #
+    #   C4.3  the root's own Software is counted in every single case, so the
+    #         answer is (products in the closure) + 1 whenever the root's own
+    #         product is not otherwise reachable. Affects 100% of cases.
+    #   C4.4  the root is a "leaf" only when it has no outgoing DEPENDS_ON, so
+    #         `*0..6` and `*1..6` agree on every root WITH dependencies and
+    #         differ only on leaf roots, where the gold answers 1 for a
+    #         version that has no dependencies at all.
+    #
+    # Note the collision with schema instruction 4, which tells every model
+    # "Multi-hop: [:DEPENDS_ON*1..6]". A model that follows it is off by the
+    # root on C4.3, and these are SA templates scored by exact match, so there
+    # is no partial credit. The smoke run measures the size of that effect.
+    # ---------------------------------------------------------------------
+    "C4.3": {
+        "family": "C4: Aggregation (dependency)",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SA",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "How many distinct software products are in the dependency closure of software '{pkg}' version '{ver}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (root)-[:DEPENDS_ON*0..6]->(dep:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
+            "RETURN count(DISTINCT ds) AS cnt"
+        ),
+        "answer_shape": {"kind": "scalar", "columns": ["cnt"], "ordered": False},
+        # An absent package is the only binding that can answer 0 here: the
+        # first MATCH fails, the aggregation still returns one row, and the
+        # count is 0. Every real root answers at least 1 because of `*0..6`.
+        "strata": [
+            ("has_indirect", 0.50, ROOTS_WITH_INDIRECT, "positive"),
+            ("direct_only", 0.16, ROOTS_DIRECT_ONLY, "positive"),
+            ("leaf_version", 0.22, LEAF_VERSIONS, "positive"),
+            ("absent_package", 0.12, "SYNTH:absent_package_versioned", "zero"),
+        ],
+    },
+    "C4.4": {
+        "family": "C4: Aggregation (dependency)",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SA",
+        "difficulty": "Easy",   # the sheet's label; kept, though the query needs
+                                # variable length + negation + aggregation
+        "params": ("pkg", "ver"),
+        "question": "How many leaf dependencies (no further DEPENDS_ON) does the tree of software '{pkg}' version '{ver}' contain?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON*0..6]->(n:SoftwareVersion) "
+            "WHERE NOT (n)-[:DEPENDS_ON]->(:SoftwareVersion) "
+            "RETURN count(DISTINCT n) AS cnt"
+        ),
+        "answer_shape": {"kind": "scalar", "columns": ["cnt"], "ordered": False},
+        # leaf_version is the stratum that exposes the `*0..6` reading: a
+        # version with no dependencies answers 1, counting itself as the leaf
+        # of its own empty tree. Kept as the sheet has it, and kept as its own
+        # stratum so the effect is measurable rather than diffused.
+        "strata": [
+            ("has_indirect", 0.50, ROOTS_WITH_INDIRECT, "positive"),
+            ("direct_only", 0.16, ROOTS_DIRECT_ONLY, "positive"),
+            ("leaf_version", 0.22, LEAF_VERSIONS, "positive"),
+            ("absent_package", 0.12, "SYNTH:absent_package_versioned", "zero"),
+        ],
+    },
 }
