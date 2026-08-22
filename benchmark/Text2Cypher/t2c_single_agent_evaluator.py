@@ -74,6 +74,7 @@ CRITICAL INSTRUCTIONS (Purdue SecureChain subgraph in Neo4j):
 ANSWER_FORMAT_INSTRUCTIONS = """
 12. Answer-format contract (your query's result table is compared against a gold result):
     - Dependency listing questions (direct or transitive): RETURN two columns — dependency software name AS software, and its version AS version.
+    - EXCEPT when the question names the dependency and asks only for its version(s) ("What version(s) of X does Y depend on?"): RETURN one column — the version — since the software name is fixed by the question.
     - Yes/no questions ("Does ...?"): RETURN a single boolean value (e.g. count(x) > 0).
     - Counting questions ("How many ...?"): RETURN a single integer count.
     - Comparison questions ("Which has more ...?"): RETURN the two counts (first subject first) — do NOT return the winner's name or a CASE expression.
