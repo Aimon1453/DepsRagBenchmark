@@ -1,0 +1,96 @@
+{
+ "n": 250,
+ "failures": [],
+ "answer_sizes": {
+  "min": 1,
+  "median": 1,
+  "max": 1064
+ },
+ "sheet_gold_sample": [
+  {
+   "id": "C5_4-freetype-2_13_2-ffmpeg-4_2_1",
+   "sheet": 6,
+   "truth": 11
+  },
+  {
+   "id": "C5_4-loom-0_2_15-addr2line-0_20_0",
+   "sheet": 326,
+   "truth": 513
+  },
+  {
+   "id": "C5_4-aiohttp-3_8_0-multidict-6_4_3",
+   "sheet": 0,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-libvpx-1_13_1-ffmpeg-4_2_1",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-actix_rt-2_10_0-actix_macros-0_2_4",
+   "sheet": 205,
+   "truth": 283
+  },
+  {
+   "id": "C5_4-asgiref-3_8_1-yarl-1_20_0",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-pkgconf-2_1_0-meson-1_4_1",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-pretty_assertions-1_4_1-ab_glyph_rasterizer-0_1_8",
+   "sheet": 97,
+   "truth": 132
+  },
+  {
+   "id": "C5_4-django-4_2_11-aiohttp-3_8_0",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-libpng-1_6_43-openssl-3_3_1",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-darling-0_13_4-ab_glyph_rasterizer-0_1_8",
+   "sheet": 104,
+   "truth": 136
+  },
+  {
+   "id": "C5_4-cryptography-2_2_0-yarl-1_20_0",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-openh264-2_3_1-meson-1_2_2",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-sha2-0_10_8-adler-1_0_2",
+   "sheet": 304,
+   "truth": 431
+  },
+  {
+   "id": "C5_4-requests-2_31_0-yarl-1_20_0",
+   "sheet": 1,
+   "truth": 1
+  },
+  {
+   "id": "C5_4-input_buffer-0_5_0-ab_glyph_rasterizer-0_1_8",
+   "sheet": 85,
+   "truth": 124
+  },
+  {
+   "id": "C5_4-term-0_2_14-mio-0_6_23",
+   "sheet": 3,
+   "truth": 3
+  }
+ ]
+}

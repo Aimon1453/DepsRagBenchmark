@@ -374,6 +374,35 @@ CWE_SECOND_HAS_NONE = (
 )
 
 
+# C5.4 pools. 88% of non-leaf version pairs have intersecting 6-hop closures
+# (measured over 40,000 sampled pairs), intersection sizes running 1 / 274 /
+# 1,239 for min / median / max, so both strata are wide. The membership test
+# uses `x IN t1` against a collected closure rather than a second
+# variable-length pattern - the same rewrite the gold needs.
+PAIRS_SHARE_TREE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (a)-[:DEPENDS_ON*1..6]->(d:SoftwareVersion) WITH collect(DISTINCT d) AS t1 "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..2]->(x) WHERE x IN t1 }} "
+    "  RETURN sb, b LIMIT 6 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+# Both sides have dependencies and the two closures still do not meet: the
+# stratum that punishes answering with one side's tree.
+PAIRS_DISJOINT_TREE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (a)-[:DEPENDS_ON*1..6]->(d:SoftwareVersion) WITH collect(DISTINCT d) AS t1 "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name AND (b)-[:DEPENDS_ON]->() "
+    "  AND NOT EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..6]->(x) WHERE x IN t1 }} "
+    "  RETURN sb, b LIMIT 4 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+
 TEMPLATES: dict[str, dict] = {
     "C1.1": {
         "family": "C1: Entity / Version Lookup",
@@ -765,18 +794,9 @@ TEMPLATES: dict[str, dict] = {
     # ---------------------------------------------------------------------
     # C5: Comparative / set
     #
-    # C5.1, C5.2, C5.3, C5.5 and C5.6 are built from the sheet verbatim.
-    # **C5.4 IS DELIBERATELY NOT REGISTERED.** Its gold puts two variable-length
-    # patterns in one MATCH -
-    #     (r1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(r2)
-    # - and Cypher's relationship-uniqueness rule then requires the two paths to
-    # share no edge, which silently drops most of the intersection. Re-measured
-    # 2026-08-22: click 0.6.1 vs dashmap 5.4.0 returns 490 where the truth is
-    # 799, and ab_glyph_rasterizer 0.1.8 vs ab_glyph 0.2.29 returns **1 where
-    # the truth is 137**. The collect-then-diff rewrite is also 350-2500x
-    # faster (0.01-0.07 s vs 25.1 s). Unlike the C3/C4 holds, no reading of the
-    # question makes those numbers right, so the row is left unbuilt pending a
-    # decision rather than shipped with wrong gold.
+    # All six rows are built. C5.1, C5.2, C5.3, C5.5 and C5.6 are verbatim from
+    # the sheet; **C5.4's gold is rewritten** because the sheet's version is
+    # wrong rather than debatable - see the note on the template itself.
     #
     # C5.2/C5.3 are the reason the answer-format contract exists: they ask
     # "which has more?" and answer with two counts, so column POSITION is the
@@ -862,6 +882,47 @@ TEMPLATES: dict[str, dict] = {
             ("both_vuln_tie", 0.20, VULN_TIE, "equal"),
             ("only_first_vuln", 0.18, VULN_ONE_ZERO, "first_greater"),
             ("neither_vuln", 0.14, VULN_NEITHER, "equal"),
+        ],
+    },
+    "C5.4": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "What dependencies appear in both full dependency trees (direct and indirect) of software '{pkg}' version '{ver}' and software '{dep}' version '{dep_ver}'?",
+        # THE ONE GOLD IN THE BANK REWRITTEN FOR CORRECTNESS RATHER THAN
+        # READING. The sheet writes the intersection as two variable-length
+        # patterns in a single MATCH:
+        #     (r1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(r2)
+        # Cypher's relationship-uniqueness rule then requires the two paths to
+        # share no edge, and the intersection silently loses most of its rows.
+        # Measured 2026-08-22: click 0.6.1 vs dashmap 5.4.0 returned 490 where
+        # the truth is 799, and ab_glyph_rasterizer 0.1.8 vs ab_glyph 0.2.29
+        # returned 1 where the truth is 137. No reading of the question makes
+        # those numbers right, so this is a bug fix, not a deviation.
+        #
+        # Collect one closure, then test membership. Also 350-2500x faster
+        # (0.07 s vs 25.1 s on the click/dashmap pair), which matters because
+        # the median answer here is 274 rows.
+        #
+        # `d1 <> r1` / `d2 <> r2` follow the C3.1 precedent: this graph has
+        # dependency cycles, and a version is not its own dependency.
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (r1)-[:DEPENDS_ON*1..6]->(d1:SoftwareVersion) WHERE d1 <> r1 "
+            "WITH collect(DISTINCT d1) AS t1 "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "MATCH (r2)-[:DEPENDS_ON*1..6]->(d2:SoftwareVersion) WHERE d2 <> r2 AND d2 IN t1 "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d2) "
+            "RETURN DISTINCT ds.name AS software, d2.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        "strata": [
+            ("shares_tree", 0.66, PAIRS_SHARE_TREE, "nonempty"),
+            ("disjoint_trees", 0.22, PAIRS_DISJOINT_TREE, "empty"),
+            ("first_is_leaf", 0.12, PAIRS_FIRST_IS_LEAF, "empty"),
         ],
     },
     "C5.5": {

@@ -660,6 +660,36 @@
    },
    "dropped_duplicates": 0,
    "built": 170
+  },
+  "C5.4": {
+   "quota": 250,
+   "strata": {
+    "shares_tree": {
+     "available": 6544,
+     "wanted": 165,
+     "drawn": 165
+    },
+    "disjoint_trees": {
+     "available": 4484,
+     "wanted": 55,
+     "drawn": 55
+    },
+    "first_is_leaf": {
+     "available": 2116,
+     "wanted": 30,
+     "drawn": 30
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 84,
+    "crates.io": 84,
+    "pypi.org": 71,
+    "sources.debian.org": 11
+   },
+   "dropped_duplicates": 0,
+   "built": 250
   }
  }
 }

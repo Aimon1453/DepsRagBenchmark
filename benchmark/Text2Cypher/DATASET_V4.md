@@ -71,7 +71,7 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**4,360 cases, 18 templates, 944 with an empty answer (21.7 %).** 250 per
+**4,610 cases, 19 templates, 1,029 with an empty answer (22.3 %).** 250 per
 template except C3.5 (190) and C5.6 (170), which ship at their measured
 capacity on this graph.
 
@@ -93,6 +93,7 @@ capacity on this graph.
 | C5.1 | C5 Comparative / set | C5.1 | table | 250 | shares_direct 165/8044 · **no_shared_direct 55/6726** · **first_is_leaf 30/2116** |
 | C5.2 | C5 Comparative / set | C5.2 | **row** | 250 | first_more 80 · second_more 80 · **tie_nonzero 50** · **tie_zero 40** |
 | C5.3 | C5 Comparative / set | C5.3 | **row** | 250 | both_vuln more/less/tie 60/60/50 · **only_first_vuln 45** · **neither_vuln 35** |
+| C5.4 | C5 Comparative / set | — | table | 250 | shares_tree 165/6544 · **disjoint_trees 55/4484** · **first_is_leaf 30/2116** |
 | C5.5 | C5 Comparative / set | — | table | 250 | has_extra_dep 165/6726 · **a_subset_b 55/1275** · **first_is_leaf 30/2116** |
 | C5.6 | C5 Comparative / set | — | list | **170** | shares_cwe 85/**87** · no_shared_cwe 51/846 · second_has_no_cwe 34/4000 |
 
@@ -241,17 +242,18 @@ C4.4's `has_indirect` misses are not this artefact — `*0..6` and `*1..6` agree
 on every root that has dependencies — so that stratum is genuine signal about
 counting leaves over a closure.
 
-### C5: five of six rows, a new answer shape, and a sampling lesson
+### C5: all six rows, a new answer shape, and a sampling lesson
 
-**C5.4 is deliberately not built.** Its gold puts two variable-length patterns
-in one `MATCH`:
+**C5.4's gold is rewritten - the one gold in the bank changed for correctness
+rather than for reading.** The sheet writes the intersection as two
+variable-length patterns in a single `MATCH`:
 
 ```cypher
 MATCH (r1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(r2)
 ```
 
 Cypher's relationship-uniqueness rule then requires the two paths to share no
-edge, so most of the intersection is silently dropped. Re-measured 2026-08-22:
+edge, so most of the intersection is silently dropped:
 
 | pair | sheet gold | truth | cost |
 |---|---|---|---|
@@ -259,9 +261,37 @@ edge, so most of the intersection is silently dropped. Re-measured 2026-08-22:
 | ab_glyph_rasterizer 0.1.8 vs ab_glyph 0.2.29 | **1** | **137** | 0.0 s vs 0.04 s |
 
 Unlike the C3 and C4 holds, **no reading of the question makes those numbers
-right**, so the row is left unbuilt pending a decision rather than shipped with
-wrong gold. The fix is the collect-then-diff rewrite (collect each closure,
-then intersect), which is also 350-2500x faster.
+right**, so this is a bug fix, not a deviation. The gold collects one closure
+and tests membership (`d2 IN t1`), and carries `d1 <> r1` / `d2 <> r2` for the
+same reason C3.1 does - this graph has cycles and a version is not its own
+dependency. Replayed against the 165 non-empty cases actually shipped, the
+sheet's formulation returns **69% of the answer** (8 of 17 sampled cases lose
+rows; the worst loses 187 of 513).
+
+**And the rewrite turns a broken row into a discriminating one.** In the smoke
+run deepseek wrote, unprompted, exactly the sheet's pattern -
+`MATCH (v1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(v2)` - and scored 0.00
+against the corrected gold. The misconception the sheet encodes is the
+misconception the model has, so with a correct gold the template measures
+something real. Smoke over 12 stratified cases: bare 0.750, contract 0.833,
+with both misses in `shares_tree` (the other is a scoping error, `v1`
+referenced after a `WITH DISTINCT dep`).
+
+**C5.4's difficulty is bimodal, and that is the graph talking.** Non-empty
+answers run 1 / 1 / 1,064 for min / median / max, because the ecosystem
+round-robin splits the draw evenly while 94% of the graph's depth sits in
+crates.io:
+
+| ecosystem | n | intersection min / median / max |
+|---|---|---|
+| crates.io | 59 | 1 / **232** / 1,064 |
+| conan.io | 59 | 1 / 1 / 11 |
+| pypi.org | 47 | 1 / 1 / 4 |
+
+88 of the 165 non-empty answers have exactly one row and 50 have more than a
+hundred. This is the documented ecosystem policy meeting an unevenly deep
+graph, not a sampling defect - but per-case difficulty inside C5.4 varies far
+more than its single "Hard" label suggests.
 
 **A new answer shape: `row`.** C5.2 and C5.3 ask "which has more?" and answer
 with *two counts*, so column POSITION is the answer - `{c1: 1, c2: 4}` and
@@ -290,7 +320,7 @@ partners at bounded cost:
 
 C3.2 and C3.3 inherited the same shape and were rebuilt with it.
 
-**Verification and smoke (2026-08-22):** all 1,170 C5 answers recomputed in
+**Verification and smoke (2026-08-22):** all 1,420 C5 answers recomputed in
 Python from the raw edge lists (direct-dependency set intersection/difference,
 CVE multiset sizes, CWE set intersection): **0 failures**; C3 re-verified after
 its rebuild, also 0 of 1,440. Smoke (60 stratified cases, deepseek-v4-flash):
