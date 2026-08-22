@@ -1,12 +1,12 @@
 {
- "verified_at": "2026-08-22 21:33",
+ "verified_at": "2026-08-22 22:51",
  "n_cases": 1440,
  "n_failures": 0,
  "failures": [],
  "gold_ms": {
-  "median": 7.3,
-  "p95": 98.1,
-  "max": 1123.1
+  "median": 9.6,
+  "p95": 83.0,
+  "max": 1235.2
  },
  "templates": {
   "C3.1": {
@@ -40,7 +40,7 @@
     "no_path": 62,
     "absent_dep": 37
    },
-   "distinct": 152
+   "distinct": 151
   },
   "C3.4": {
    "n": 250,

@@ -71,9 +71,9 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**3,190 cases, 13 templates, 590 with an empty answer (18.5 %).** 250 per
-template except C3.5, which ships at its measured capacity of 190 (see the C3
-notes below).
+**4,360 cases, 18 templates, 944 with an empty answer (21.7 %).** 250 per
+template except C3.5 (190) and C5.6 (170), which ship at their measured
+capacity on this graph.
 
 | id | sheet family | v3 id | shape | n | strata (drawn / pool) |
 |---|---|---|---|---|---|
@@ -90,6 +90,11 @@ notes below).
 | C3.6 | C3 Transitive / path | — | table | 250 | has_indirect 155/1049 · **all_deps_direct 40/72** · leaf 28/529 · absent 27/81 |
 | C4.3 | C4 Aggregation (dependency) | — | scalar | 250 | has_indirect 125/1051 · direct_only 40/70 · **leaf_version 55/529** · **absent_package 30/90** |
 | C4.4 | C4 Aggregation (dependency) | — | scalar | 250 | has_indirect 125/1051 · direct_only 40/70 · **leaf_version 55/529** · **absent_package 30/90** |
+| C5.1 | C5 Comparative / set | C5.1 | table | 250 | shares_direct 165/8044 · **no_shared_direct 55/6726** · **first_is_leaf 30/2116** |
+| C5.2 | C5 Comparative / set | C5.2 | **row** | 250 | first_more 80 · second_more 80 · **tie_nonzero 50** · **tie_zero 40** |
+| C5.3 | C5 Comparative / set | C5.3 | **row** | 250 | both_vuln more/less/tie 60/60/50 · **only_first_vuln 45** · **neither_vuln 35** |
+| C5.5 | C5 Comparative / set | — | table | 250 | has_extra_dep 165/6726 · **a_subset_b 55/1275** · **first_is_leaf 30/2116** |
+| C5.6 | C5 Comparative / set | — | list | **170** | shares_cwe 85/**87** · no_shared_cwe 51/846 · second_has_no_cwe 34/4000 |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -235,6 +240,81 @@ faithfully scores it lower, because the instruction and the gold disagree.**
 C4.4's `has_indirect` misses are not this artefact — `*0..6` and `*1..6` agree
 on every root that has dependencies — so that stratum is genuine signal about
 counting leaves over a closure.
+
+### C5: five of six rows, a new answer shape, and a sampling lesson
+
+**C5.4 is deliberately not built.** Its gold puts two variable-length patterns
+in one `MATCH`:
+
+```cypher
+MATCH (r1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(r2)
+```
+
+Cypher's relationship-uniqueness rule then requires the two paths to share no
+edge, so most of the intersection is silently dropped. Re-measured 2026-08-22:
+
+| pair | sheet gold | truth | cost |
+|---|---|---|---|
+| click 0.6.1 vs dashmap 5.4.0 | 490 | 799 | 25.1 s vs 0.07 s |
+| ab_glyph_rasterizer 0.1.8 vs ab_glyph 0.2.29 | **1** | **137** | 0.0 s vs 0.04 s |
+
+Unlike the C3 and C4 holds, **no reading of the question makes those numbers
+right**, so the row is left unbuilt pending a decision rather than shipped with
+wrong gold. The fix is the collect-then-diff rewrite (collect each closure,
+then intersect), which is also 350-2500x faster.
+
+**A new answer shape: `row`.** C5.2 and C5.3 ask "which has more?" and answer
+with *two counts*, so column POSITION is the answer - `{c1: 1, c2: 4}` and
+`{c1: 4, c2: 1}` are different answers. The evaluator has always had
+`ordered_columns` for this; v4 now declares it in the template
+(`"kind": "row", "ordered_columns": True`) and V7 refuses a `row` template that
+does not, since without it the two values are interchangeable and the template
+cannot tell more from fewer. These are the only two templates in the bank with
+the flag.
+
+**The sampling lesson, and it applies to every pair template.** The first build
+of C5.5 drew its 250 cases from **38 distinct first sides** and produced only
+**10 distinct answers**. Cause: the pools truncated the outer side of the join
+with `ORDER BY sw.name ... LIMIT n`, which takes the alphabetically first n
+versions - and since a pair template's answer is mostly determined by its first
+side, the bank was re-asking a handful of questions. Replacing that with a
+correlated `CALL (sw, a) { ... LIMIT k }` gives every eligible first side a few
+partners at bounded cost:
+
+| | first sides before -> after | distinct answers |
+|---|---|---|
+| C5.5 | 38 -> **146** | 10 -> **81** |
+| C5.1 | 100 -> 184 | 62 -> 96 |
+| C5.2 | 40 -> 146 | - |
+| C3.2 / C3.3 | 85 -> 172 / 107 -> 181 | - |
+
+C3.2 and C3.3 inherited the same shape and were rebuilt with it.
+
+**Verification and smoke (2026-08-22):** all 1,170 C5 answers recomputed in
+Python from the raw edge lists (direct-dependency set intersection/difference,
+CVE multiset sizes, CWE set intersection): **0 failures**; C3 re-verified after
+its rebuild, also 0 of 1,440. Smoke (60 stratified cases, deepseek-v4-flash):
+**bare 0.433 -> contract 0.933**, the largest contract effect measured so far,
+and it lands exactly where the contract was invented: C5.2 0.17 -> 1.00 and
+C5.3 0.08 -> 0.83. The two remaining contract-condition misses are genuine model
+errors - a plain `MATCH` where the gold uses `OPTIONAL MATCH`, so a side with no
+CVEs collapses the whole query to zero rows. That is the `only_first_vuln`
+stratum doing its job.
+
+### The contract effect by family
+
+Reported separately per family because it changes sign:
+
+| family | bare | contract | delta | why |
+|---|---|---|---|---|
+| C2 direct dependency | 0.933 | 0.917 | -0.016 | the answer shape is already obvious |
+| C3 transitive / path | 0.717 | 1.000 | +0.283 | scales with shape novelty (C3.3, a row holding an array: +0.70) |
+| C4 aggregation | 0.540 | 0.420 | -0.120 | compliance amplifies a protocol self-contradiction (`*0..6` vs schema instruction 4) |
+| C5 comparative / set | 0.433 | 0.933 | **+0.500** | "which has more" has no natural answer shape at all |
+
+The sharper claim this supports: *the contract buys answer-shape
+disambiguation, not capability.* It approaches zero return as the shape becomes
+conventional, and goes negative when the protocol contradicts itself.
 
 ### On the quota
 

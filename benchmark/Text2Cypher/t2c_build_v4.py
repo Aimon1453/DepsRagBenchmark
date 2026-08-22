@@ -295,6 +295,16 @@ def check_template(tid: str, tpl: dict) -> None:
                          "otherwise its row order is undefined")
     if kind in ("bool", "scalar") and len(tpl["answer_shape"]["columns"]) != 1:
         raise BuildError(tid + ": V7 a " + kind + " template must declare exactly one column")
+    # A "row" answer is scored by column POSITION, so the template has to say so:
+    # the evaluator sorts the values inside a row unless ordered_columns is set,
+    # which would make "which has more" and "which has fewer" indistinguishable.
+    if kind == "row":
+        if len(tpl["answer_shape"]["columns"]) < 2:
+            raise BuildError(tid + ": V7 a row template needs at least two columns")
+        if not tpl["answer_shape"].get("ordered_columns"):
+            raise BuildError(tid + ": V7 a row template must declare ordered_columns=True, "
+                             "otherwise the two values are interchangeable and the answer "
+                             "cannot distinguish more from fewer")
     shares = sum(share for _, share, _, _ in tpl["strata"])
     if abs(shares - 1.0) > 1e-6:
         raise BuildError(tid + ": V7 stratum shares sum to " + str(shares) + ", not 1.0")
@@ -306,7 +316,7 @@ def _check_shape(rows: list[dict], shape: dict, where: str) -> None:
         got = list(rows[0].keys())
         if got != cols:
             raise BuildError(where + ": V3 columns " + repr(got) + " != declared " + repr(cols))
-    if kind in ("bool", "scalar") and len(rows) != 1:
+    if kind in ("bool", "scalar", "row") and len(rows) != 1:
         raise BuildError(where + ": V3 " + kind + " template returned "
                          + str(len(rows)) + " rows, expected 1")
     if kind == "bool" and rows and not isinstance(rows[0][cols[0]], bool):
@@ -346,6 +356,16 @@ def _check_expect(rows: list[dict], expect: str | None, shape: dict, where: str)
     if expect == "positive" and (not rows or not isinstance(rows[0][col], (int, float))
                                  or rows[0][col] <= 0):
         raise BuildError(where + ": V4 stratum expects " + col + ">0, got " + repr(rows))
+    # Comparison strata: the point of the template is which side is larger, so
+    # the stratum declares the relation and the build checks the gold produced it.
+    if expect in ("first_greater", "second_greater", "equal"):
+        if not rows or len(shape["columns"]) < 2:
+            raise BuildError(where + ": V4 " + expect + " needs a two-column row, got " + repr(rows))
+        a, b = rows[0][shape["columns"][0]], rows[0][shape["columns"][1]]
+        ok = {"first_greater": a > b, "second_greater": a < b, "equal": a == b}[expect]
+        if not ok:
+            raise BuildError(where + ": V4 stratum expects " + expect
+                             + ", got " + str(a) + " vs " + str(b))
 
 
 def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict]:
@@ -422,6 +442,10 @@ def build(ses, tids: list[str], quota: int, seed: int) -> tuple[list[dict], dict
                 "query_type": tpl["query_type"],
                 "difficulty": tpl["difficulty"],
                 "answer_shape": tpl["answer_shape"]["kind"],
+                # Consumed by the evaluator: keep the values in RETURN order
+                # instead of sorting them inside the row.
+                **({"ordered_columns": True}
+                   if tpl["answer_shape"].get("ordered_columns") else {}),
                 "question": question,
                 "cypher_query": cypher,
                 "expected_result": rows,

@@ -256,7 +256,7 @@
    "quota": 250,
    "strata": {
     "indirect_true": {
-     "available": 25000,
+     "available": 8130,
      "wanted": 88,
      "drawn": 88
     },
@@ -266,12 +266,12 @@
      "drawn": 37
     },
     "reverse_only": {
-     "available": 6000,
+     "available": 4607,
      "wanted": 75,
      "drawn": 75
     },
     "unreachable": {
-     "available": 5000,
+     "available": 762,
      "wanted": 50,
      "drawn": 50
     }
@@ -279,10 +279,10 @@
    "topped_up": 0,
    "total": 250,
    "ecosystems": {
-    "crates.io": 194,
-    "pypi.org": 43,
-    "conan.io": 12,
-    "sources.debian.org": 1
+    "conan.io": 57,
+    "crates.io": 114,
+    "pypi.org": 54,
+    "sources.debian.org": 25
    },
    "dropped_duplicates": 0,
    "built": 250
@@ -291,17 +291,17 @@
    "quota": 250,
    "strata": {
     "unique_path_2plus": {
-     "available": 20000,
+     "available": 6079,
      "wanted": 113,
      "drawn": 113
     },
     "unique_path_direct": {
-     "available": 1286,
+     "available": 2565,
      "wanted": 38,
      "drawn": 38
     },
     "no_path": {
-     "available": 5000,
+     "available": 762,
      "wanted": 62,
      "drawn": 62
     },
@@ -314,9 +314,10 @@
    "topped_up": 0,
    "total": 250,
    "ecosystems": {
-    "crates.io": 190,
-    "pypi.org": 46,
-    "conan.io": 14
+    "conan.io": 41,
+    "crates.io": 164,
+    "pypi.org": 39,
+    "sources.debian.org": 6
    },
    "dropped_duplicates": 0,
    "built": 250
@@ -494,6 +495,171 @@
    },
    "dropped_duplicates": 0,
    "built": 250
+  },
+  "C5.1": {
+   "quota": 250,
+   "strata": {
+    "shares_direct": {
+     "available": 8044,
+     "wanted": 165,
+     "drawn": 165
+    },
+    "no_shared_direct": {
+     "available": 6726,
+     "wanted": 55,
+     "drawn": 55
+    },
+    "first_is_leaf": {
+     "available": 2116,
+     "wanted": 30,
+     "drawn": 30
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 53,
+    "crates.io": 145,
+    "pypi.org": 39,
+    "sources.debian.org": 13
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C5.2": {
+   "quota": 250,
+   "strata": {
+    "first_more": {
+     "available": 5605,
+     "wanted": 80,
+     "drawn": 80
+    },
+    "second_more": {
+     "available": 8234,
+     "wanted": 80,
+     "drawn": 80
+    },
+    "tie_nonzero": {
+     "available": 5517,
+     "wanted": 50,
+     "drawn": 50
+    },
+    "tie_zero": {
+     "available": 2116,
+     "wanted": 40,
+     "drawn": 40
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 72,
+    "crates.io": 71,
+    "pypi.org": 71,
+    "sources.debian.org": 36
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C5.3": {
+   "quota": 250,
+   "strata": {
+    "both_vuln_first_more": {
+     "available": 644,
+     "wanted": 60,
+     "drawn": 60
+    },
+    "both_vuln_second_more": {
+     "available": 644,
+     "wanted": 60,
+     "drawn": 60
+    },
+    "both_vuln_tie": {
+     "available": 760,
+     "wanted": 50,
+     "drawn": 50
+    },
+    "only_first_vuln": {
+     "available": 4000,
+     "wanted": 45,
+     "drawn": 45
+    },
+    "neither_vuln": {
+     "available": 4809,
+     "wanted": 35,
+     "drawn": 35
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 42,
+    "crates.io": 70,
+    "pypi.org": 70,
+    "sources.debian.org": 68
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C5.5": {
+   "quota": 250,
+   "strata": {
+    "has_extra_dep": {
+     "available": 6726,
+     "wanted": 165,
+     "drawn": 165
+    },
+    "a_subset_b": {
+     "available": 1275,
+     "wanted": 55,
+     "drawn": 55
+    },
+    "first_is_leaf": {
+     "available": 2116,
+     "wanted": 30,
+     "drawn": 30
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 72,
+    "crates.io": 99,
+    "pypi.org": 66,
+    "sources.debian.org": 13
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C5.6": {
+   "quota": 170,
+   "strata": {
+    "shares_cwe": {
+     "available": 87,
+     "wanted": 85,
+     "drawn": 85
+    },
+    "no_shared_cwe": {
+     "available": 846,
+     "wanted": 51,
+     "drawn": 51
+    },
+    "second_has_no_cwe": {
+     "available": 4000,
+     "wanted": 34,
+     "drawn": 34
+    }
+   },
+   "topped_up": 0,
+   "total": 170,
+   "ecosystems": {
+    "conan.io": 26,
+    "crates.io": 61,
+    "pypi.org": 45,
+    "sources.debian.org": 38
+   },
+   "dropped_duplicates": 0,
+   "built": 170
   }
  }
 }

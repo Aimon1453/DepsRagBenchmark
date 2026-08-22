@@ -32,6 +32,9 @@ from __future__ import annotations
 #   "bool"   exactly one row, one boolean column
 #   "scalar" exactly one row, one numeric column
 #   "table"  0..n rows of several columns
+#   "row"    exactly one row of several columns, and COLUMN POSITION IS THE
+#            ANSWER (the comparison templates: gold {c1: 1, c2: 4} and a
+#            backwards {c1: 4, c2: 1} must not score the same)
 
 # ---------------------------------------------------------------------------
 # Shared candidate pools
@@ -109,11 +112,11 @@ ROOTS_DIRECT_ONLY = (
 # separates "depends at any depth" from "depends directly".
 INDIRECT_PAIRS_2_6 = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE (v)-[:DEPENDS_ON]->() "
-    "WITH sw, v ORDER BY sw.name, v.versionName LIMIT 700 "
-    "MATCH (v)-[:DEPENDS_ON*2..6]->(d:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
-    "WHERE ds.name <> sw.name AND NOT (v)-[:DEPENDS_ON]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
-    "WITH DISTINCT sw, v, ds, {ECO} AS eco LIMIT 25000 "
-    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, eco"
+    "CALL (sw, v) {{ "
+    "  MATCH (v)-[:DEPENDS_ON*2..6]->(d:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
+    "  WHERE ds.name <> sw.name AND NOT (v)-[:DEPENDS_ON]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
+    "  RETURN DISTINCT ds LIMIT 8 }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, {ECO} AS eco"
 )
 
 # (root, dep) where dep reaches the root but the root does not reach dep: the
@@ -126,12 +129,12 @@ INDIRECT_PAIRS_2_6 = (
 REVERSE_ONLY_PAIRS = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
     "WHERE (v)<-[:DEPENDS_ON]-() AND NOT EXISTS {{ (v)-[:DEPENDS_ON*7..7]->() }} "
-    "WITH sw, v ORDER BY sw.name, v.versionName LIMIT 400 "
-    "MATCH (ds:Software)-[:HAS_VERSION]->(dv:SoftwareVersion)-[:DEPENDS_ON*1..6]->(v) "
-    "WHERE ds.name <> sw.name "
-    "AND NOT (v)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
-    "WITH DISTINCT sw, v, ds, {ECO} AS eco LIMIT 6000 "
-    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, eco"
+    "CALL (sw, v) {{ "
+    "  MATCH (ds:Software)-[:HAS_VERSION]->(dv:SoftwareVersion)-[:DEPENDS_ON*1..6]->(v) "
+    "  WHERE ds.name <> sw.name "
+    "  AND NOT (v)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
+    "  RETURN DISTINCT ds LIMIT 8 }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, {ECO} AS eco"
 )
 
 # (root, dep) unreachable within 6 hops in the forward direction.
@@ -139,11 +142,11 @@ REVERSE_ONLY_PAIRS = (
 UNREACHABLE_6_PAIRS = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
     "WHERE (v)-[:DEPENDS_ON]->() AND NOT EXISTS {{ (v)-[:DEPENDS_ON*7..7]->() }} "
-    "WITH sw, v ORDER BY sw.name, v.versionName LIMIT 400 "
-    "MATCH (ds:Software) WHERE ds.name <> sw.name "
-    "AND NOT (v)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
-    "WITH sw, v, ds, {ECO} AS eco LIMIT 5000 "
-    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, eco"
+    "CALL (sw, v) {{ "
+    "  MATCH (ds:Software) WHERE ds.name <> sw.name "
+    "  AND NOT (v)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ds) "
+    "  RETURN ds LIMIT 6 }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, {ECO} AS eco"
 )
 
 # (root, dep) with exactly ONE reachable target version and exactly ONE
@@ -152,29 +155,29 @@ UNREACHABLE_6_PAIRS = (
 # must bind only pairs where nothing is left to arbitrate (G2).
 UNIQUE_PATH_PAIRS = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE (v)-[:DEPENDS_ON]->() "
-    "WITH sw, v ORDER BY sw.name, v.versionName LIMIT 400 "
-    "MATCH (v)-[:DEPENDS_ON*1..6]->(t:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
-    "WHERE ds.name <> sw.name "
-    "WITH sw, v, ds, collect(DISTINCT t) AS ts WHERE size(ts) = 1 "
-    "WITH sw, v, ds, ts[0] AS t "
-    "MATCH p = allShortestPaths((v)-[:DEPENDS_ON*1..6]->(t)) "
-    "WITH sw, v, ds, collect(p) AS ps WHERE size(ps) = 1 AND length(ps[0]) >= 2 "
-    "WITH sw, v, ds, {ECO} AS eco LIMIT 20000 "
-    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, eco"
+    "CALL (sw, v) {{ "
+    "  MATCH (v)-[:DEPENDS_ON*1..6]->(t:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
+    "  WHERE ds.name <> sw.name "
+    "  WITH ds, collect(DISTINCT t) AS ts WHERE size(ts) = 1 "
+    "  WITH ds, ts[0] AS t "
+    "  MATCH p = allShortestPaths((v)-[:DEPENDS_ON*1..6]->(t)) "
+    "  WITH ds, collect(p) AS ps WHERE size(ps) = 1 AND length(ps[0]) >= 2 "
+    "  RETURN ds LIMIT 6 }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, {ECO} AS eco"
 )
 
 # Same, but the trivial grade: the unique path is the direct edge.
 UNIQUE_PATH_DIRECT = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE (v)-[:DEPENDS_ON]->() "
-    "WITH sw, v ORDER BY sw.name, v.versionName LIMIT 400 "
-    "MATCH (v)-[:DEPENDS_ON*1..6]->(t:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
-    "WHERE ds.name <> sw.name "
-    "WITH sw, v, ds, collect(DISTINCT t) AS ts WHERE size(ts) = 1 "
-    "WITH sw, v, ds, ts[0] AS t "
-    "MATCH p = allShortestPaths((v)-[:DEPENDS_ON*1..6]->(t)) "
-    "WITH sw, v, ds, collect(p) AS ps WHERE size(ps) = 1 AND length(ps[0]) = 1 "
-    "WITH sw, v, ds, {ECO} AS eco LIMIT 20000 "
-    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, eco"
+    "CALL (sw, v) {{ "
+    "  MATCH (v)-[:DEPENDS_ON*1..6]->(t:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software) "
+    "  WHERE ds.name <> sw.name "
+    "  WITH ds, collect(DISTINCT t) AS ts WHERE size(ts) = 1 "
+    "  WITH ds, ts[0] AS t "
+    "  MATCH p = allShortestPaths((v)-[:DEPENDS_ON*1..6]->(t)) "
+    "  WITH ds, collect(p) AS ps WHERE size(ps) = 1 AND length(ps[0]) = 1 "
+    "  RETURN ds LIMIT 4 }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, ds.name AS dep, {ECO} AS eco"
 )
 
 # Roots with a node at distance exactly 2 (2-hop and not also direct).
@@ -216,6 +219,158 @@ ROOTS_DEPTH_EXACTLY1 = (
     "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
     "WHERE (v)-[:DEPENDS_ON]->() AND NOT EXISTS {{ (v)-[:DEPENDS_ON*2..2]->() }} "
     "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+
+# --- C5 pools --------------------------------------------------------------
+# Every C5 template takes a PAIR of versions, so each pool returns
+# (pkg, ver, dep, dep_ver). Random pairs do not work here: with 1,650 versions
+# two of them almost never overlap, which is how the first C5.1 draw in v3 came
+# out 89% empty. Each stratum is therefore enumerated by the relation it needs.
+#
+# **Give every first side a few partners, never `ORDER BY name LIMIT n`.**
+# Truncating the outer side of the join takes the alphabetically first n
+# versions, and since the answer of a pair template is mostly determined by its
+# first side, the bank then re-asks a handful of questions: measured on the
+# first C5.5 build, 250 cases came from 38 distinct first sides and produced
+# only 10 distinct answers. A correlated `CALL {{ WITH ... LIMIT k }}` covers
+# every eligible first side at bounded cost.
+
+PAIRS_SHARE_DIRECT = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (a)-[:DEPENDS_ON]->(:SoftwareVersion)<-[:DEPENDS_ON]-(b:SoftwareVersion)"
+    "<-[:HAS_VERSION]-(sb:Software) WHERE sb.name <> sw.name "
+    "  RETURN DISTINCT sb, b LIMIT 8 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+PAIRS_NO_SHARED_DIRECT = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE (b)-[:DEPENDS_ON]->() AND sb.name <> sw.name "
+    "  AND NOT (a)-[:DEPENDS_ON]->(:SoftwareVersion)<-[:DEPENDS_ON]-(b) "
+    "  RETURN sb, b LIMIT 6 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+# First side is a leaf: nothing to share, nothing to subtract from.
+PAIRS_FIRST_IS_LEAF = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE NOT (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name AND (b)-[:DEPENDS_ON]->() "
+    "  RETURN sb, b LIMIT 4 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+PAIRS_A_HAS_EXTRA_DEP = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE sb.name <> sw.name "
+    "  AND EXISTS {{ MATCH (a)-[:DEPENDS_ON]->(d) WHERE NOT (b)-[:DEPENDS_ON]->(d) }} "
+    "  RETURN sb, b LIMIT 6 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+# A's direct dependencies are a subset of B's: the difference is empty even
+# though A is not a leaf. The stratum that punishes "just list A's deps".
+PAIRS_A_SUBSET_B = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE sb.name <> sw.name "
+    "  AND NOT EXISTS {{ MATCH (a)-[:DEPENDS_ON]->(d) WHERE NOT (b)-[:DEPENDS_ON]->(d) }} "
+    "  RETURN sb, b LIMIT 6 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+_DEPCNT = ("MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) "
+           "OPTIONAL MATCH (a)-[:DEPENDS_ON]->(d1:SoftwareVersion) "
+           "WITH sw, a, count(DISTINCT d1) AS c1 ")
+
+def _cmp_pool(rel, first_nonzero=True):
+    return (_DEPCNT + ("WHERE c1 > 0 " if first_nonzero else "") +
+            "CALL (sw, a, c1) {{ "
+            "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE sb.name <> sw.name "
+            "  OPTIONAL MATCH (b)-[:DEPENDS_ON]->(d2:SoftwareVersion) "
+            "  WITH sb, b, c1, count(DISTINCT d2) AS c2 "
+            "  WHERE " + rel + " "
+            "  RETURN sb, b LIMIT 5 }} "
+            "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco")
+
+CMP_FIRST_MORE = _cmp_pool("c1 > c2")
+CMP_SECOND_MORE = _cmp_pool("c1 < c2", first_nonzero=False)
+CMP_TIE_NONZERO = _cmp_pool("c1 = c2 AND c1 > 0")
+# Two leaves: the tie is 0 vs 0, which is also the "both answers are nothing"
+# trap for a model that reads the question as "name the winner".
+CMP_TIE_ZERO = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE NOT (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE NOT (b)-[:DEPENDS_ON]->() AND sb.name <> sw.name "
+    "  RETURN sb, b LIMIT 4 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+_VULNCNT = ("MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion)-[:VULNERABLE_TO]->(x:Vulnerability) "
+            "WITH sw, a, count(x) AS n1 ")
+
+def _vuln_pool(rel):
+    return (_VULNCNT +
+            "MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion)-[:VULNERABLE_TO]->(y:Vulnerability) "
+            "WHERE sb.name <> sw.name "
+            "WITH sw, a, n1, sb, b, count(y) AS n2 "
+            "WHERE " + rel + " "
+            "WITH sw, a, sb, b, {ECO} AS eco LIMIT 4000 "
+            "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, eco")
+
+VULN_FIRST_MORE = _vuln_pool("n1 > n2")
+VULN_SECOND_MORE = _vuln_pool("n1 < n2")
+VULN_TIE = _vuln_pool("n1 = n2")
+VULN_ONE_ZERO = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:VULNERABLE_TO]->() "
+    "MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "WHERE sb.name <> sw.name AND NOT (b)-[:VULNERABLE_TO]->() "
+    "WITH sw, a, sb, b, {ECO} AS eco LIMIT 4000 "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, eco"
+)
+VULN_NEITHER = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE NOT (a)-[:VULNERABLE_TO]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name AND NOT (b)-[:VULNERABLE_TO]->() "
+    "  RETURN sb, b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+# Only 87 version pairs in the whole graph share a CWE - this is C5.6's ceiling.
+CWE_PAIRS_SHARED = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+    "-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+    "MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+    "-[:VULNERABILITY_TYPE]->(w) WHERE sb.name > sw.name "
+    "WITH DISTINCT sw, a, sb, b, {ECO} AS eco "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, eco"
+)
+CWE_PAIRS_NO_SHARED = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+    "-[:VULNERABILITY_TYPE]->(:VulnerabilityType) "
+    "MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+    "-[:VULNERABILITY_TYPE]->(:VulnerabilityType) "
+    "WHERE sb.name > sw.name AND NOT EXISTS {{ "
+    "  MATCH (a)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w2:VulnerabilityType) "
+    "  WHERE EXISTS {{ (b)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w2) }} }} "
+    "WITH DISTINCT sw, a, sb, b, {ECO} AS eco LIMIT 4000 "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, eco"
+)
+CWE_SECOND_HAS_NONE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+    "-[:VULNERABILITY_TYPE]->(:VulnerabilityType) "
+    "MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "WHERE sb.name <> sw.name AND NOT (b)-[:VULNERABLE_TO]->() "
+    "WITH DISTINCT sw, a, sb, b, {ECO} AS eco LIMIT 4000 "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, eco"
 )
 
 
@@ -605,6 +760,162 @@ TEMPLATES: dict[str, dict] = {
             ("direct_only", 0.16, ROOTS_DIRECT_ONLY, "positive"),
             ("leaf_version", 0.22, LEAF_VERSIONS, "positive"),
             ("absent_package", 0.12, "SYNTH:absent_package_versioned", "zero"),
+        ],
+    },
+    # ---------------------------------------------------------------------
+    # C5: Comparative / set
+    #
+    # C5.1, C5.2, C5.3, C5.5 and C5.6 are built from the sheet verbatim.
+    # **C5.4 IS DELIBERATELY NOT REGISTERED.** Its gold puts two variable-length
+    # patterns in one MATCH -
+    #     (r1)-[:DEPENDS_ON*1..6]->(d)<-[:DEPENDS_ON*1..6]-(r2)
+    # - and Cypher's relationship-uniqueness rule then requires the two paths to
+    # share no edge, which silently drops most of the intersection. Re-measured
+    # 2026-08-22: click 0.6.1 vs dashmap 5.4.0 returns 490 where the truth is
+    # 799, and ab_glyph_rasterizer 0.1.8 vs ab_glyph 0.2.29 returns **1 where
+    # the truth is 137**. The collect-then-diff rewrite is also 350-2500x
+    # faster (0.01-0.07 s vs 25.1 s). Unlike the C3/C4 holds, no reading of the
+    # question makes those numbers right, so the row is left unbuilt pending a
+    # decision rather than shipped with wrong gold.
+    #
+    # C5.2/C5.3 are the reason the answer-format contract exists: they ask
+    # "which has more?" and answer with two counts, so column POSITION is the
+    # answer. They are the only templates in the bank with `ordered_columns`.
+    # ---------------------------------------------------------------------
+    "C5.1": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": "C5.1",
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "What common direct dependencies are shared by software '{pkg}' version '{ver}' and software '{dep}' version '{dep_ver}'?",
+        # Two DEPENDS_ON patterns in one MATCH here too, but both are SINGLE
+        # hop and start from different nodes, so the relationship-uniqueness
+        # rule that breaks C5.4 cannot bite: the two edges are distinct by
+        # construction.
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:DEPENDS_ON]-(r2) "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) "
+            "RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        "strata": [
+            ("shares_direct", 0.66, PAIRS_SHARE_DIRECT, "nonempty"),
+            ("no_shared_direct", 0.22, PAIRS_NO_SHARED_DIRECT, "empty"),
+            ("first_is_leaf", 0.12, PAIRS_FIRST_IS_LEAF, "empty"),
+        ],
+    },
+    "C5.2": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": "C5.2",
+        "query_type": "SA",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "Which has more direct dependencies: software '{pkg}' version '{ver}' or software '{dep}' version '{dep_ver}'?",
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (r1)-[:DEPENDS_ON]->(d1:SoftwareVersion) "
+            "WITH count(DISTINCT d1) AS c1 "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "OPTIONAL MATCH (r2)-[:DEPENDS_ON]->(d2:SoftwareVersion) "
+            "WITH c1, count(DISTINCT d2) AS c2 RETURN c1, c2"
+        ),
+        "answer_shape": {"kind": "row", "columns": ["c1", "c2"],
+                         "ordered": False, "ordered_columns": True},
+        # Ties are the discriminating stratum: a model that answers with a
+        # winner's name, or with a CASE expression, has nothing to say here.
+        "strata": [
+            ("first_more", 0.32, CMP_FIRST_MORE, "first_greater"),
+            ("second_more", 0.32, CMP_SECOND_MORE, "second_greater"),
+            ("tie_nonzero", 0.20, CMP_TIE_NONZERO, "equal"),
+            ("tie_zero", 0.16, CMP_TIE_ZERO, "equal"),
+        ],
+    },
+    "C5.3": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": "C5.3",
+        "query_type": "SA",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "Which has more known vulnerabilities (CVEs): software '{pkg}' version '{ver}' or software '{dep}' version '{dep_ver}'?",
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (r1)-[:VULNERABLE_TO]->(cve1:Vulnerability) "
+            "WITH count(cve1) AS n1 "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "OPTIONAL MATCH (r2)-[:VULNERABLE_TO]->(cve2:Vulnerability) "
+            "WITH n1, count(cve2) AS n2 RETURN n1, n2"
+        ),
+        "answer_shape": {"kind": "row", "columns": ["n1", "n2"],
+                         "ordered": False, "ordered_columns": True},
+        # Only 47 versions in the graph carry a CVE, so the both-vulnerable
+        # strata are drawn from 1,081 possible pairs. Wide enough for 250, but
+        # this is the family where the graph starts to bind.
+        "strata": [
+            ("both_vuln_first_more", 0.24, VULN_FIRST_MORE, "first_greater"),
+            ("both_vuln_second_more", 0.24, VULN_SECOND_MORE, "second_greater"),
+            ("both_vuln_tie", 0.20, VULN_TIE, "equal"),
+            ("only_first_vuln", 0.18, VULN_ONE_ZERO, "first_greater"),
+            ("neither_vuln", 0.14, VULN_NEITHER, "equal"),
+        ],
+    },
+    "C5.5": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "Which direct dependencies of software '{pkg}' version '{ver}' are not direct dependencies of software '{dep}' version '{dep_ver}'?",
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (r1)-[:DEPENDS_ON]->(d:SoftwareVersion) "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) "
+            "WITH d, ds "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "WHERE NOT (r2)-[:DEPENDS_ON]->(d) "
+            "RETURN DISTINCT ds.name AS software, d.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        # a_subset_b is the stratum that separates set difference from "just
+        # list the first side's dependencies": the first side HAS dependencies,
+        # and the right answer is still nothing.
+        "strata": [
+            ("has_extra_dep", 0.66, PAIRS_A_HAS_EXTRA_DEP, "nonempty"),
+            ("a_subset_b", 0.22, PAIRS_A_SUBSET_B, "empty"),
+            ("first_is_leaf", 0.12, PAIRS_FIRST_IS_LEAF, "empty"),
+        ],
+    },
+    "C5.6": {
+        "family": "C5: Comparative / set",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "What CWE IDs are shared by software '{pkg}' version '{ver}' and software '{dep}' version '{dep_ver}'?",
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (r1)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "MATCH (r2)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w) "
+            "RETURN DISTINCT w.cweId AS cweId ORDER BY cweId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cweId"], "ordered": False},
+        # CAPACITY CEILING measured on the graph: only **87** version pairs in
+        # the entire KG share a CWE. At 0.50 of the quota that caps the template
+        # at 174; it ships at 170 to keep a margin for the round-robin draw.
+        # This is the graph binding, not the design.
+        "max_quota": 170,
+        "strata": [
+            ("shares_cwe", 0.50, CWE_PAIRS_SHARED, "nonempty"),
+            ("no_shared_cwe", 0.30, CWE_PAIRS_NO_SHARED, "empty"),
+            ("second_has_no_cwe", 0.20, CWE_SECOND_HAS_NONE, "empty"),
         ],
     },
 }
