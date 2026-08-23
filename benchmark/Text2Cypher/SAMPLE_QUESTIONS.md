@@ -6,8 +6,8 @@ the correct answer, and the first rows of that answer.
 
 **9,317 questions · 41 templates · 2,294 with a deliberately empty answer**
 
-See `DATASET_V4.md` for how the bank is built and validated, and
-`verification/` for the independent re-computation scripts.
+New here? [`ABOUT_THE_QUESTION_BANK.md`](ABOUT_THE_QUESTION_BANK.md) explains in
+one page how these questions are generated and how the answers are checked.
 
 ---
 
