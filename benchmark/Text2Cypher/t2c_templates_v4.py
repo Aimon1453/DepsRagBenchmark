@@ -403,6 +403,63 @@ PAIRS_DISJOINT_TREE = (
 )
 
 
+# --- C6 pools --------------------------------------------------------------
+# The vulnerability side of the graph is small and fixed (measured 2026-08-23):
+# 47 versions carry a CVE, via 196 (version, CVE) pairs over 155 Vulnerability
+# nodes - 134 of those CVEs have a CWE classification and 21 do not, and
+# exactly 2 versions have CVEs none of which carries a CWE. Every positive
+# stratum below draws from these pools, so C6.2/C6.3/C6.8 ship at the honest
+# cap (positive_pool / positive_share) instead of 250 - the same
+# graph-capacity precedent as C3.5 and C5.6. C6.6 (196 true pairs) reaches
+# 250; C6.7 (155 CVEs + synthetic absences) ships at 200.
+
+VULN_VERSIONS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE (v)-[:VULNERABLE_TO]->() "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+CLEAN_VERSIONS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE NOT (v)-[:VULNERABLE_TO]->() "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+CWE_VERSIONS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->() "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# The sharp empty stratum for C6.3: the version IS vulnerable, but none of its
+# CVEs has a CWE classification, so the honest answer is still nothing. Only 2
+# such versions exist; both are included.
+VULN_NO_CWE_VERSIONS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:VULNERABLE_TO]->() "
+    "AND NOT (v)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->() "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# The true pool for C6.6: real (version, CVE) links.
+VULN_PAIRS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "RETURN DISTINCT sw.name AS pkg, v.versionName AS ver, c.cveId AS cve, {ECO} AS eco"
+)
+
+# CVE-keyed pools for C6.7. A Vulnerability node has no ecosystem of its own,
+# so the round-robin eco comes from an affected version (min() makes the
+# choice deterministic; every one of the 155 CVEs has at least one).
+CVES_WITH_CWE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "WHERE (c)-[:VULNERABILITY_TYPE]->() "
+    "WITH c.cveId AS cve, min({ECO}) AS eco RETURN cve, eco"
+)
+CVES_WITHOUT_CWE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "WHERE NOT (c)-[:VULNERABILITY_TYPE]->() "
+    "WITH c.cveId AS cve, min({ECO}) AS eco RETURN cve, eco"
+)
+
+
 TEMPLATES: dict[str, dict] = {
     "C1.1": {
         "family": "C1: Entity / Version Lookup",
@@ -977,6 +1034,154 @@ TEMPLATES: dict[str, dict] = {
             ("shares_cwe", 0.50, CWE_PAIRS_SHARED, "nonempty"),
             ("no_shared_cwe", 0.30, CWE_PAIRS_NO_SHARED, "empty"),
             ("second_has_no_cwe", 0.20, CWE_SECOND_HAS_NONE, "empty"),
+        ],
+    },
+    # ---------------------------------------------------------------------
+    # C6: Vulnerability
+    #
+    # The sheet lists eight C6 rows and strikes three: C6.1 ("any known
+    # vulnerabilities", the boolean degenerate of C6.4 > 0) and C6.4/C6.5, the
+    # one-hop count halves of the C6.2/C6.3 list-vs-count pairs. Live rows are
+    # C6.2, C6.3, C6.6, C6.7 and C6.8; all five golds ship verbatim from the
+    # sheet - the strata, quotas and negatives are what v4 adds.
+    #
+    # This is the family the vulnerability pools cap. 47 CVE-bearing versions
+    # divided by a 0.67 positive share puts the honest ceiling for
+    # C6.2 and C6.8 at 70; C6.3's is 67 (45 CWE-bearing versions). Padding
+    # them to 250 would mean templates whose correct answer is "nothing" about
+    # 80% of the time, which measures willingness to stay silent, not query
+    # skill. The vulnerability-driven re-import remains the only real fix.
+    # ---------------------------------------------------------------------
+    "C6.2": {
+        "family": "C6: Vulnerability",
+        "source": "luxu",
+        "v3_id": "C2.3",           # identical question and gold in the v3 bank
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "What are the CVE IDs of known vulnerabilities affecting software '{pkg}' version '{ver}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "RETURN DISTINCT c.cveId AS cveId ORDER BY cveId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cveId"], "ordered": False},
+        # CAPACITY CEILING: 47 versions in the whole KG carry a CVE, and V6
+        # uniqueness is on (pkg, ver), so 47 is the entire positive pool.
+        "max_quota": 70,
+        "strata": [
+            ("has_cves", 0.67, VULN_VERSIONS, "nonempty"),
+            ("clean_version", 0.22, CLEAN_VERSIONS, "empty"),
+            ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C6.3": {
+        "family": "C6: Vulnerability",
+        "source": "luxu",
+        "v3_id": "C2.4",           # identical question and gold in the v3 bank
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "What CWE IDs are associated with vulnerabilities of software '{pkg}' version '{ver}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+            "RETURN DISTINCT w.cweId AS cweId ORDER BY cweId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cweId"], "ordered": False},
+        # CAPACITY CEILING: 45 CWE-bearing versions. The 0.03 stratum is the
+        # entire graph supply of "vulnerable but unclassified" - 2 versions -
+        # and it is the discriminating empty: the version HAS CVEs, and a
+        # model that answers the CVE question it expected still scores 0.
+        "max_quota": 67,
+        "strata": [
+            ("has_cwes", 0.67, CWE_VERSIONS, "nonempty"),
+            ("cves_without_cwe", 0.03, VULN_NO_CWE_VERSIONS, "empty"),
+            ("clean_version", 0.19, CLEAN_VERSIONS, "empty"),
+            ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C6.6": {
+        "family": "C6: Vulnerability",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SA",
+        "difficulty": "Easy",
+        "params": ("pkg", "ver", "cve"),
+        "question": "Does software '{pkg}' version '{ver}' have vulnerability '{cve}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability {{cveId: '{cve}'}}) "
+            "RETURN count(c) > 0 AS has_cve"
+        ),
+        "answer_shape": {"kind": "bool", "columns": ["has_cve"], "ordered": False},
+        # The one C6 template that reaches 250: the true pool is the 196 real
+        # (version, CVE) links. The false side comes in three grades:
+        # `vuln_other_cve` is the discriminating one (the version IS
+        # vulnerable, just not to this CVE - a model that resolves "has
+        # vulnerability X" to "has any vulnerability" answers true);
+        # `near_miss_cve` asks a vulnerable version about an id one number
+        # away from one of ITS OWN CVEs, so "no" has to come from the graph
+        # rather than from the id looking foreign; `clean_version_real_cve`
+        # is the easy grade.
+        "strata": [
+            ("has_cve", 0.50, VULN_PAIRS, "true"),
+            ("vuln_other_cve", 0.20, "SYNTH:vuln_other_cve", "false"),
+            ("near_miss_cve", 0.15, "SYNTH:near_miss_cve", "false"),
+            ("clean_version_real_cve", 0.15, "SYNTH:clean_version_real_cve", "false"),
+        ],
+    },
+    "C6.7": {
+        "family": "C6: Vulnerability",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SR",
+        "difficulty": "Easy",
+        "params": ("cve",),
+        "question": "What CWE IDs are linked to vulnerability '{cve}'?",
+        "cypher": (
+            "MATCH (c:Vulnerability {{cveId: '{cve}'}})-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+            "RETURN DISTINCT w.cweId AS cweId ORDER BY cweId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cweId"], "ordered": False},
+        # CAPACITY CEILING: 155 Vulnerability nodes in the graph, split 134
+        # with a CWE / 21 without. The 21 are the attributable empty ("the CVE
+        # exists, it just has no classification"); the synthetic absences are
+        # near-miss ids one number away from real ones. 134/21/45 lands the
+        # shares exactly at quota 200.
+        "max_quota": 200,
+        "strata": [
+            ("cve_with_cwe", 0.67, CVES_WITH_CWE, "nonempty"),
+            ("cve_without_cwe", 0.105, CVES_WITHOUT_CWE, "empty"),
+            ("absent_cve", 0.225, "SYNTH:absent_cve", "empty"),
+        ],
+    },
+    "C6.8": {
+        "family": "C6: Vulnerability",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "What CVE-CWE pairs affect software '{pkg}' version '{ver}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "OPTIONAL MATCH (c)-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+            "RETURN DISTINCT c.cveId AS cveId, w.cweId AS cweId ORDER BY cveId, cweId"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["cveId", "cweId"], "ordered": False},
+        # Same 47-version positive pool and ceiling as C6.2. The sheet's
+        # OPTIONAL MATCH on the CWE hop is right and is kept: 27 of the 196
+        # (version, CVE) links involve a CVE with no CWE, so some gold rows
+        # carry a null cweId - a NEW ANSWER SHAPE for the bank (nullable
+        # cell), covered by its own format-contract clause per the house rule
+        # that every new shape needs one.
+        "max_quota": 70,
+        "strata": [
+            ("has_cves", 0.67, VULN_VERSIONS, "nonempty"),
+            ("clean_version", 0.22, CLEAN_VERSIONS, "empty"),
+            ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
         ],
     },
 }

@@ -1,0 +1,10 @@
+{
+ "n": 657,
+ "regression_n": 4610,
+ "regression_failures": 0,
+ "failures": [],
+ "gold_ms": {
+  "median": 2.7,
+  "max": 4.2
+ }
+}

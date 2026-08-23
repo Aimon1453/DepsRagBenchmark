@@ -71,9 +71,10 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**4,610 cases, 19 templates, 1,029 with an empty answer (22.3 %).** 250 per
-template except C3.5 (190) and C5.6 (170), which ship at their measured
-capacity on this graph.
+**5,267 cases, 24 templates, 1,064 with an empty answer (20.2 %).** 250 per
+template except C3.5 (190), C5.6 (170) and four of the five C6 templates
+(C6.2 70, C6.3 67, C6.7 200, C6.8 70), which ship at their measured capacity
+on this graph.
 
 | id | sheet family | v3 id | shape | n | strata (drawn / pool) |
 |---|---|---|---|---|---|
@@ -96,6 +97,11 @@ capacity on this graph.
 | C5.4 | C5 Comparative / set | — | table | 250 | shares_tree 165/6544 · **disjoint_trees 55/4484** · **first_is_leaf 30/2116** |
 | C5.5 | C5 Comparative / set | — | table | 250 | has_extra_dep 165/6726 · **a_subset_b 55/1275** · **first_is_leaf 30/2116** |
 | C5.6 | C5 Comparative / set | — | list | **170** | shares_cwe 85/**87** · no_shared_cwe 51/846 · second_has_no_cwe 34/4000 |
+| C6.2 | C6 Vulnerability | **C2.3** | list | **70** | has_cves 47/**47** · **clean_version 15/1603** · **absent_package 8/24** |
+| C6.3 | C6 Vulnerability | **C2.4** | list | **67** | has_cwes 45/**45** · **cves_without_cwe 2/2** · **clean_version 13/1603** · **absent_package 7/21** |
+| C6.6 | C6 Vulnerability | — | bool | 250 | has_cve 125/196 · **vuln_other_cve 50/150** · **near_miss_cve 38/114** · **clean_version_real_cve 37/111** |
+| C6.7 | C6 Vulnerability | — | list | **200** | cve_with_cwe 134/**134** · **cve_without_cwe 21/21** · **absent_cve 45/133** |
+| C6.8 | C6 Vulnerability | — | table | **70** | has_cves 47/**47** · **clean_version 15/1603** · **absent_package 8/24** |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -331,6 +337,47 @@ errors - a plain `MATCH` where the gold uses `OPTIONAL MATCH`, so a side with no
 CVEs collapses the whole query to zero rows. That is the `only_first_vuln`
 stratum doing its job.
 
+### C6: the family the vulnerability pools cap
+
+The sheet lists eight C6 rows and strikes three: C6.1 ("any known
+vulnerabilities", the boolean degenerate of `C6.4 > 0`) and C6.4/C6.5, the
+one-hop count halves of the C6.2/C6.3 list-vs-count pairs. Live rows are
+**C6.2, C6.3, C6.6, C6.7, C6.8**; all five golds ship verbatim from the sheet
+— the first family since C1 with zero gold deviations.
+
+- **Four of five templates ship at a measured capacity ceiling**, because the
+  vulnerability side of the graph is small and fixed: 47 CVE-bearing versions
+  (via 196 version–CVE links over 155 `Vulnerability` nodes), 45 of them with
+  a CWE classification. At the standard 0.67 positive share that caps C6.2 and
+  C6.8 at 70 and C6.3 at 67; C6.7 (drawing from the 155 CVE ids themselves)
+  reaches 200. Padding these to 250 would make templates whose correct answer
+  is "nothing" ~80 % of the time — a measure of willingness to stay silent,
+  not of query skill. This is the documented cost of the anchor-based,
+  dependency-driven import; a vulnerability-driven re-import is the only real
+  fix.
+- **C6.6's negatives come in three grades**, following the C2 pattern:
+  `vuln_other_cve` (the version IS vulnerable, just not to this CVE — punishes
+  resolving "has vulnerability X" to "has any vulnerability"),
+  `near_miss_cve` (a vulnerable version asked about an id one number away
+  from one of *its own* CVEs, zero-padding preserved — the sharpest false),
+  and `clean_version_real_cve` (the easy grade). The v3 sentinel lesson
+  applies to CVE ids unchanged: an absent id must look exactly like a present
+  one.
+- **C6.3's `cves_without_cwe` stratum is the entire graph supply — 2
+  versions** — of "vulnerable but unclassified". It is the discriminating
+  empty: the version *has* CVEs, so a model that answers the CVE question it
+  expected still scores 0.
+- **C6.8 introduces a new answer shape: a nullable cell.** The sheet's
+  `OPTIONAL MATCH` on the CWE hop is right and is kept — 27 of the 196
+  version–CVE links involve a CVE with no CWE, so some gold rows carry a null
+  `cweId`. Per the house rule that every new shape needs a contract clause,
+  the format contract gained one (keep the row, null `cweId`, when a CVE has
+  no classification).
+- **Smoke (60 stratified cases, deepseek-v4-flash): bare 0.967 → contract
+  1.000.** Both bare misses are C6.6 shape errors (extra columns / a CASE
+  expression instead of the single boolean the Yes/no clause pins), which the
+  contract corrects — model signal, not a dataset defect.
+
 ### The contract effect by family
 
 Reported separately per family because it changes sign:
@@ -341,6 +388,7 @@ Reported separately per family because it changes sign:
 | C3 transitive / path | 0.717 | 1.000 | +0.283 | scales with shape novelty (C3.3, a row holding an array: +0.70) |
 | C4 aggregation | 0.540 | 0.420 | -0.120 | compliance amplifies a protocol self-contradiction (`*0..6` vs schema instruction 4) |
 | C5 comparative / set | 0.433 | 0.933 | **+0.500** | "which has more" has no natural answer shape at all |
+| C6 vulnerability | 0.967 | 1.000 | +0.033 | CVE/CWE listing and yes/no are conventional shapes |
 
 The sharper claim this supports: *the contract buys answer-shape
 disambiguation, not capability.* It approaches zero return as the shape becomes

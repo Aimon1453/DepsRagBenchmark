@@ -69,13 +69,25 @@ class Context:
         self.versions = run(ses, (
             f"MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
             f"RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco, "
-            f"EXISTS {{ (v)-[:DEPENDS_ON]->() }} AS hasdeps"
+            f"EXISTS {{ (v)-[:DEPENDS_ON]->() }} AS hasdeps, "
+            f"EXISTS {{ (v)-[:VULNERABLE_TO]->() }} AS hasvuln"
         ))
         self.package_names = {r["pkg"] for r in self.versions}
         self.pkg_ver = {(r["pkg"], r["ver"]) for r in self.versions}
         self.a_version_of = {}
         for r in self.versions:
             self.a_version_of.setdefault(r["pkg"], r["ver"])
+        # The vulnerability side, for the C6 synthetic strata: all 196 real
+        # (version, CVE) links, and the 155 CVE ids they cover (measured
+        # 2026-08-23; every Vulnerability node is attached to some version).
+        self.vuln_pairs = run(ses, (
+            f"MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            f"RETURN DISTINCT sw.name AS pkg, v.versionName AS ver, c.cveId AS cve, {ECO} AS eco"
+        ))
+        self.cve_ids = {r["cve"] for r in self.vuln_pairs}
+        self.cves_of: dict[tuple, set] = defaultdict(set)
+        for r in self.vuln_pairs:
+            self.cves_of[(r["pkg"], r["ver"])].add(r["cve"])
 
 
 _NUM = re.compile(r"^(\d+)")
@@ -123,6 +135,31 @@ def _near_miss_names(name: str) -> list[str]:
     if name.startswith("lib"):
         cands.insert(0, name[3:])
     return cands
+
+
+_CVE = re.compile(r"^(CVE-\d{4}-)(\d+)$")
+
+
+def _bump_cve(cve: str, taken: set[str]) -> str | None:
+    """A CVE id one number away from a real one, provably absent from the KG.
+
+    The version-side lesson applies here unchanged: v3's sentinel negatives
+    ("99.99.99") were learnable on sight, so an absent CVE has to look exactly
+    like a present one. Zero-padding is preserved (CVE-2024-0001 bumps to
+    CVE-2024-0002, not CVE-2024-2).
+    """
+    m = _CVE.match(cve)
+    if not m:
+        return None
+    head, tail = m.group(1), m.group(2)
+    for delta in (1, 2, 10, -1):
+        num = int(tail) + delta
+        if num <= 0:
+            continue
+        cand = head + str(num).zfill(len(tail))
+        if cand not in taken:
+            return cand
+    return None
 
 
 def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
@@ -198,6 +235,71 @@ def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
                 continue
             seen.add(key)
             out.append({"pkg": r["pkg"], "ver": r["ver"], "dep": name, "eco": r["eco"]})
+
+    elif kind == "vuln_other_cve":
+        # A version that IS vulnerable, asked about a real CVE that belongs to
+        # a different version. Punishes resolving "has vulnerability X" to
+        # "has any vulnerability".
+        vulns = sorted({(r["pkg"], r["ver"], r["eco"]) for r in ctx.vuln_pairs})
+        all_cves = sorted(ctx.cve_ids)
+        seen = set()
+        attempts = 0
+        while len(out) < n and attempts < n * 80 and vulns:
+            attempts += 1
+            pkg, ver, eco = vulns[attempts % len(vulns)]
+            cand = rng.choice(all_cves)
+            if cand in ctx.cves_of[(pkg, ver)]:
+                continue
+            key = (pkg, ver, cand)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"pkg": pkg, "ver": ver, "cve": cand, "eco": eco})
+
+    elif kind == "near_miss_cve":
+        # A vulnerable version asked about an id one number away from one of
+        # ITS OWN CVEs. The sharpest false: a sloppy string match, or a model
+        # answering from CVE folklore instead of the graph, says yes.
+        pairs = list(ctx.vuln_pairs)
+        rng.shuffle(pairs)
+        seen = set()
+        for r in pairs:
+            if len(out) >= n:
+                break
+            cand = _bump_cve(r["cve"], ctx.cve_ids)
+            if cand is None:
+                continue
+            key = (r["pkg"], r["ver"], cand)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"pkg": r["pkg"], "ver": r["ver"], "cve": cand, "eco": r["eco"]})
+
+    elif kind == "clean_version_real_cve":
+        # The easy false grade: a version with no vulnerabilities at all,
+        # asked about a real CVE.
+        clean = [r for r in ctx.versions if not r.get("hasvuln")]
+        rng.shuffle(clean)
+        all_cves = sorted(ctx.cve_ids)
+        for r in clean:
+            if len(out) >= n:
+                break
+            out.append({"pkg": r["pkg"], "ver": r["ver"],
+                        "cve": rng.choice(all_cves), "eco": r["eco"]})
+
+    elif kind == "absent_cve":
+        # Just a {cve} parameter (C6.7): a near-miss of a real id.
+        ids = sorted(ctx.cve_ids)
+        rng.shuffle(ids)
+        seen = set()
+        for cid in ids:
+            if len(out) >= n:
+                break
+            cand = _bump_cve(cid, ctx.cve_ids)
+            if cand is None or cand in seen:
+                continue
+            seen.add(cand)
+            out.append({"cve": cand, "eco": "absent"})
 
     else:
         raise ValueError("unknown synthetic stratum: " + kind)

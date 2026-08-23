@@ -690,6 +690,170 @@
    },
    "dropped_duplicates": 0,
    "built": 250
+  },
+  "C6.2": {
+   "quota": 70,
+   "strata": {
+    "has_cves": {
+     "available": 47,
+     "wanted": 47,
+     "drawn": 47
+    },
+    "clean_version": {
+     "available": 1603,
+     "wanted": 15,
+     "drawn": 15
+    },
+    "absent_package": {
+     "available": 24,
+     "wanted": 8,
+     "drawn": 8
+    }
+   },
+   "topped_up": 0,
+   "total": 70,
+   "ecosystems": {
+    "conan.io": 6,
+    "crates.io": 33,
+    "pypi.org": 9,
+    "sources.debian.org": 14,
+    "absent": 8
+   },
+   "dropped_duplicates": 0,
+   "built": 70
+  },
+  "C6.3": {
+   "quota": 67,
+   "strata": {
+    "has_cwes": {
+     "available": 45,
+     "wanted": 45,
+     "drawn": 45
+    },
+    "cves_without_cwe": {
+     "available": 2,
+     "wanted": 2,
+     "drawn": 2
+    },
+    "clean_version": {
+     "available": 1603,
+     "wanted": 13,
+     "drawn": 13
+    },
+    "absent_package": {
+     "available": 21,
+     "wanted": 7,
+     "drawn": 7
+    }
+   },
+   "topped_up": 0,
+   "total": 67,
+   "ecosystems": {
+    "conan.io": 6,
+    "crates.io": 32,
+    "pypi.org": 8,
+    "sources.debian.org": 14,
+    "absent": 7
+   },
+   "dropped_duplicates": 0,
+   "built": 67
+  },
+  "C6.6": {
+   "quota": 250,
+   "strata": {
+    "has_cve": {
+     "available": 196,
+     "wanted": 125,
+     "drawn": 125
+    },
+    "vuln_other_cve": {
+     "available": 150,
+     "wanted": 50,
+     "drawn": 50
+    },
+    "near_miss_cve": {
+     "available": 114,
+     "wanted": 38,
+     "drawn": 38
+    },
+    "clean_version_real_cve": {
+     "available": 111,
+     "wanted": 37,
+     "drawn": 37
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 50,
+    "crates.io": 91,
+    "pypi.org": 55,
+    "sources.debian.org": 54
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C6.7": {
+   "quota": 200,
+   "strata": {
+    "cve_with_cwe": {
+     "available": 134,
+     "wanted": 134,
+     "drawn": 134
+    },
+    "cve_without_cwe": {
+     "available": 21,
+     "wanted": 21,
+     "drawn": 21
+    },
+    "absent_cve": {
+     "available": 133,
+     "wanted": 45,
+     "drawn": 45
+    }
+   },
+   "topped_up": 0,
+   "total": 200,
+   "ecosystems": {
+    "conan.io": 31,
+    "crates.io": 29,
+    "pypi.org": 41,
+    "sources.debian.org": 54,
+    "absent": 45
+   },
+   "dropped_duplicates": 0,
+   "built": 200
+  },
+  "C6.8": {
+   "quota": 70,
+   "strata": {
+    "has_cves": {
+     "available": 47,
+     "wanted": 47,
+     "drawn": 47
+    },
+    "clean_version": {
+     "available": 1603,
+     "wanted": 15,
+     "drawn": 15
+    },
+    "absent_package": {
+     "available": 24,
+     "wanted": 8,
+     "drawn": 8
+    }
+   },
+   "topped_up": 0,
+   "total": 70,
+   "ecosystems": {
+    "conan.io": 6,
+    "crates.io": 33,
+    "pypi.org": 9,
+    "sources.debian.org": 14,
+    "absent": 8
+   },
+   "dropped_duplicates": 0,
+   "built": 70
   }
  }
 }
