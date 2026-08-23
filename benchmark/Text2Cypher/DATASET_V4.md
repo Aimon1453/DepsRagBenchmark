@@ -71,7 +71,7 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**5,267 cases, 24 templates, 1,064 with an empty answer (20.2 %).** 250 per
+**6,017 cases, 27 templates, 1,199 with an empty answer (19.9 %).** 250 per
 template except C3.5 (190), C5.6 (170) and four of the five C6 templates
 (C6.2 70, C6.3 67, C6.7 200, C6.8 70), which ship at their measured capacity
 on this graph.
@@ -102,6 +102,9 @@ on this graph.
 | C6.6 | C6 Vulnerability | — | bool | 250 | has_cve 125/196 · **vuln_other_cve 50/150** · **near_miss_cve 38/114** · **clean_version_real_cve 37/111** |
 | C6.7 | C6 Vulnerability | — | list | **200** | cve_with_cwe 134/**134** · **cve_without_cwe 21/21** · **absent_cve 45/133** |
 | C6.8 | C6 Vulnerability | — | table | **70** | has_cves 47/**47** · **clean_version 15/1603** · **absent_package 8/24** |
+| C7.1 | C7 Reverse DEPENDS_ON (in) | **C3.5** | table | 250 | has_dependents 213/1638 · **no_dependents 10/11** · **absent_package 27/81** |
+| C7.2 | C7 Reverse DEPENDS_ON (in) | — | table | 250 | has_dependents 195/1121 · **no_version_depended_on 8/10** · **absent_product 45/135** |
+| C7.5 | C7 Reverse DEPENDS_ON (in) | **C3.6** | table | 250 | has_indirect_dependents 150/1575 · **direct_only_dependents 55/64** · **no_dependents 10/11** · **absent_package 35/105** |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -378,6 +381,37 @@ one-hop count halves of the C6.2/C6.3 list-vs-count pairs. Live rows are
   expression instead of the single boolean the Yes/no clause pins), which the
   contract corrects — model signal, not a dataset defect.
 
+### C7: the reverse direction, one guard, and a measured question-gold mismatch
+
+Live rows are **C7.1, C7.2, C7.5** (C7.3 struck as the count half of the
+C7.1 pair, C7.4 as the boolean degenerate of `C7.3 = 0`). The reverse
+direction is where this graph is almost never empty — 1,639 of 1,650
+versions have a dependent — so the honest empty pools are tiny (11 versions,
+10 products) and ship in full.
+
+- **C7.5's gold carries `WHERE other <> root`** (the C3.1 cycle precedent):
+  466 versions return to themselves within 6 hops, and the verifier measured
+  the guard actually removing the root from **34 of 215** in-graph answers.
+  The graph also contains exactly one direct self-loop version; it is
+  excluded from C7.1's positive pool so the verbatim gold never lists a
+  version as its own dependent.
+- **C7.5's "at any depth" wording joins the C3.1/C3.6 truncation decision,
+  now quantified for the reverse direction: 122 of 215** in-graph answers
+  lose nodes past 6 hops (worst measured: 185 rows within 6 hops, 808
+  beyond).
+- **C7.2 is the family's recorded defect, and the smoke run priced it.** The
+  question asks "which software *products*"; the gold returns
+  (software, version) pairs — one row per dependent *version*. Shipped
+  verbatim (the C4 rule). Measured: **bare 0.30 / contract 0.50**, and every
+  miss is a clean 0.00 of the same shape — the model returns the one-column
+  product list the question literally asks for. Second measured instance of
+  "the protocol punishes obedience when question and gold disagree".
+- Smoke (60 stratified, deepseek-v4-flash): bare 0.707 → contract 0.827.
+  C7.1 0.95→1.00 and C7.5 0.87→0.98 are healthy (remaining bare misses are
+  unbounded `*1..` traversals — the depth-convention model signal); the
+  family average is dragged by C7.2's mismatch, which no contract clause can
+  fix because the conflict is inside the sheet row itself.
+
 ### The contract effect by family
 
 Reported separately per family because it changes sign:
@@ -389,6 +423,7 @@ Reported separately per family because it changes sign:
 | C4 aggregation | 0.540 | 0.420 | -0.120 | compliance amplifies a protocol self-contradiction (`*0..6` vs schema instruction 4) |
 | C5 comparative / set | 0.433 | 0.933 | **+0.500** | "which has more" has no natural answer shape at all |
 | C6 vulnerability | 0.967 | 1.000 | +0.033 | CVE/CWE listing and yes/no are conventional shapes |
+| C7 reverse deps | 0.707 | 0.827 | +0.120 | C7.5's shape gains, capped by C7.2's question-gold mismatch under both protocols |
 
 The sharper claim this supports: *the contract buys answer-shape
 disambiguation, not capability.* It approaches zero return as the shape becomes

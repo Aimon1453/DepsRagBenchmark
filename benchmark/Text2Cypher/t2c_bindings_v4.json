@@ -854,6 +854,104 @@
    },
    "dropped_duplicates": 0,
    "built": 70
+  },
+  "C7.1": {
+   "quota": 250,
+   "strata": {
+    "has_dependents": {
+     "available": 1638,
+     "wanted": 213,
+     "drawn": 213
+    },
+    "no_dependents": {
+     "available": 11,
+     "wanted": 10,
+     "drawn": 10
+    },
+    "absent_package": {
+     "available": 81,
+     "wanted": 27,
+     "drawn": 27
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 34,
+    "crates.io": 132,
+    "pypi.org": 37,
+    "sources.debian.org": 20,
+    "absent": 27
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C7.2": {
+   "quota": 250,
+   "strata": {
+    "has_dependents": {
+     "available": 1121,
+     "wanted": 195,
+     "drawn": 195
+    },
+    "no_version_depended_on": {
+     "available": 10,
+     "wanted": 10,
+     "drawn": 8
+    },
+    "absent_product": {
+     "available": 135,
+     "wanted": 45,
+     "drawn": 45
+    }
+   },
+   "topped_up": 2,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 27,
+    "crates.io": 141,
+    "pypi.org": 36,
+    "sources.debian.org": 1,
+    "absent": 45
+   },
+   "dropped_duplicates": 0,
+   "built": 250
+  },
+  "C7.5": {
+   "quota": 250,
+   "strata": {
+    "has_indirect_dependents": {
+     "available": 1575,
+     "wanted": 150,
+     "drawn": 150
+    },
+    "direct_only_dependents": {
+     "available": 64,
+     "wanted": 55,
+     "drawn": 55
+    },
+    "no_dependents": {
+     "available": 11,
+     "wanted": 10,
+     "drawn": 10
+    },
+    "absent_package": {
+     "available": 105,
+     "wanted": 35,
+     "drawn": 35
+    }
+   },
+   "topped_up": 0,
+   "total": 250,
+   "ecosystems": {
+    "conan.io": 34,
+    "crates.io": 133,
+    "pypi.org": 32,
+    "sources.debian.org": 16,
+    "absent": 35
+   },
+   "dropped_duplicates": 0,
+   "built": 250
   }
  }
 }

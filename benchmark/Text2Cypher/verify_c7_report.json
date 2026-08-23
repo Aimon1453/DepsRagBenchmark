@@ -1,0 +1,40 @@
+{
+ "n": 750,
+ "regression_n": 5267,
+ "regression_failures": 0,
+ "c75_guard_removed_root": 34,
+ "c75_in_graph": 215,
+ "c75_truncated_answers": 122,
+ "c75_truncation_examples": [
+  {
+   "id": "C7_5-inotify_sys-0_1_5",
+   "within6": 498,
+   "beyond6": 496
+  },
+  {
+   "id": "C7_5-actix_web-3_3_3",
+   "within6": 213,
+   "beyond6": 781
+  },
+  {
+   "id": "C7_5-diff-0_1_13",
+   "within6": 493,
+   "beyond6": 500
+  },
+  {
+   "id": "C7_5-phf_macros-0_9_0",
+   "within6": 185,
+   "beyond6": 808
+  },
+  {
+   "id": "C7_5-http_client-6_5_3",
+   "within6": 497,
+   "beyond6": 496
+  }
+ ],
+ "failures": [],
+ "gold_ms": {
+  "median": 2.5,
+  "max": 25.0
+ }
+}

@@ -403,6 +403,60 @@ PAIRS_DISJOINT_TREE = (
 )
 
 
+# --- C7 pools --------------------------------------------------------------
+# The reverse direction is where this graph is almost never empty: 1,639 of
+# 1,650 versions have at least one direct dependent (measured 2026-08-23), so
+# the empty strata are graph-capped at 11 versions / 10 products and every
+# other pool reaches 250 comfortably. Two structural facts shape the pools:
+# the graph contains exactly ONE direct self-loop version (excluded from
+# C7.1's positive pool so the verbatim gold never lists a version as its own
+# dependent), and 466 versions sit on a cycle that returns within 6 hops, so
+# C7.5's gold carries the same `<> root` guard the C3 transitive golds got.
+
+REV_HAS_DEPENDENTS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (o:SoftwareVersion)-[:DEPENDS_ON]->(v) WHERE o <> v }} "
+    "AND NOT (v)-[:DEPENDS_ON]->(v) "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+REV_NO_DEPENDENTS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE NOT ()-[:DEPENDS_ON]->(v) "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+PRODUCTS_WITH_DEPENDENTS = (
+    "MATCH (sw:Software) "
+    "WHERE EXISTS {{ (sw)-[:HAS_VERSION]->(:SoftwareVersion)<-[:DEPENDS_ON]-() }} "
+    "RETURN sw.name AS dep, {ECO} AS eco"
+)
+
+PRODUCTS_NO_DEPENDENTS = (
+    "MATCH (sw:Software) "
+    "WHERE NOT EXISTS {{ (sw)-[:HAS_VERSION]->(:SoftwareVersion)<-[:DEPENDS_ON]-() }} "
+    "RETURN sw.name AS dep, {ECO} AS eco"
+)
+
+# The discriminating split for C7.5, mirroring C3's has_indirect/direct_only:
+# a version whose dependents include some at depth >= 2 (the transitive
+# question is about something real) vs one whose dependents are all one hop
+# up (reverse *1..6 == reverse *1..1 there, so a model that writes *2..6 for
+# "at any depth" is punished). Both sides exclude the version itself so the
+# claim survives cycles.
+REV_INDIRECT_DEPENDENTS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (o:SoftwareVersion)-[:DEPENDS_ON*2..2]->(v) WHERE o <> v }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+REV_DIRECT_ONLY_DEPENDENTS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (o:SoftwareVersion)-[:DEPENDS_ON]->(v) WHERE o <> v }} "
+    "AND NOT EXISTS {{ MATCH (o2:SoftwareVersion)-[:DEPENDS_ON*2..2]->(v) WHERE o2 <> v }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+
 # --- C6 pools --------------------------------------------------------------
 # The vulnerability side of the graph is small and fixed (measured 2026-08-23):
 # 47 versions carry a CVE, via 196 (version, CVE) pairs over 155 Vulnerability
@@ -1182,6 +1236,97 @@ TEMPLATES: dict[str, dict] = {
             ("has_cves", 0.67, VULN_VERSIONS, "nonempty"),
             ("clean_version", 0.22, CLEAN_VERSIONS, "empty"),
             ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    # ---------------------------------------------------------------------
+    # C7: Reverse DEPENDS_ON (in)
+    #
+    # The sheet lists five C7 rows (plus the backup C7.6) and strikes two:
+    # C7.3 (the count half of the C7.1 list-vs-count pair at one hop) and
+    # C7.4 ("is it a root", the boolean degenerate of C7.3 = 0). Live rows
+    # are C7.1, C7.2 and C7.5.
+    #
+    # One deliberate deviation and one recorded defect:
+    # - C7.5's gold gets `WHERE other <> root` (the C3.1 cycle precedent):
+    #   466 versions can reach themselves within 6 hops, so the sheet's
+    #   verbatim gold lists a version as its own transitive dependent for
+    #   every binding in that region. Same defect class, same fix, and the
+    #   contract's "never list the root itself" clause already covers it.
+    # - C7.2's question asks for "software products" while its gold returns
+    #   (software, version) pairs — one row per dependent VERSION, not per
+    #   product. Shipped verbatim (the C4 rule: change nothing, collect the
+    #   problems); the smoke run measures what the mismatch costs.
+    # ---------------------------------------------------------------------
+    "C7.1": {
+        "family": "C7: Reverse DEPENDS_ON (in)",
+        "source": "luxu",
+        "v3_id": "C3.5",           # same gold in v3; wording said "packages"
+        "query_type": "CR",
+        "difficulty": "Easy",
+        "params": ("pkg", "ver"),
+        "question": "Which software versions directly depend on software '{pkg}' version '{ver}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (other:SoftwareVersion)-[:DEPENDS_ON]->(root) "
+            "OPTIONAL MATCH (os:Software)-[:HAS_VERSION]->(other) "
+            "RETURN DISTINCT os.name AS software, other.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        # The graph's own bias does the discriminating here: with 1,639 of
+        # 1,650 versions depended on, the honest empty pool is 11 versions -
+        # all of them anchor roots - and it ships in full.
+        "strata": [
+            ("has_dependents", 0.85, REV_HAS_DEPENDENTS, "nonempty"),
+            ("no_dependents", 0.04, REV_NO_DEPENDENTS, "empty"),
+            ("absent_package", 0.11, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C7.2": {
+        "family": "C7: Reverse DEPENDS_ON (in)",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("dep",),
+        "question": "Which software products have some version that directly depends on software '{dep}'?",
+        "cypher": (
+            "MATCH (ds:Software {{name: '{dep}'}})-[:HAS_VERSION]->(target:SoftwareVersion) "
+            "MATCH (other:SoftwareVersion)-[:DEPENDS_ON]->(target) "
+            "OPTIONAL MATCH (os:Software)-[:HAS_VERSION]->(other) "
+            "RETURN DISTINCT os.name AS software, other.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        "strata": [
+            ("has_dependents", 0.78, PRODUCTS_WITH_DEPENDENTS, "nonempty"),
+            ("no_version_depended_on", 0.04, PRODUCTS_NO_DEPENDENTS, "empty"),
+            ("absent_product", 0.18, "SYNTH:absent_product", "empty"),
+        ],
+    },
+    "C7.5": {
+        "family": "C7: Reverse DEPENDS_ON (in)",
+        "source": "luxu",
+        "v3_id": "C3.6",           # same traversal in v3; wording said "packages"
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "Which software versions can reach software '{pkg}' version '{ver}' via DEPENDS_ON at any depth?",
+        # DEVIATION FROM THE SHEET: `WHERE other <> root` added, per the C3.1
+        # cycle precedent - 466 versions return to themselves within 6 hops.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (other:SoftwareVersion)-[:DEPENDS_ON*1..6]->(root) WHERE other <> root "
+            "OPTIONAL MATCH (os:Software)-[:HAS_VERSION]->(other) "
+            "RETURN DISTINCT os.name AS software, other.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        # NOTE the question says "at any depth" while gold and schema
+        # instruction 4 cap at 6 hops - the same open wording decision as
+        # C3.1/C3.6; the verifier measures the truncation share.
+        "strata": [
+            ("has_indirect_dependents", 0.60, REV_INDIRECT_DEPENDENTS, "nonempty"),
+            ("direct_only_dependents", 0.22, REV_DIRECT_ONLY_DEPENDENTS, "nonempty"),
+            ("no_dependents", 0.04, REV_NO_DEPENDENTS, "empty"),
+            ("absent_package", 0.14, "SYNTH:absent_package_versioned", "empty"),
         ],
     },
 }

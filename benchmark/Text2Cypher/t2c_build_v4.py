@@ -236,6 +236,12 @@ def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
             seen.add(key)
             out.append({"pkg": r["pkg"], "ver": r["ver"], "dep": name, "eco": r["eco"]})
 
+    elif kind == "absent_product":
+        # C7.2 keys on a bare product name in the `dep` parameter, so this is
+        # absent_package with the column renamed.
+        out = [{"dep": r["pkg"], "eco": r["eco"]}
+               for r in synth("absent_package", ctx, rng, n)]
+
     elif kind == "vuln_other_cve":
         # A version that IS vulnerable, asked about a real CVE that belongs to
         # a different version. Punishes resolving "has vulnerability X" to
