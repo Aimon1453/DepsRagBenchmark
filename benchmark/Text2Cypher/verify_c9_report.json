@@ -1,0 +1,106 @@
+{
+ "n": 1550,
+ "regression_n": 7767,
+ "regression_failures": 0,
+ "cycle_guard_changed_answers": {
+  "C9.6": 64
+ },
+ "pairs_in_graph": {
+  "C9.5": 250,
+  "C9.6": 250,
+  "C9.7": 250
+ },
+ "sheet_c96_cases_wrong": 64,
+ "sheet_c96_of": 250,
+ "sheet_c96_sample": [
+  {
+   "id": "C9_6-proptest-0_10_1-1_6_0",
+   "sheet_n": 711,
+   "truth_n": 710,
+   "spurious": [
+    "proptest"
+   ]
+  },
+  {
+   "id": "C9_6-bytes-0_5_6-1_10_1",
+   "sheet_n": 443,
+   "truth_n": 442,
+   "spurious": [
+    "bytes"
+   ]
+  },
+  {
+   "id": "C9_6-hashbrown-0_1_8-0_11_2",
+   "sheet_n": 695,
+   "truth_n": 694,
+   "spurious": [
+    "hashbrown"
+   ]
+  },
+  {
+   "id": "C9_6-rstest_macros-0_16_0-0_18_2",
+   "sheet_n": 706,
+   "truth_n": 705,
+   "spurious": [
+    "rstest_macros"
+   ]
+  },
+  {
+   "id": "C9_6-ref_cast-0_2_7-1_0_24",
+   "sheet_n": 282,
+   "truth_n": 281,
+   "spurious": [
+    "ref-cast"
+   ]
+  },
+  {
+   "id": "C9_6-wasm_bindgen_futures-0_2_22-0_4_37",
+   "sheet_n": 354,
+   "truth_n": 353,
+   "spurious": [
+    "wasm-bindgen-futures"
+   ]
+  },
+  {
+   "id": "C9_6-env_logger-0_3_5-0_7_1",
+   "sheet_n": 247,
+   "truth_n": 246,
+   "spurious": [
+    "env_logger"
+   ]
+  },
+  {
+   "id": "C9_6-rustls_webpki-0_100_3-0_101_7",
+   "sheet_n": 294,
+   "truth_n": 293,
+   "spurious": [
+    "rustls-webpki"
+   ]
+  }
+ ],
+ "pair_sampling_health": {
+  "C9.5": {
+   "n": 250,
+   "distinct_first_sides": 159,
+   "nonempty": 145,
+   "distinct_nonempty_answers": 80
+  },
+  "C9.6": {
+   "n": 250,
+   "distinct_first_sides": 200,
+   "nonempty": 159,
+   "distinct_nonempty_answers": 144
+  },
+  "C9.7": {
+   "n": 250,
+   "distinct_first_sides": 206,
+   "nonempty": 140,
+   "distinct_nonempty_answers": 79
+  }
+ },
+ "failures": [],
+ "gold_ms": {
+  "median": 6.7,
+  "max": 373.6
+ }
+}

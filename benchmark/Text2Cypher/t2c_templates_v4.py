@@ -403,6 +403,207 @@ PAIRS_DISJOINT_TREE = (
 )
 
 
+# --- C9 pools --------------------------------------------------------------
+# The same-package family. Three templates key on a package alone, one on
+# (package, dependency), one on (package, CVE), and the three upgrade-diff
+# templates on a (package, ver, ver2) triple drawn from the 1,070 ordered
+# same-package version pairs. Every pair pool is first-side correlated
+# (the C5.5 sampling lesson): a bare `ORDER BY name LIMIT n` over version
+# pairs would draw them all from the alphabetically first packages.
+
+PKGS_WITH_VULN_VERSION = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:VULNERABLE_TO]->() "
+    "RETURN DISTINCT sw.name AS pkg, {ECO} AS eco"
+)
+
+# NAME-LEVEL POOLS, and the reason they have to be. C9's package-keyed
+# templates take only `{pkg}`, and the golds resolve it with
+# `MATCH (s:Software {name: ...})` - which matches EVERY Software node of that
+# name. Five names are shared across ecosystems (openssl x3; brotli, click,
+# freetype, idna x2), so a pool that groups by NODE can call `click` clean
+# because the crates.io node is clean while the gold, asking by name, also
+# sees the vulnerable PyPI one. Grouping by name makes the stratum's claim and
+# the gold's behaviour the same claim. Found by verify_c9.py on C9.2/click and
+# C9.2/brotli.
+PKGS_NO_VULN_VERSION = (
+    "MATCH (sw:Software) "
+    "WHERE NOT EXISTS {{ MATCH (x:Software)-[:HAS_VERSION]->(:SoftwareVersion)-[:VULNERABLE_TO]->() "
+    "                    WHERE x.name = sw.name }} "
+    "RETURN DISTINCT sw.name AS pkg, {ECO} AS eco"
+)
+
+# C9.2's three grades. multi_version_with_vuln is the discriminating one: the
+# per-version counts actually differ, so an answer that reports one number
+# for the package is visibly wrong.
+PKGS_MULTI_VERSION_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WITH sw.name AS pkg, min({ECO}) AS eco, count(DISTINCT v) AS c, "
+    "     sum(CASE WHEN EXISTS {{ (v)-[:VULNERABLE_TO]->() }} THEN 1 ELSE 0 END) AS nv "
+    "WHERE c >= 2 AND nv > 0 "
+    "RETURN pkg, eco"
+)
+
+PKGS_MULTI_VERSION_CLEAN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WITH sw.name AS pkg, min({ECO}) AS eco, count(DISTINCT v) AS c, "
+    "     sum(CASE WHEN EXISTS {{ (v)-[:VULNERABLE_TO]->() }} THEN 1 ELSE 0 END) AS nv "
+    "WHERE c >= 2 AND nv = 0 "
+    "RETURN pkg, eco"
+)
+
+PKGS_SINGLE_VERSION = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WITH sw.name AS pkg, min({ECO}) AS eco, count(DISTINCT v) AS c WHERE c = 1 "
+    "RETURN pkg, eco"
+)
+
+# C9.3: (package, dependency) pairs. varying_dep_version is the stratum the
+# question exists for - different versions of the package pull different
+# versions of the same dependency (393 such pairs).
+PKG_DEP_VARYING_VERSION = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:DEPENDS_ON]->(d:SoftwareVersion)"
+    "<-[:HAS_VERSION]-(ds:Software) WHERE ds.name <> sw.name "
+    "WITH sw.name AS pkg, ds.name AS dep, min({ECO}) AS eco, count(DISTINCT d) AS depvers "
+    "WHERE depvers >= 2 "
+    "RETURN pkg, dep, eco"
+)
+
+PKG_DEP_UNIFORM_VERSION = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion)-[:DEPENDS_ON]->(d:SoftwareVersion)"
+    "<-[:HAS_VERSION]-(ds:Software) WHERE ds.name <> sw.name "
+    "WITH sw.name AS pkg, ds.name AS dep, min({ECO}) AS eco, count(DISTINCT d) AS depvers "
+    "WHERE depvers = 1 "
+    "RETURN pkg, dep, eco"
+)
+
+# C9.4: (package, CVE) pairs. cve_elsewhere is the trap - the CVE is real but
+# affects a different package, so every row is `false` and the answer is
+# still a full table. A model that writes MATCH instead of OPTIONAL MATCH
+# returns nothing.
+PKG_CVE_REAL = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "RETURN DISTINCT sw.name AS pkg, c.cveId AS cve, {ECO} AS eco"
+)
+
+PKG_CVE_ELSEWHERE = (
+    "MATCH (sw:Software) "
+    "WHERE NOT EXISTS {{ MATCH (x:Software)-[:HAS_VERSION]->(:SoftwareVersion)-[:VULNERABLE_TO]->() "
+    "                    WHERE x.name = sw.name }} "
+    "CALL (sw) {{ MATCH (c:Vulnerability) RETURN c.cveId AS cve LIMIT 3 }} "
+    "RETURN DISTINCT sw.name AS pkg, cve, {ECO} AS eco"
+)
+
+# --- C9.5-9.7 upgrade-diff pair pools --------------------------------------
+# `a` is the OLD version (parameter `ver`), `b` the NEW one (`ver2`).
+
+# C9.5: the new tree carries a CVE the old tree did not. *0..6 on both sides,
+# because the question says "(including each root)".
+PAIRS_NEW_EXTRA_CVE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(oc:Vulnerability) "
+    "  WITH collect(DISTINCT oc.cveId) AS old_cves "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE b.versionName > a.versionName "
+    "  AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "                WHERE NOT c.cveId IN old_cves }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# Both trees carry exactly the same CVE set (often both empty): the answer is
+# nothing, and a model that just lists the new tree's CVEs scores 0.
+PAIRS_SAME_CVES = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(oc:Vulnerability) "
+    "  WITH collect(DISTINCT oc.cveId) AS old_cves "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE b.versionName > a.versionName "
+    "  AND NOT EXISTS {{ MATCH (b)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+    "                    WHERE NOT c.cveId IN old_cves }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# C9.6: the new tree contains a software product the old tree did not
+# (excluding the package itself - see the gold's deviation note).
+PAIRS_NEW_EXTRA_SOFTWARE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(os:Software) "
+    "  WITH collect(DISTINCT os.name) AS old_names "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE b.versionName > a.versionName "
+    "  AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ns:Software) "
+    "                WHERE ns.name <> sw.name AND NOT ns.name IN old_names }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+PAIRS_SAME_SOFTWARE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(os:Software) "
+    "  WITH collect(DISTINCT os.name) AS old_names "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE b.versionName > a.versionName AND (b)-[:DEPENDS_ON]->() "
+    "  AND NOT EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ns:Software) "
+    "                    WHERE ns.name <> sw.name AND NOT ns.name IN old_names }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# The new version is a leaf: it has no tree at all, so nothing can be new.
+# The sharp empty for C9.6/C9.7 - the OLD version may have a large tree, so
+# a model that answers with the wrong side's closure is punished.
+PAIRS_NEW_IS_LEAF = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE b.versionName > a.versionName AND NOT (b)-[:DEPENDS_ON]->() "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# The old version is a leaf: every product in the new tree is new. The
+# mirror-image stratum, and non-empty.
+PAIRS_OLD_IS_LEAF = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE NOT (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE b.versionName > a.versionName AND (b)-[:DEPENDS_ON]->() "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# C9.7: a vulnerable INDIRECT dependency (2..6 and not direct) present in the
+# new tree and absent from the old one.
+PAIRS_NEW_EXTRA_INDIRECT_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*1..6]->(o:SoftwareVersion) "
+    "  WITH collect(DISTINCT o) AS old_nodes "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) WHERE b.versionName > a.versionName "
+    "  AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*2..6]->(n:SoftwareVersion)-[:VULNERABLE_TO]->() "
+    "                WHERE n <> b AND NOT (b)-[:DEPENDS_ON]->(n) AND NOT n IN old_nodes }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+# Both versions have trees, and the new one adds no vulnerable indirect
+# dependency - the discriminating empty for C9.7.
+PAIRS_NO_NEW_INDIRECT_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  OPTIONAL MATCH (a)-[:DEPENDS_ON*1..6]->(o:SoftwareVersion) "
+    "  WITH collect(DISTINCT o) AS old_nodes "
+    "  MATCH (sw)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE b.versionName > a.versionName AND (b)-[:DEPENDS_ON]->() "
+    "  AND NOT EXISTS {{ MATCH (b)-[:DEPENDS_ON*2..6]->(n:SoftwareVersion)-[:VULNERABLE_TO]->() "
+    "                    WHERE n <> b AND NOT (b)-[:DEPENDS_ON]->(n) AND NOT n IN old_nodes }} "
+    "  RETURN b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, b.versionName AS ver2, {ECO} AS eco"
+)
+
+
 # --- C8 pools --------------------------------------------------------------
 # Dep x Vuln is where the 47-version CVE pool stops being the cap: these
 # templates bind on ROOTS whose closures contain a vulnerable version, and the
@@ -1727,6 +1928,223 @@ TEMPLATES: dict[str, dict] = {
             ("share_vuln_dep", 0.60, PAIRS_SHARE_VULN_DEP, "nonempty"),
             ("share_tree_no_vuln", 0.24, PAIRS_SHARE_TREE_NO_VULN, "empty"),
             ("disjoint_trees", 0.16, PAIRS_DISJOINT_TREE, "empty"),
+        ],
+    },
+    # ---------------------------------------------------------------------
+    # C9: Same package, multi-version
+    #
+    # All seven rows are live. This family is the sheet's best original
+    # contribution: C9.5-C9.7 are upgrade-diff questions ("what did upgrading
+    # from v1 to v2 add"), which is the real supply-chain question and is
+    # structurally a set difference over two closures.
+    #
+    # Two things measured before building, both recorded here because they
+    # settle questions the earlier review left open:
+    #
+    # 1. **C9.5's `*0..6` and C9.6's `*1..6` are NOT an inconsistency.** The
+    #    2026-08-19 review flagged the mismatch as a defect. Measured: C9.5's
+    #    question says "(including each root)" and the roots really do
+    #    contribute (392 answer rows came from a root itself in a 200-pair
+    #    sample), while C9.6's question does not. Each gold agrees with its
+    #    own question, so both ship verbatim on that point.
+    # 2. **C9.6 has a real cycle defect, and it is large.** Because it
+    #    returns software *names*, a new version that reaches its own package
+    #    within 6 hops lists the package itself as "newly added". Measured on
+    #    600 pairs: the package's own name lands in the answer **131 times
+    #    (21.8 %)**. 563 of the 1,070 version pairs can reach their own
+    #    package. C9.7 has the same defect at 2/330. Both get the
+    #    `<> package` guard, the C3.1 precedent applied to the reverse of the
+    #    same problem.
+    # ---------------------------------------------------------------------
+    "C9.1": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SR",
+        "difficulty": "Easy",
+        "params": ("pkg",),
+        "question": "Which versions of software '{pkg}' have known vulnerabilities?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(v:SoftwareVersion)"
+            "-[:VULNERABLE_TO]->(:Vulnerability) "
+            "RETURN DISTINCT v.versionName AS version ORDER BY version"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["version"], "ordered": False},
+        # CAPACITY CEILING: exactly 30 packages in the graph have a vulnerable
+        # version, and this template keys on the package alone, so 30 is the
+        # entire positive pool. Same cause as C6 - see the graph snapshot.
+        "max_quota": 50,
+        "strata": [
+            ("has_vuln_version", 0.56, PKGS_WITH_VULN_VERSION, "nonempty"),
+            ("no_vuln_version", 0.30, PKGS_NO_VULN_VERSION, "empty"),
+            ("absent_package", 0.14, "SYNTH:absent_package", "empty"),
+        ],
+    },
+    "C9.2": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg",),
+        "question": "How many distinct CVEs does each version of software '{pkg}' have?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(v:SoftwareVersion) "
+            "OPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "RETURN v.versionName AS version, count(DISTINCT c) AS cve_cnt ORDER BY version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["version", "cve_cnt"], "ordered": False},
+        # multi_version_clean is the trap and it is the majority case: every
+        # row is `0`, so a model that writes MATCH instead of OPTIONAL MATCH
+        # returns an empty table against a full one. The template's only
+        # empty answer comes from an absent package.
+        "strata": [
+            ("multi_version_with_vuln", 0.22, PKGS_MULTI_VERSION_VULN, "nonempty"),
+            ("multi_version_clean", 0.38, PKGS_MULTI_VERSION_CLEAN, "nonempty"),
+            ("single_version", 0.28, PKGS_SINGLE_VERSION, "nonempty"),
+            ("absent_package", 0.12, "SYNTH:absent_package", "empty"),
+        ],
+    },
+    "C9.3": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "dep"),
+        "question": "For each version of software '{pkg}', what version of software '{dep}' is a direct dependency?",
+        # Verbatim, including the non-standard column names `pkg_version` /
+        # `dep_version` - both sides of the pairing are versions here, so
+        # the contract's usual (software, version) shape does not apply and
+        # the family gets its own clause instead.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(v:SoftwareVersion) "
+            "MATCH (v)-[:DEPENDS_ON]->(d:SoftwareVersion)<-[:HAS_VERSION]-(ds:Software {{name: '{dep}'}}) "
+            "RETURN v.versionName AS pkg_version, d.versionName AS dep_version "
+            "ORDER BY pkg_version, dep_version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["pkg_version", "dep_version"], "ordered": False},
+        "strata": [
+            ("varying_dep_version", 0.40, PKG_DEP_VARYING_VERSION, "nonempty"),
+            ("uniform_dep_version", 0.32, PKG_DEP_UNIFORM_VERSION, "nonempty"),
+            ("unrelated_dep", 0.16, UNRELATED_PAIRS, "empty"),
+            ("absent_dep", 0.12, "SYNTH:absent_dep", "empty"),
+        ],
+    },
+    "C9.4": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "cve"),
+        "question": "For each version of software '{pkg}', does it have vulnerability '{cve}'?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(v:SoftwareVersion) "
+            "OPTIONAL MATCH (v)-[:VULNERABLE_TO]->(c:Vulnerability {{cveId: '{cve}'}}) "
+            "RETURN v.versionName AS version, count(c) > 0 AS has_cve ORDER BY version"
+        ),
+        # A table of booleans - one row per version, `false` included. New
+        # shape for the bank, so it gets its own contract clause.
+        "answer_shape": {"kind": "table", "columns": ["version", "has_cve"], "ordered": False},
+        # cve_elsewhere and near_miss_cve both produce all-`false` tables, not
+        # empty ones: the package exists, so every version still gets a row.
+        # This is what separates "the CVE does not affect it" from "there is
+        # nothing to report", and a plain MATCH collapses both to nothing.
+        "strata": [
+            ("real_pair", 0.44, PKG_CVE_REAL, "nonempty"),
+            ("cve_elsewhere", 0.28, PKG_CVE_ELSEWHERE, "nonempty"),
+            ("near_miss_cve", 0.16, "SYNTH:pkg_near_miss_cve", "nonempty"),
+            ("absent_package", 0.12, "SYNTH:absent_package_cve", "empty"),
+        ],
+    },
+    "C9.5": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "ver2"),
+        "question": "What CVE IDs appear in the dependency tree of software '{pkg}' version '{ver2}' but not in the tree of version '{ver}' (including each root)?",
+        # Verbatim. The *0..6 is correct here and is NOT the C4 defect: the
+        # question says "(including each root)", and the roots really do
+        # contribute (392 of the answer rows in a 200-pair probe came from a
+        # root itself).
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(old:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (old)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(oldc:Vulnerability) "
+            "WITH s, collect(DISTINCT oldc.cveId) AS old_cves "
+            "MATCH (s)-[:HAS_VERSION]->(new:SoftwareVersion {{versionName: '{ver2}'}}) "
+            "MATCH (new)-[:DEPENDS_ON*0..6]->(:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "WHERE NOT c.cveId IN old_cves "
+            "RETURN DISTINCT c.cveId AS cveId ORDER BY cveId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cveId"], "ordered": False},
+        "strata": [
+            ("new_extra_cve", 0.58, PAIRS_NEW_EXTRA_CVE, "nonempty"),
+            ("same_cves", 0.30, PAIRS_SAME_CVES, "empty"),
+            ("new_is_leaf", 0.12, PAIRS_NEW_IS_LEAF, "empty"),
+        ],
+    },
+    "C9.6": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "SR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "ver2"),
+        "question": "Which software products appear in the dependency tree of software '{pkg}' version '{ver2}' but not in the tree of version '{ver}'?",
+        # DEVIATION: `ns.name <> s.name` added. Because this template returns
+        # software NAMES, a new version that reaches its own package within 6
+        # hops reports the package itself as newly added - measured at
+        # **131 of 600 pairs (21.8 %)**, the largest cycle contamination
+        # found in the bank. 563 of the 1,070 version pairs can reach their
+        # own package. Same class as the C3.1 defect, same fix.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(old:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (old)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(os:Software) "
+            "WITH s, collect(DISTINCT os.name) AS old_names "
+            "MATCH (s)-[:HAS_VERSION]->(new:SoftwareVersion {{versionName: '{ver2}'}}) "
+            "MATCH (new)-[:DEPENDS_ON*1..6]->(:SoftwareVersion)<-[:HAS_VERSION]-(ns:Software) "
+            "WHERE ns.name <> s.name AND NOT ns.name IN old_names "
+            "RETURN DISTINCT ns.name AS software ORDER BY software"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["software"], "ordered": False},
+        "strata": [
+            ("new_extra_software", 0.52, PAIRS_NEW_EXTRA_SOFTWARE, "nonempty"),
+            ("old_is_leaf", 0.12, PAIRS_OLD_IS_LEAF, "nonempty"),
+            ("same_software", 0.24, PAIRS_SAME_SOFTWARE, "empty"),
+            ("new_is_leaf", 0.12, PAIRS_NEW_IS_LEAF, "empty"),
+        ],
+    },
+    "C9.7": {
+        "family": "C9: Same package multi-version",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "ver2"),
+        "question": "Which indirect vulnerable dependencies appear in the tree of software '{pkg}' version '{ver2}' but not in the tree of version '{ver}'?",
+        # DEVIATION: `n <> new` added (same cycle guard as C9.6, measured at
+        # 2/330 here - small but real). The sheet's `*2..6` + `NOT (new)-
+        # [:DEPENDS_ON]->(n)` encoding of "indirect but not also direct" is
+        # correct and is kept.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(old:SoftwareVersion {{versionName: '{ver}'}}) "
+            "OPTIONAL MATCH (old)-[:DEPENDS_ON*1..6]->(o:SoftwareVersion) "
+            "WITH s, collect(DISTINCT o) AS old_nodes "
+            "MATCH (s)-[:HAS_VERSION]->(new:SoftwareVersion {{versionName: '{ver2}'}}) "
+            "MATCH (new)-[:DEPENDS_ON*2..6]->(n:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "WHERE n <> new AND NOT (new)-[:DEPENDS_ON]->(n) AND NOT n IN old_nodes "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(n) "
+            "RETURN DISTINCT ds.name AS software, n.versionName AS version, c.cveId AS cveId "
+            "ORDER BY software, version, cveId"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version", "cveId"], "ordered": False},
+        "strata": [
+            ("new_extra_indirect_vuln", 0.56, PAIRS_NEW_EXTRA_INDIRECT_VULN, "nonempty"),
+            ("no_new_indirect_vuln", 0.32, PAIRS_NO_NEW_INDIRECT_VULN, "empty"),
+            ("new_is_leaf", 0.12, PAIRS_NEW_IS_LEAF, "empty"),
         ],
     },
 }

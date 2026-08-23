@@ -54,7 +54,11 @@ from t2c_enumerate_bindings import ABSENT_PACKAGES, ECO, draw, run  # noqa: E402
 from t2c_templates_v4 import TEMPLATES  # noqa: E402
 
 GOLD_TIMEOUT = 60.0
-PARAM_KEYS = ("pkg", "ver", "dep", "dep_ver", "depth", "cve")
+# `ver2` is the C9 upgrade-diff parameter (compare version `ver` with
+# version `ver2` of the SAME package). It must be in this tuple: V6 builds its
+# duplicate key from these names, so without it every (pkg, ver, ver2) triple
+# sharing a first version would look like a duplicate question and be dropped.
+PARAM_KEYS = ("pkg", "ver", "ver2", "dep", "dep_ver", "depth", "cve")
 
 
 # ---------------------------------------------------------------------------
@@ -85,6 +89,9 @@ class Context:
             f"RETURN DISTINCT sw.name AS pkg, v.versionName AS ver, c.cveId AS cve, {ECO} AS eco"
         ))
         self.cve_ids = {r["cve"] for r in self.vuln_pairs}
+        self.eco_of = {}
+        for r in self.versions:
+            self.eco_of.setdefault(r["pkg"], r["eco"])
         self.cves_of: dict[tuple, set] = defaultdict(set)
         for r in self.vuln_pairs:
             self.cves_of[(r["pkg"], r["ver"])].add(r["cve"])
@@ -235,6 +242,34 @@ def synth(kind: str, ctx: Context, rng: random.Random, n: int) -> list[dict]:
                 continue
             seen.add(key)
             out.append({"pkg": r["pkg"], "ver": r["ver"], "dep": name, "eco": r["eco"]})
+
+    elif kind == "pkg_near_miss_cve":
+        # C9.4: a REAL package asked about a CVE id one number away from a
+        # real one. The answer is a full table of `false`, not an empty one -
+        # the package exists, so every version still gets a row.
+        pkgs = sorted(ctx.package_names)
+        ids = sorted(ctx.cve_ids)
+        rng.shuffle(ids)
+        seen = set()
+        for i, cid in enumerate(ids * 3):
+            if len(out) >= n:
+                break
+            cand = _bump_cve(cid, ctx.cve_ids)
+            if cand is None:
+                continue
+            pkg = rng.choice(pkgs)
+            if (pkg, cand) in seen:
+                continue
+            seen.add((pkg, cand))
+            out.append({"pkg": pkg, "cve": cand,
+                        "eco": ctx.eco_of.get(pkg, "unknown")})
+
+    elif kind == "absent_package_cve":
+        # C9.4's empty stratum: the package is not in the graph at all, so
+        # there are no versions to report on.
+        ids = sorted(ctx.cve_ids)
+        out = [{"pkg": r["pkg"], "cve": rng.choice(ids), "eco": "absent"}
+               for r in synth("absent_package", ctx, rng, n)]
 
     elif kind == "absent_product":
         # C7.2 keys on a bare product name in the `dep` parameter, so this is

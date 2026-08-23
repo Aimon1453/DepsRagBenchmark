@@ -71,10 +71,14 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**7,767 cases, 34 templates, 1,833 with an empty answer (23.6 %).** 250 per
-template except C3.5 (190), C5.6 (170) and four of the five C6 templates
-(C6.2 70, C6.3 67, C6.7 200, C6.8 70), which ship at their measured capacity
-on this graph.
+**9,317 cases, 41 templates, 2,294 with an empty answer (24.6 %).** This is
+the whole live sheet: every row that is not struck through is built. 250 per
+template except C3.5 (190), C5.6 (170), four of the five C6 templates
+(C6.2 70, C6.3 67, C6.7 200, C6.8 70) and C9.1 (50), which ship at their
+measured capacity on this graph.
+
+Ecosystem split: crates.io 5,205 · pypi.org 1,459 · conan.io 1,319 ·
+sources.debian.org 695 · absent-from-graph 639.
 
 | id | sheet family | v3 id | shape | n | strata (drawn / pool) |
 |---|---|---|---|---|---|
@@ -112,6 +116,13 @@ on this graph.
 | C8.8 | C8 Dep x Vuln | — | table | 250 | **unique_nearest 150/277** · **no_vuln_reachable 50/272** · **leaf_version 25/529** · **absent_package 25/75** |
 | C8.9 | C8 Dep x Vuln | — | table | 250 | mixed_subtrees 125/848 · **all_zero_subtrees 63/272** · **leaf_version 37/529** · **absent_package 25/75** |
 | C8.10 | C8 Dep x Vuln | — | table | 250 | share_vuln_dep 150/2522 · **share_tree_no_vuln 60/3313** · **disjoint_trees 40/4484** |
+| C9.1 | C9 Same package multi-version | — | list | **50** | has_vuln_version 27/**30** · **no_vuln_version 16/1101** · **absent_package 7/21** |
+| C9.2 | C9 Same package multi-version | — | table | 250 | multi_version_with_vuln 19/19 · **multi_version_clean 100/277** · single_version 99/835 · **absent_package 30/90** |
+| C9.3 | C9 Same package multi-version | — | table | 250 | **varying_dep_version 100/393** · uniform_dep_version 80/4299 · **unrelated_dep 40/4000** · **absent_dep 30/90** |
+| C9.4 | C9 Same package multi-version | — | table | 250 | real_pair 110/155 · **cve_elsewhere 70/3303** · **near_miss_cve 40/120** · **absent_package 30/90** |
+| C9.5 | C9 Same package multi-version | — | list | 250 | new_extra_cve 145/421 · **same_cves 75/522** · **new_is_leaf 28/125** |
+| C9.6 | C9 Same package multi-version | — | list | 250 | new_extra_software 130/539 · **old_is_leaf 29/164** · **same_software 60/121** · **new_is_leaf 30/125** |
+| C9.7 | C9 Same package multi-version | — | table | 250 | new_extra_indirect_vuln 140/374 · **no_new_indirect_vuln 80/260** · **new_is_leaf 30/125** |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -468,6 +479,57 @@ amplifying a question–gold mismatch. Recommended fix: append "and what are
 their CVE IDs?" to the question, mirroring C8.7's phrasing; zero gold
 changes.
 
+### C9: upgrade diffs, the largest cycle defect in the bank, and a name-collision lesson
+
+All seven rows are live. C9.5–C9.7 are the sheet's best original contribution:
+"what did upgrading from v1 to v2 add" is the real supply-chain question and
+is structurally a set difference over two closures.
+
+Two things the 2026-08-19 review left open, now measured:
+
+- **C9.5's `*0..6` vs C9.6's `*1..6` is NOT an inconsistency.** C9.5's question
+  says "(including each root)" and the roots really do contribute (392 answer
+  rows came from a root itself in a 200-pair probe); C9.6's question does not.
+  Each gold agrees with its own question, so both ship verbatim on that point.
+  This is the opposite finding to C4.3/C4.4, where the gold and the *prompt*
+  disagree — worth stating together, because it shows the test is
+  question-vs-gold agreement, not a house style for depth bounds.
+- **C9.6 carries the largest cycle contamination found anywhere in the bank.**
+  It returns software *names*, so a new version that reaches its own package
+  within 6 hops reports the package itself as "newly added". 563 of the 1,070
+  version pairs can reach their own package; the verifier measured the
+  `<> package` guard changing **64 of 250 shipped answers (25.6 %)**, i.e.
+  replaying the sheet's unguarded gold gets 64 of 250 cases wrong. C9.7 has
+  the same defect and gets the same guard. Precedent: C3.1.
+
+**The name-collision lesson, and it applies to every package-keyed template.**
+C9's package-keyed golds resolve `{pkg}` with `MATCH (s:Software {name: ...})`,
+which matches EVERY node of that name — and five names are shared across
+ecosystems (`openssl` ×3; `brotli`, `click`, `freetype`, `idna` ×2). A pool
+that groups candidates by *node* can therefore call `click` clean because the
+crates.io node is clean, while the gold, asking by name, also sees the
+vulnerable PyPI one. The C9 pools were rewritten to group by name so the
+stratum's claim and the gold's behaviour are the same claim. Found by
+`verify_c9.py` on C9.2/click and C9.2/brotli — build-time validation cannot
+see it, because the gold runs fine and returns a perfectly good answer; only
+the stratum *label* was wrong.
+
+**Smoke (84 stratified, deepseek-v4-flash): bare 0.809 → contract 0.866.**
+One contract clause was added on the C2.3 precedent (versions of a software
+the question already names → one column), taking C9.1 0.67→1.00 and C9.2/
+C9.3/C9.4 to 1.00. The two remaining gaps are both signal rather than defect:
+
+- **C9.6 contract 0.73 — the model omits the cycle guard our gold has.** It
+  writes the sheet's unguarded formulation and lists the package itself. This
+  is the C5.4 phenomenon for the third time: *the misconception the sheet
+  encodes is the misconception the model has*, and a corrected gold turns the
+  template into a real measurement.
+- **C9.7 contract 0.42 — the same question–gold mismatch as C8.10.** The
+  question never asks for CVE IDs; the gold returns a `cveId` column.
+  Compliant models return (software, version) and score 0. Recorded, not
+  repaired: the fix belongs in the question text, and it is the same one-line
+  fix C8.10 needs.
+
 ### The contract effect by family
 
 Reported separately per family because it changes sign:
@@ -481,6 +543,7 @@ Reported separately per family because it changes sign:
 | C6 vulnerability | 0.967 | 1.000 | +0.033 | CVE/CWE listing and yes/no are conventional shapes |
 | C7 reverse deps | 0.707 | 0.827 | +0.120 | C7.5's shape gains, capped by C7.2's question-gold mismatch under both protocols |
 | C8 dep x vuln | 0.676 | 0.857 | +0.181 | big shape gains (C8.8 0.17→0.67-0.83), minus C8.10's question-gold mismatch surfaced by compliance |
+| C9 same package | 0.809 | 0.866 | +0.057 | shape gains on C9.1–C9.4 (all → 1.00), minus C9.7's C8.10-style mismatch |
 
 The sharper claim this supports: *the contract buys answer-shape
 disambiguation, not capability.* It approaches zero return as the shape becomes

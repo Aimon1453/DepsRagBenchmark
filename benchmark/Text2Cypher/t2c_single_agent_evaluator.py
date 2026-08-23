@@ -75,6 +75,7 @@ ANSWER_FORMAT_INSTRUCTIONS = """
 12. Answer-format contract (your query's result table is compared against a gold result):
     - Dependency listing questions (direct or transitive): RETURN two columns — dependency software name AS software, and its version AS version. Never list the root version itself, even when a dependency cycle leads back to it (add `dep <> root` to transitive traversals).
     - EXCEPT when the question names the dependency and asks only for its version(s) ("What version(s) of X does Y depend on?"): RETURN one column — the version — since the software name is fixed by the question.
+    - More generally, whenever the question asks for VERSIONS of a software it already names ("Which versions of X ...?"): RETURN one column — the version — never the software name alongside it.
     - Yes/no questions ("Does ...?"): RETURN a single boolean value (e.g. count(x) > 0).
     - Counting questions ("How many ...?"): RETURN a single integer count.
     - Comparison questions ("Which has more ...?"): RETURN the two counts (first subject first) — do NOT return the winner's name or a CASE expression.
@@ -86,6 +87,8 @@ ANSWER_FORMAT_INSTRUCTIONS = """
     - Questions asking WHICH software/versions (in a tree) have vulnerabilities: RETURN two columns — software and version — and do NOT add CVE or CWE id columns.
     - Per-dependency counting questions ("For each direct dependency, how many ...?"): RETURN three columns — software, version, and the count — one row for EVERY direct dependency, keeping zero counts (use OPTIONAL MATCH on the counted hop). A dependency's subtree is [:DEPENDS_ON*0..5] from that dependency (depth 6 counted from the root).
     - Shortest-path-to-a-vulnerable-dependency questions: RETURN two columns — path (the list of versionName values from the root to that dependency, via shortestPath over DEPENDS_ON) and hops (its length).
+    - "For each version of X ..." questions: RETURN one row for EVERY version of X, keeping versions whose value is 0 or false (use OPTIONAL MATCH). Columns: the version, then the count or the boolean.
+    - "For each version of X, what version of dependency Y ...": RETURN two columns — X's version, then Y's version — one row per pair, and here list only the versions that do have that dependency.
     - Top-N questions ("Which ... has the most ...?"): RETURN two columns — the winning software's name, and the quantity the question asks you to maximise — with ORDER BY on that quantity and LIMIT 1. Do NOT return only the name, and do NOT return only the quantity. (What the quantity means is stated in the question; this rule only fixes the shape of the answer.)
 """
 
