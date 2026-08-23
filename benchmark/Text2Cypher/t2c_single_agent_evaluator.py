@@ -82,6 +82,10 @@ ANSWER_FORMAT_INSTRUCTIONS = """
     - Depth questions ("maximum dependency depth ..."): RETURN a single integer; if the version has no dependencies at all the answer is 0, not an empty table (use coalesce(max(...), 0)).
     - CVE / CWE listing questions: RETURN the id values only.
     - CVE-CWE pair questions ("What CVE-CWE pairs affect ...?"): RETURN two columns — cveId and cweId. Use OPTIONAL MATCH for the CWE hop and keep the row (with a null cweId) when a CVE has no CWE classification.
+    - Questions asking which dependencies have vulnerabilities AND for their CVE IDs: RETURN three columns — software, version, cveId — one row per (dependency version, CVE) pair.
+    - Questions asking WHICH software/versions (in a tree) have vulnerabilities: RETURN two columns — software and version — and do NOT add CVE or CWE id columns.
+    - Per-dependency counting questions ("For each direct dependency, how many ...?"): RETURN three columns — software, version, and the count — one row for EVERY direct dependency, keeping zero counts (use OPTIONAL MATCH on the counted hop). A dependency's subtree is [:DEPENDS_ON*0..5] from that dependency (depth 6 counted from the root).
+    - Shortest-path-to-a-vulnerable-dependency questions: RETURN two columns — path (the list of versionName values from the root to that dependency, via shortestPath over DEPENDS_ON) and hops (its length).
     - Top-N questions ("Which ... has the most ...?"): RETURN two columns — the winning software's name, and the quantity the question asks you to maximise — with ORDER BY on that quantity and LIMIT 1. Do NOT return only the name, and do NOT return only the quantity. (What the quantity means is stated in the question; this rule only fixes the shape of the answer.)
 """
 

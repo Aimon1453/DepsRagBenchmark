@@ -1,0 +1,66 @@
+{
+ "n": 1750,
+ "regression_n": 6017,
+ "regression_failures": 0,
+ "c88_unique_bindings_proven": 150,
+ "sheet_c810_sampled": 40,
+ "sheet_c810_cases_losing_rows": 31,
+ "sheet_c810_row_recall": 0.487,
+ "sheet_c810_sample": [
+  {
+   "id": "C8_10-compiler_builtins-0_1_156-async_native_tls-0_4_0",
+   "sheet": 2,
+   "truth": 2
+  },
+  {
+   "id": "C8_10-tracing_futures-0_2_5-anyhow-1_0_98",
+   "sheet": 3,
+   "truth": 12
+  },
+  {
+   "id": "C8_10-ffmpeg-4_2_1-libvpx-1_13_1",
+   "sheet": 21,
+   "truth": 21
+  },
+  {
+   "id": "C8_10-tungstenite-0_17_3-async_executor-1_13_1",
+   "sheet": 8,
+   "truth": 26
+  },
+  {
+   "id": "C8_10-rstest_reuse-0_1_3-anyhow-1_0_98",
+   "sheet": 5,
+   "truth": 6
+  },
+  {
+   "id": "C8_10-bumpalo-3_17_0-async_executor-1_13_1",
+   "sheet": 8,
+   "truth": 27
+  },
+  {
+   "id": "C8_10-adler2-2_0_0-async_executor-1_13_1",
+   "sheet": 8,
+   "truth": 27
+  },
+  {
+   "id": "C8_10-libz_sys-1_1_22-async_dup-1_2_4",
+   "sheet": 2,
+   "truth": 2
+  },
+  {
+   "id": "C8_10-strum_macros-0_21_1-async_dup-1_2_4",
+   "sheet": 7,
+   "truth": 11
+  },
+  {
+   "id": "C8_10-parking_lot-0_12_3-anyhow-1_0_98",
+   "sheet": 2,
+   "truth": 4
+  }
+ ],
+ "failures": [],
+ "gold_ms": {
+  "median": 7.0,
+  "max": 1029.1
+ }
+}

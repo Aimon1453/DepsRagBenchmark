@@ -403,6 +403,167 @@ PAIRS_DISJOINT_TREE = (
 )
 
 
+# --- C8 pools --------------------------------------------------------------
+# Dep x Vuln is where the 47-version CVE pool stops being the cap: these
+# templates bind on ROOTS whose closures contain a vulnerable version, and the
+# 47 vulnerable versions are hub nodes - 849 of 1,121 dependency-having roots
+# reach one within 6 hops (measured 2026-08-23). The 272 that do not are the
+# discriminating empty. Only 8 roots are both vulnerable and self-reaching
+# within 6 hops, which is why C8.2's `dep <> root` guard exists.
+
+ROOTS_VULN_IN_CLOSURE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+ROOTS_DEPS_NO_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:DEPENDS_ON]->() "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# The *0..6 trap stratum for C8.5/C8.6: the root itself is vulnerable and its
+# proper closure is clean, so a model that writes *1..6 (missing "including
+# the root") returns empty against a non-empty gold. Pool: 26 versions.
+ROOTS_ONLY_SELF_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:VULNERABLE_TO]->() "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# Clean everywhere: the root is not vulnerable and neither is anything in its
+# closure - the honest empty for the *0..6 templates.
+ROOTS_ALL_CLEAN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:DEPENDS_ON]->() AND NOT (v)-[:VULNERABLE_TO]->() "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+LEAF_CLEAN_VERSIONS = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE NOT (v)-[:DEPENDS_ON]->() AND NOT (v)-[:VULNERABLE_TO]->() "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# Tree-level (*0..6) positives for C8.5/C8.6: the root COUNTS, per the
+# question's own "(including the root)".
+ROOTS_VULN_IN_TREE06 = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (v)-[:DEPENDS_ON*0..6]->(n) WHERE (n)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+ROOTS_CWE_IN_TREE06 = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (v)-[:DEPENDS_ON*0..6]->(n) "
+    "WHERE (n)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+ROOTS_ONLY_SELF_CWE = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->() "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) "
+    "WHERE d <> v AND (d)-[:VULNERABLE_TO]->(:Vulnerability)-[:VULNERABILITY_TYPE]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# C8.7's two sides of "indirect": a vulnerable version at 2..6 hops that is
+# not also a direct dependency (pool 840), vs the sharp empty where every
+# vulnerable dependency IS direct (pool 9 - shipped in full).
+ROOTS_INDIRECT_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (v)-[:DEPENDS_ON*2..6]->(d) "
+    "WHERE d <> v AND NOT (v)-[:DEPENDS_ON]->(d) AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+ROOTS_VULN_DIRECT_ONLY = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE EXISTS {{ MATCH (v)-[:DEPENDS_ON]->(d) WHERE (d)-[:VULNERABLE_TO]->() }} "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*2..6]->(d) "
+    "WHERE d <> v AND NOT (v)-[:DEPENDS_ON]->(d) AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# C8.8 binds only roots where nothing is left for shortestPath() to
+# arbitrate (the C3.3 G2 precedent): a UNIQUE nearest vulnerable dependency
+# with a UNIQUE shortest path to it. Roots that are themselves vulnerable and
+# self-reaching are excluded so the root never enters the candidate set.
+# Pool: 277, mean answer depth 3.0 hops.
+ROOTS_UNIQUE_NEAREST_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) WHERE (v)-[:DEPENDS_ON]->() "
+    "AND NOT ((v)-[:VULNERABLE_TO]->() AND EXISTS {{ (v)-[:DEPENDS_ON*1..6]->(v) }}) "
+    "CALL (v) {{ "
+    "  MATCH (d:SoftwareVersion)-[:VULNERABLE_TO]->() WHERE d <> v "
+    "  MATCH p = shortestPath((v)-[:DEPENDS_ON*1..6]->(d)) "
+    "  WITH d, length(p) AS hops "
+    "  WITH collect({{d: d, hops: hops}}) AS cands, min(hops) AS mh "
+    "  WITH [c IN cands WHERE c.hops = mh | c.d] AS mins, mh "
+    "  WHERE size(mins) = 1 "
+    "  WITH mins[0] AS target, mh "
+    "  MATCH p2 = allShortestPaths((v)-[:DEPENDS_ON*1..6]->(target)) "
+    "  WITH target, mh, count(p2) AS np WHERE np = 1 "
+    "  RETURN target }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# C8.9's positive split: at least one direct dependency whose <=5-hop subtree
+# holds a CVE, vs the all-zero trap - the root HAS direct dependencies and
+# every count in the answer is 0, so a model that filters to vulnerable rows
+# (plain MATCH instead of OPTIONAL MATCH) collapses the table. The single
+# direct self-loop version is excluded from both.
+ROOTS_MIXED_SUBTREES = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE NOT (v)-[:DEPENDS_ON]->(v) "
+    "AND EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+ROOTS_ALL_ZERO_SUBTREES = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(v:SoftwareVersion) "
+    "WHERE (v)-[:DEPENDS_ON]->() AND NOT (v)-[:DEPENDS_ON]->(v) "
+    "AND NOT EXISTS {{ MATCH (v)-[:DEPENDS_ON*1..6]->(d) WHERE d <> v AND (d)-[:VULNERABLE_TO]->() }} "
+    "RETURN sw.name AS pkg, v.versionName AS ver, {ECO} AS eco"
+)
+
+# C8.10 pair pools, all first-side correlated (the C5.5 sampling lesson).
+# share_vuln_dep: the intersection of the two trees contains a vulnerable
+# version (2,522 pairs over 848 first sides at LIMIT 3).
+PAIRS_SHARE_VULN_DEP = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (a)-[:DEPENDS_ON*1..6]->(d1:SoftwareVersion) "
+    "  WHERE d1 <> a AND (d1)-[:VULNERABLE_TO]->() "
+    "  WITH collect(DISTINCT d1) AS tv WHERE size(tv) > 0 "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..2]->(x) WHERE x IN tv }} "
+    "  RETURN sb, b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+# The discriminating empty: the trees DO intersect, but nothing in the
+# intersection is vulnerable - answering C5.4's question instead of C8.10's
+# scores 0 here.
+PAIRS_SHARE_TREE_NO_VULN = (
+    "MATCH (sw:Software)-[:HAS_VERSION]->(a:SoftwareVersion) WHERE (a)-[:DEPENDS_ON]->() "
+    "CALL (sw, a) {{ "
+    "  MATCH (a)-[:DEPENDS_ON*1..6]->(d1:SoftwareVersion) WHERE d1 <> a "
+    "  WITH collect(DISTINCT d1) AS t1, "
+    "       [x IN collect(DISTINCT d1) WHERE (x)-[:VULNERABLE_TO]->()] AS tv "
+    "  MATCH (sb:Software)-[:HAS_VERSION]->(b:SoftwareVersion) "
+    "  WHERE sb.name <> sw.name "
+    "  AND EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..2]->(x) WHERE x IN t1 }} "
+    "  AND NOT EXISTS {{ MATCH (b)-[:DEPENDS_ON*1..6]->(y) WHERE y <> b AND y IN tv }} "
+    "  RETURN sb, b LIMIT 3 }} "
+    "RETURN sw.name AS pkg, a.versionName AS ver, sb.name AS dep, b.versionName AS dep_ver, {ECO} AS eco"
+)
+
+
 # --- C7 pools --------------------------------------------------------------
 # The reverse direction is where this graph is almost never empty: 1,639 of
 # 1,650 versions have at least one direct dependent (measured 2026-08-23), so
@@ -1327,6 +1488,245 @@ TEMPLATES: dict[str, dict] = {
             ("direct_only_dependents", 0.22, REV_DIRECT_ONLY_DEPENDENTS, "nonempty"),
             ("no_dependents", 0.04, REV_NO_DEPENDENTS, "empty"),
             ("absent_package", 0.14, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    # ---------------------------------------------------------------------
+    # C8: Dep x Vuln
+    #
+    # All seven listed rows are live (C8.1/C8.3/C8.4 were deleted from the
+    # sheet, not struck). This is the family where the 47-version CVE pool
+    # stops being the cap: the templates bind on roots whose closures contain
+    # a vulnerable version - pool 849 - so every row reaches 250.
+    #
+    # Deviations, each on an established precedent:
+    # - C8.2 and C8.7 golds get `dep <> root` (C3.1 cycle precedent): 8 roots
+    #   are vulnerable AND return to themselves within 6 hops, and both
+    #   questions say the root does not count.
+    # - C8.8 binds only provably-unique answers (C3.3 G2 precedent):
+    #   shortestPath() arbitrates ties, so every bound root has exactly one
+    #   nearest vulnerable dependency and exactly one shortest path to it.
+    # - C8.10's gold is REWRITTEN collect-then-diff (C5.4 precedent): the
+    #   sheet's two variable-length patterns in one MATCH silently drop every
+    #   path pair sharing an edge. Same bug, same fix; the verifier replays
+    #   the sheet's formulation to quantify the loss.
+    # C8.5, C8.6 and C8.9 ship verbatim - C8.5/C8.6's *0..6 agrees with
+    # their questions' "(including the root)".
+    # ---------------------------------------------------------------------
+    "C8.2": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "What CVE IDs affect any direct or indirect dependency of software '{pkg}' version '{ver}' (excluding the root itself)?",
+        # DEVIATION: `dep <> root` added - the question says "excluding the
+        # root itself", and 8 vulnerable roots reach themselves within 6 hops.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON*1..6]->(dep:SoftwareVersion) WHERE dep <> root "
+            "MATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "RETURN DISTINCT c.cveId AS cveId ORDER BY cveId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cveId"], "ordered": False},
+        "strata": [
+            ("vuln_in_closure", 0.64, ROOTS_VULN_IN_CLOSURE, "nonempty"),
+            ("deps_no_vuln", 0.16, ROOTS_DEPS_NO_VULN, "empty"),
+            ("leaf_version", 0.10, LEAF_VERSIONS, "empty"),
+            ("absent_package", 0.10, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.5": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "Which software products in the dependency tree of software '{pkg}' version '{ver}' (including the root) have known vulnerabilities?",
+        # Verbatim: *0..6 matches the question's "(including the root)". Note
+        # the same products-vs-(software, version) wording looseness as C7.2,
+        # recorded, not repaired.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON*0..6]->(n:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability) "
+            "MATCH (ds:Software)-[:HAS_VERSION]->(n) "
+            "RETURN DISTINCT ds.name AS software, n.versionName AS version ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version"], "ordered": False},
+        # root_only_vuln is the stratum the *0..6 exists for: the root itself
+        # is vulnerable and its proper closure is clean (26 versions), so a
+        # model that writes *1..6 returns empty against a non-empty gold.
+        "strata": [
+            ("vuln_in_tree", 0.55, ROOTS_VULN_IN_TREE06, "nonempty"),
+            ("root_only_vuln", 0.10, ROOTS_ONLY_SELF_VULN, "nonempty"),
+            ("clean_tree", 0.15, ROOTS_ALL_CLEAN, "empty"),
+            ("leaf_clean", 0.10, LEAF_CLEAN_VERSIONS, "empty"),
+            ("absent_package", 0.10, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.6": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Medium",
+        "params": ("pkg", "ver"),
+        "question": "What CWE IDs appear in the dependency tree of software '{pkg}' version '{ver}' (including the root)?",
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON*0..6]->(n:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability)"
+            "-[:VULNERABILITY_TYPE]->(w:VulnerabilityType) "
+            "RETURN DISTINCT w.cweId AS cweId ORDER BY cweId"
+        ),
+        "answer_shape": {"kind": "list", "columns": ["cweId"], "ordered": False},
+        # The positive pools are CWE-exact (not reused from the CVE side):
+        # 2 vulnerable versions have no classified CVE at all, and a root
+        # whose tree holds only unclassified CVEs belongs in the empty side.
+        "strata": [
+            ("cwe_in_tree", 0.55, ROOTS_CWE_IN_TREE06, "nonempty"),
+            ("root_only_cwe", 0.10, ROOTS_ONLY_SELF_CWE, "nonempty"),
+            ("clean_tree", 0.15, ROOTS_ALL_CLEAN, "empty"),
+            ("leaf_clean", 0.10, LEAF_CLEAN_VERSIONS, "empty"),
+            ("absent_package", 0.10, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.7": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver"),
+        "question": "Which indirect (not direct) dependencies of software '{pkg}' version '{ver}' have known vulnerabilities, and what are their CVE IDs?",
+        # DEVIATION: `dep <> root` added (cycle precedent). The sheet's
+        # `*2..6 + NOT direct` encoding of "indirect but not also direct" is
+        # kept - it is the correct one.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON*2..6]->(dep:SoftwareVersion) "
+            "WHERE dep <> root AND NOT (root)-[:DEPENDS_ON]->(dep) "
+            "MATCH (dep)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(dep) "
+            "RETURN DISTINCT ds.name AS software, dep.versionName AS version, c.cveId AS cveId "
+            "ORDER BY software, version, cveId"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version", "cveId"], "ordered": False},
+        # vuln_direct_only is the whole graph supply (9 roots) of "the
+        # vulnerable dependencies are all DIRECT": the root demonstrably has
+        # vulnerable dependencies, and the right answer is still nothing.
+        "strata": [
+            ("has_indirect_vuln", 0.62, ROOTS_INDIRECT_VULN, "nonempty"),
+            ("vuln_direct_only", 0.04, ROOTS_VULN_DIRECT_ONLY, "empty"),
+            ("no_vuln_deps", 0.18, ROOTS_DEPS_NO_VULN, "empty"),
+            ("leaf_version", 0.08, LEAF_VERSIONS, "empty"),
+            ("absent_package", 0.08, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.8": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver"),
+        "question": "What is the shortest DEPENDS_ON path from software '{pkg}' version '{ver}' to a dependency that has a known vulnerability (excluding the root)?",
+        # Scoreability comes from the BINDINGS (the C3.3 precedent): every
+        # bound root has a unique nearest vulnerable dependency and a unique
+        # shortest path, so nothing is left for shortestPath() to arbitrate
+        # and the question's singular "the shortest path" is true.
+        #
+        # DEVIATION: `dep <> root` added, and here it is not merely the cycle
+        # precedent - WITHOUT it the sheet's gold cannot execute on any of
+        # the graph's 47 vulnerable roots: the root itself enters the
+        # candidate set and Neo4j refuses shortestPath() with identical
+        # endpoints (Neo.DatabaseError.Statement.ExecutionFailed). The
+        # question's own "(excluding the root)" says the guard is what was
+        # meant.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (dep:SoftwareVersion)-[:VULNERABLE_TO]->(:Vulnerability) WHERE dep <> root "
+            "MATCH p = shortestPath((root)-[:DEPENDS_ON*1..6]->(dep)) "
+            "WITH p, length(p) AS hops "
+            "WITH min(hops) AS min_hops, collect({{path: [n IN nodes(p) | n.versionName], hops: hops}}) AS allp "
+            "UNWIND allp AS row "
+            "WITH row, min_hops WHERE row.hops = min_hops "
+            # ORDER BY appended per the C2.3/V7 precedent: a table answer
+            # needs a defined row order even when the bindings guarantee it
+            # has exactly one row.
+            "RETURN DISTINCT row.path AS path, min_hops AS hops ORDER BY hops, path"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["path", "hops"], "ordered": False},
+        "strata": [
+            ("unique_nearest", 0.60, ROOTS_UNIQUE_NEAREST_VULN, "nonempty"),
+            ("no_vuln_reachable", 0.20, ROOTS_DEPS_NO_VULN, "empty"),
+            ("leaf_version", 0.10, LEAF_VERSIONS, "empty"),
+            ("absent_package", 0.10, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.9": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver"),
+        "question": "For each direct dependency of software '{pkg}' version '{ver}', how many distinct CVEs appear in that dependency's subtree (including the dependency itself)?",
+        # Verbatim. *0..5 from the direct dependency = depth <= 6 from the
+        # root, consistent with the depth convention.
+        "cypher": (
+            "MATCH (s:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(root:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (root)-[:DEPENDS_ON]->(direct:SoftwareVersion) "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(direct) "
+            "OPTIONAL MATCH (direct)-[:DEPENDS_ON*0..5]->(n:SoftwareVersion)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "RETURN ds.name AS software, direct.versionName AS version, count(DISTINCT c) AS cve_cnt "
+            "ORDER BY software, version"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version", "cve_cnt"], "ordered": False},
+        # all_zero_subtrees is the trap: the root HAS direct dependencies and
+        # every count is 0, so a model that writes a plain MATCH on the
+        # vulnerability hop (dropping the zero rows) collapses the table.
+        "strata": [
+            ("mixed_subtrees", 0.50, ROOTS_MIXED_SUBTREES, "nonempty"),
+            ("all_zero_subtrees", 0.25, ROOTS_ALL_ZERO_SUBTREES, "nonempty"),
+            ("leaf_version", 0.15, LEAF_VERSIONS, "empty"),
+            ("absent_package", 0.10, "SYNTH:absent_package_versioned", "empty"),
+        ],
+    },
+    "C8.10": {
+        "family": "C8: Dep x Vuln",
+        "source": "luxu",
+        "v3_id": None,
+        "query_type": "CR",
+        "difficulty": "Hard",
+        "params": ("pkg", "ver", "dep", "dep_ver"),
+        "question": "Which dependencies appear in both full trees of software '{pkg}' version '{ver}' and software '{dep}' version '{dep_ver}', and have known vulnerabilities?",
+        # GOLD REWRITTEN, the C5.4 fix applied to its twin. The sheet writes
+        # the intersection as two variable-length patterns in one MATCH, and
+        # relationship-uniqueness silently drops every path pair sharing an
+        # edge (C5.4 measured: 69% of the true answer survives). Collect one
+        # closure, test membership, keep the vulnerability filter and the
+        # (software, version, cveId) return. `<> r1` / `<> r2` per the cycle
+        # precedent. The verifier replays the sheet's formulation on the
+        # shipped cases to quantify the loss for this template too.
+        "cypher": (
+            "MATCH (s1:Software {{name: '{pkg}'}})-[:HAS_VERSION]->(r1:SoftwareVersion {{versionName: '{ver}'}}) "
+            "MATCH (r1)-[:DEPENDS_ON*1..6]->(d1:SoftwareVersion) WHERE d1 <> r1 "
+            "WITH collect(DISTINCT d1) AS t1 "
+            "MATCH (s2:Software {{name: '{dep}'}})-[:HAS_VERSION]->(r2:SoftwareVersion {{versionName: '{dep_ver}'}}) "
+            "MATCH (r2)-[:DEPENDS_ON*1..6]->(d:SoftwareVersion) "
+            "WHERE d <> r2 AND d IN t1 AND (d)-[:VULNERABLE_TO]->() "
+            "WITH DISTINCT d "
+            "MATCH (d)-[:VULNERABLE_TO]->(c:Vulnerability) "
+            "OPTIONAL MATCH (ds:Software)-[:HAS_VERSION]->(d) "
+            "RETURN DISTINCT ds.name AS software, d.versionName AS version, c.cveId AS cveId "
+            "ORDER BY software, version, cveId"
+        ),
+        "answer_shape": {"kind": "table", "columns": ["software", "version", "cveId"], "ordered": False},
+        "strata": [
+            ("share_vuln_dep", 0.60, PAIRS_SHARE_VULN_DEP, "nonempty"),
+            ("share_tree_no_vuln", 0.24, PAIRS_SHARE_TREE_NO_VULN, "empty"),
+            ("disjoint_trees", 0.16, PAIRS_DISJOINT_TREE, "empty"),
         ],
     },
 }

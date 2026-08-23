@@ -71,7 +71,7 @@ the answer set is unaffected.
 
 ## In the bank so far
 
-**6,017 cases, 27 templates, 1,199 with an empty answer (19.9 %).** 250 per
+**7,767 cases, 34 templates, 1,833 with an empty answer (23.6 %).** 250 per
 template except C3.5 (190), C5.6 (170) and four of the five C6 templates
 (C6.2 70, C6.3 67, C6.7 200, C6.8 70), which ship at their measured capacity
 on this graph.
@@ -105,6 +105,13 @@ on this graph.
 | C7.1 | C7 Reverse DEPENDS_ON (in) | **C3.5** | table | 250 | has_dependents 213/1638 · **no_dependents 10/11** · **absent_package 27/81** |
 | C7.2 | C7 Reverse DEPENDS_ON (in) | — | table | 250 | has_dependents 195/1121 · **no_version_depended_on 8/10** · **absent_product 45/135** |
 | C7.5 | C7 Reverse DEPENDS_ON (in) | **C3.6** | table | 250 | has_indirect_dependents 150/1575 · **direct_only_dependents 55/64** · **no_dependents 10/11** · **absent_package 35/105** |
+| C8.2 | C8 Dep x Vuln | — | list | 250 | vuln_in_closure 160/849 · **deps_no_vuln 40/272** · **leaf_version 25/529** · **absent_package 25/75** |
+| C8.5 | C8 Dep x Vuln | — | table | 250 | vuln_in_tree 138/875 · **root_only_vuln 9/26** · **clean_tree 37/264** · **leaf_clean 25/511** · **absent_package 25/75** |
+| C8.6 | C8 Dep x Vuln | — | list | 250 | cwe_in_tree 138/875 · **root_only_cwe 8/26** · **clean_tree 37/264** · **leaf_clean 25/511** · **absent_package 25/75** |
+| C8.7 | C8 Dep x Vuln | — | table | 250 | has_indirect_vuln 155/840 · **vuln_direct_only 9/9** · **no_vuln_deps 45/272** · **leaf_version 20/529** · **absent_package 20/60** |
+| C8.8 | C8 Dep x Vuln | — | table | 250 | **unique_nearest 150/277** · **no_vuln_reachable 50/272** · **leaf_version 25/529** · **absent_package 25/75** |
+| C8.9 | C8 Dep x Vuln | — | table | 250 | mixed_subtrees 125/848 · **all_zero_subtrees 63/272** · **leaf_version 37/529** · **absent_package 25/75** |
+| C8.10 | C8 Dep x Vuln | — | table | 250 | share_vuln_dep 150/2522 · **share_tree_no_vuln 60/3313** · **disjoint_trees 40/4484** |
 
 Bold strata are new in v4; the sheet has no notion of a stratum, so a template
 copied from it straight has no empty-answer case, no false case and no
@@ -412,6 +419,55 @@ versions have a dependent — so the honest empty pools are tiny (11 versions,
   family average is dragged by C7.2's mismatch, which no contract clause can
   fix because the conflict is inside the sheet row itself.
 
+### C8: Dep x Vuln — where the CVE cap stops binding, and three repairs
+
+All seven listed rows are live. The family binds on ROOTS whose closures
+contain a vulnerable version (pool 849 of 1,121), so every template reaches
+250 — the 47-version cap shows up only as answer *diversity* (C8.10's 250
+cases produce 46 distinct non-empty answers over 191 distinct first sides:
+healthy sampling, small answer universe).
+
+Deviations and repairs, each on an established precedent:
+
+- **C8.2 / C8.7 golds get `dep <> root`** (cycle precedent): 8 roots are
+  vulnerable and self-reaching, and both questions exclude the root.
+- **C8.8: the sheet's gold CANNOT EXECUTE on any of the 47 vulnerable
+  roots** — the root itself enters the vulnerable-candidate set and Neo4j
+  refuses `shortestPath()` with identical endpoints. `dep <> root` (which
+  the question's own "excluding the root" asks for) fixes it. Scoreability
+  then comes from the bindings, per the C3.3 precedent: every bound root has
+  a unique nearest vulnerable dependency with a unique shortest path —
+  independently re-proven for all 150 by DAG path-counting. In the smoke
+  run the model reproduced the sheet's crash: its own shortestPath queries,
+  lacking the guard, failed with the same error on vulnerable roots.
+- **C8.10's gold is rewritten collect-then-diff** (the C5.4 twin). Replayed
+  on 40 shipped non-empty cases, the sheet's two-variable-length formulation
+  returns **48.7 % of the true rows** (31/40 cases lose rows) — worse than
+  C5.4's 69 %. In the smoke run the model wrote the sheet's buggy pattern
+  unprompted and scored 0 against the corrected gold — the C5.4 phenomenon
+  again: the misconception the sheet encodes is the misconception the model
+  has.
+- **C8.8 also gained `ORDER BY` (V7/C2.3 precedent)** — a table answer needs
+  a defined row order even when the bindings guarantee one row.
+
+Verbatim rows: C8.5, C8.6, C8.9 — the `*0..6` in C8.5/C8.6 agrees with
+their questions' "(including the root)"; `root_only_vuln`/`root_only_cwe`
+(the root is vulnerable, its closure clean) is the stratum that punishes a
+model writing `*1..6` there.
+
+**Smoke (84 stratified, deepseek-v4-flash): bare 0.676 → contract 0.857.**
+Two contract clauses were added mid-smoke on the C2.3 precedent (the
+contract is v4's own protocol artifact): a two-column rule for
+"which members have vulnerabilities" listings took C8.5 0.67→1.00, and a
+`*0..5`-subtree note on the per-dependency-count clause took C8.9
+0.82→1.00. The same two-column rule then exposed a **new sheet defect,
+recorded not repaired: C8.10's question never asks for CVE IDs, but its
+gold returns a cveId column** — compliant models return two columns and
+score 0 (C8.10 0.75→0.42), the third measured instance of compliance
+amplifying a question–gold mismatch. Recommended fix: append "and what are
+their CVE IDs?" to the question, mirroring C8.7's phrasing; zero gold
+changes.
+
 ### The contract effect by family
 
 Reported separately per family because it changes sign:
@@ -424,6 +480,7 @@ Reported separately per family because it changes sign:
 | C5 comparative / set | 0.433 | 0.933 | **+0.500** | "which has more" has no natural answer shape at all |
 | C6 vulnerability | 0.967 | 1.000 | +0.033 | CVE/CWE listing and yes/no are conventional shapes |
 | C7 reverse deps | 0.707 | 0.827 | +0.120 | C7.5's shape gains, capped by C7.2's question-gold mismatch under both protocols |
+| C8 dep x vuln | 0.676 | 0.857 | +0.181 | big shape gains (C8.8 0.17→0.67-0.83), minus C8.10's question-gold mismatch surfaced by compliance |
 
 The sharper claim this supports: *the contract buys answer-shape
 disambiguation, not capability.* It approaches zero return as the shape becomes
